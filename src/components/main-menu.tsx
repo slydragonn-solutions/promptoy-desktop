@@ -8,7 +8,7 @@ import { HouseIcon, SquareChevronRight, HeartIcon, TagIcon, PcCaseIcon, CloudUpl
 
 export default function MainMenu() {
     return (
-        <nav className="flex flex-col h-screen items-center justify-between gap-2 p-1 border-r border-r-neutral-200">
+        <nav className="flex flex-col h-screen items-center justify-between gap-2 p-1 bg-neutral-900 text-neutral-400">
             <ul className="flex flex-col gap-2">
                 <li>
                     <Tooltip>

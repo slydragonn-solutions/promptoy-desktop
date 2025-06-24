@@ -1,12 +1,16 @@
 import "./App.css";
-import { Editor } from "@monaco-editor/react";
 import MainMenu from "@/components/main-menu";
+import PromptList from "@/components/prompt-list";
+import Editor from "@/components/editor";
+import Sidebar from "@/components/sidebar";
 
 function App() {
   return (
     <main className="flex h-screen items-center justify-center">
       <MainMenu />
-      <Editor height="90vh" defaultLanguage="markdown" defaultValue="# Hello promptoy.app" /> 
+      <PromptList />
+      <Editor />
+      <Sidebar />
     </main>
   )
 }
