@@ -18,10 +18,10 @@ export default function Editor() {
                     <h1 className="font-bold text-xl">Prompt Editor</h1>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline"><BookIcon /> Folder</Button>
-                    <Button variant="outline"><TagIcon /> Add Tags</Button>
-                    <Button variant="outline"><HeartIcon /></Button>
-                    <Button variant="outline"><EllipsisVerticalIcon /></Button>
+                    <Button variant="ghost"><BookIcon /></Button>
+                    <Button variant="ghost"><TagIcon /></Button>
+                    <Button variant="ghost"><HeartIcon /></Button>
+                    <Button variant="ghost"><EllipsisVerticalIcon /></Button>
                 </div>
             </div>
             <div className="flex gap-2 w-xl">

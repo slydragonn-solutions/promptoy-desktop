@@ -2,9 +2,51 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "Capability for the main window",
-  "windows": ["main"],
+  "windows": [
+    "main"
+  ],
   "permissions": [
     "core:default",
-    "opener:default"
+    "opener:default",
+    "fs:default",
+    {
+      "identifier": "fs:allow-exists",
+      "allow": [
+        { "path": "$HOME/*" },
+        { "path": "$HOME/**/*" },
+        { "path": "$Documents/*" },
+        { "path": "$Documents/**/*" },
+        { "path": "$Desktop/*" },
+        { "path": "$Desktop/**/*" },
+        { "path": "$AppData/*" },
+        { "path": "$AppData/**/*" }
+      ]
+    },
+    {
+      "identifier": "fs:read-all",
+      "allow": [
+        { "path": "$HOME/*" },
+        { "path": "$HOME/**/*" },
+        { "path": "$Documents/*" },
+        { "path": "$Documents/**/*" },
+        { "path": "$Desktop/*" },
+        { "path": "$Desktop/**/*" },
+        { "path": "$AppData/*" },
+        { "path": "$AppData/**/*" }
+      ]
+    },
+    {
+      "identifier": "fs:write-all",
+      "allow": [
+        { "path": "$HOME/*" },
+        { "path": "$HOME/**/*" },
+        { "path": "$Documents/*" },
+        { "path": "$Documents/**/*" },
+        { "path": "$Desktop/*" },
+        { "path": "$Desktop/**/*" },
+        { "path": "$AppData/*" },
+        { "path": "$AppData/**/*" }
+      ]
+    }
   ]
 }
