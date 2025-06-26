@@ -23,12 +23,11 @@ function NoteItem({ id, content, createdAt }: NoteItemProps) {
 
 export default function Sidebar() {
     return (
-        <section className="flex flex-col gap-2 min-w-80 w-80 h-screen p-2 border-l border-l-neutral-200 bg-neutral-200">
+        <section className="flex flex-col gap-2 min-w-80 w-80 h-screen p-2 border-l border-l-neutral-200 bg-neutral-100">
             <Tabs defaultValue="versions" className="w-full">
                 <TabsList className="w-full">
                     <TabsTrigger value="versions">Versions</TabsTrigger>
                     <TabsTrigger value="notes">Notes</TabsTrigger>
-                    <TabsTrigger value="chat">Chat</TabsTrigger>
                 </TabsList>
                 <TabsContent value="versions">
                     <Button variant="secondary" className="w-full"><HistoryIcon /> New Version</Button>
@@ -52,7 +51,6 @@ export default function Sidebar() {
                         </ul>
                     </ScrollArea>
                 </TabsContent>
-                <TabsContent value="chat">Chat content</TabsContent>
             </Tabs>
         </section>
     )

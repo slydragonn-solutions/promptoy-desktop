@@ -2,6 +2,7 @@ import { Editor as MonacoEditor } from "@monaco-editor/react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { BookIcon, EllipsisVerticalIcon, HeartIcon, TagIcon, X } from "lucide-react";
+import { AIChat } from "./ai-chat";
 
 export default function Editor() {
     const exampleTags = ["work", "personal", "fun", "health", "family"]
@@ -21,6 +22,7 @@ export default function Editor() {
                     <Button variant="ghost"><BookIcon /></Button>
                     <Button variant="ghost"><TagIcon /></Button>
                     <Button variant="ghost"><HeartIcon /></Button>
+                    <AIChat />
                     <Button variant="ghost"><EllipsisVerticalIcon /></Button>
                 </div>
             </div>

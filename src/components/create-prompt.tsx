@@ -115,32 +115,24 @@ export default function CreatePromptDialog() {
   );
 
   const renderBlankPrompt = () => (
-    <div className="space-y-4">
-        <div>
-          <Label htmlFor="promptName">Prompt Name</Label>
           <Input
             id="promptName"
             placeholder="Enter the name of the prompt"
             value={formData.promptName || ''}
             onChange={(e) => handleInputChange('promptName', e.target.value)}
           />
-        </div>
-    </div> 
   );
 
   const renderLayoutPrompt = () => (
     <div className="space-y-4">
-      <div>
-        <Label htmlFor="promptName">Prompt Name</Label>
+     
         <Input
           id="promptName"
           placeholder="Enter the name of the prompt"
           value={formData.promptName || ''}
           onChange={(e) => handleInputChange('promptName', e.target.value)}
         />
-      </div>
-      <div>
-        <Label htmlFor="layout">Layout</Label>
+     
         <select
           id="layout"
           className="w-full p-2 border rounded-md"
@@ -153,23 +145,19 @@ export default function CreatePromptDialog() {
           <option value="account">Cuenta</option>
           <option value="other">Otro</option>
         </select>
-      </div>
     </div>
   );
 
   const renderTemplatePrompt = () => (
     <div className="space-y-4">
-      <div>
-        <Label htmlFor="promptName">Prompt Name</Label>
+     
         <Input
           id="promptName"
           placeholder="Enter the name of the prompt"
           value={formData.promptName || ''}
           onChange={(e) => handleInputChange('promptName', e.target.value)}
         />
-      </div>
-      <div>
-        <Label htmlFor="template">Template</Label>
+     
         <select
           id="template"
           className="w-full p-2 border rounded-md"
@@ -182,23 +170,19 @@ export default function CreatePromptDialog() {
           <option value="account">Cuenta</option>
           <option value="other">Otro</option>
         </select>
-      </div>
     </div>
   );
 
   const renderHumanLangPrompt = () => (
     <div className="space-y-4">
-      <div>
-        <Label htmlFor="promptName">Prompt Name</Label>
+     
         <Input
           id="promptName"
           placeholder="Enter the name of the prompt"
           value={formData.promptName || ''}
           onChange={(e) => handleInputChange('promptName', e.target.value)}
         />
-      </div>
-      <div>
-        <Label htmlFor="promptDescription">Prompt Description</Label>
+   
         <Textarea
           id="promptDescription"
           placeholder="Enter the description of the prompt"
@@ -206,7 +190,6 @@ export default function CreatePromptDialog() {
           value={formData.promptDescription || ''}
           onChange={(e) => handleInputChange('promptDescription', e.target.value)}
         />
-      </div>
     </div>
   );
 
