@@ -1,4 +1,4 @@
-import { HistoryIcon, TrashIcon, CheckIcon, Edit2, Info } from "lucide-react"
+import { HistoryIcon, TrashIcon, Info } from "lucide-react"
 import { Button } from "./ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
 import { ScrollArea } from "./ui/scroll-area"
@@ -9,14 +9,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip"
+import VersionItem from "./versions/version-item"
+import NewVersionDialog from "./versions/new-version-dialog"
+import RenameVersionDialog from "./versions/rename-version-dialog"
+import { MAX_VERSIONS } from "@/constants/prompt"
 
 interface NoteItemProps {
-    id: string;
     content: string;
     createdAt: string;
 }
 
-function NoteItem({ id, content, createdAt }: NoteItemProps) {
+function NoteItem({ content, createdAt }: NoteItemProps) {
     return (
         <li className="flex flex-col gap-2 py-2 px-4 border border-neutral-200 rounded-md bg-neutral-50">
             <div className="flex justify-between gap-2">
@@ -27,61 +30,6 @@ function NoteItem({ id, content, createdAt }: NoteItemProps) {
         </li>
     )
 }
-
-interface VersionItemProps {
-    version: PromptContent;
-    isActive: boolean;
-    onSelect: (version: PromptContent) => void;
-    onRename: (version: PromptContent) => void;
-    onDelete: (version: PromptContent) => void;
-}
-
-function VersionItem({ version, isActive, onSelect, onRename, onDelete }: VersionItemProps) {
-    const displayText = version.name || new Date(version.date).toLocaleString();
-
-    return (
-        <li 
-            className={`group flex justify-between items-center gap-2 p-2 border rounded-md cursor-pointer transition-colors ${
-                isActive 
-                    ? 'border-blue-500 bg-blue-50' 
-                    : 'border-neutral-200 bg-neutral-50 hover:bg-neutral-100'
-            }`}
-            onClick={() => onSelect(version)}
-        >
-            <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium truncate">{displayText}</p>
-                    <div className="flex items-center gap-1">
-                        <button 
-                            className="p-1 rounded-full hover:bg-neutral-200 opacity-0 group-hover:opacity-100 transition-opacity"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onRename(version);
-                            }}
-                        >
-                            <Edit2 className="w-3.5 h-3.5 text-muted-foreground" />
-                        </button>
-                        <button 
-                            className="p-1 rounded-full hover:bg-neutral-200 opacity-0 group-hover:opacity-100 transition-opacity"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onDelete(version);
-                            }}
-                        >
-                            <TrashIcon className="w-3.5 h-3.5 text-muted-foreground hover:text-red-500" />
-                        </button>
-                    </div>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                    {new Date(version.date).toLocaleString()}
-                </p>
-            </div>
-            {isActive && <CheckIcon className="w-4 h-4 text-blue-500" />}
-        </li>
-    );
-}
-
-const MAX_VERSIONS = 50;
 
 export default function Sidebar() {
     const { selectedPrompt, updatePrompt } = promptsStore();
@@ -240,62 +188,16 @@ export default function Sidebar() {
                             {selectedPrompt.versions.length}/{MAX_VERSIONS} versions
                         </div>
                         
-                        <Dialog open={isVersionDialogOpen} onOpenChange={setIsVersionDialogOpen}>
-                            <DialogContent className="sm:max-w-[425px]">
-                                <DialogHeader>
-                                    <DialogTitle>Create New Version</DialogTitle>
-                                    <DialogDescription>
-                                        Create a new version of your prompt
-                                        <div className="text-xs text-muted-foreground mt-1">
-                                            {selectedPrompt.versions.length}/{MAX_VERSIONS} versions used
-                                        </div>
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <div className="grid gap-4 py-4">
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="versionName" className="text-right">
-                                            Name
-                                        </Label>
-                                        <div className="col-span-3 space-y-2">
-                                            <Input
-                                                id="versionName"
-                                                value={newVersionName}
-                                                onChange={(e) => {
-                                                    setNewVersionName(e.target.value);
-                                                    if (versionError) setVersionError('');
-                                                }}
-                                                placeholder="e.g., v2.0, Production, etc."
-                                                className={versionError ? 'border-red-500' : ''}
-                                                autoFocus
-                                                onKeyDown={(e) => {
-                                                    if (e.key === 'Enter') {
-                                                        e.preventDefault();
-                                                        handleCreateNewVersion();
-                                                    }
-                                                }}
-                                            />
-                                            {versionError && (
-                                                <p className="text-sm text-red-500">{versionError}</p>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="flex justify-end gap-2">
-                                    <Button 
-                                        variant="outline" 
-                                        onClick={() => setIsVersionDialogOpen(false)}
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button 
-                                        onClick={handleCreateNewVersion}
-                                        disabled={!newVersionName.trim()}
-                                    >
-                                        Create Version
-                                    </Button>
-                                </div>
-                            </DialogContent>
-                        </Dialog>
+                        <NewVersionDialog
+                            isVersionDialogOpen={isVersionDialogOpen}
+                            setIsVersionDialogOpen={setIsVersionDialogOpen}
+                            selectedPrompt={selectedPrompt}
+                            newVersionName={newVersionName}
+                            setNewVersionName={setNewVersionName}
+                            versionError={versionError}
+                            setVersionError={setVersionError}
+                            handleCreateNewVersion={handleCreateNewVersion}
+                        />
                     </div>
                     <ScrollArea className="h-[calc(100vh-160px)]">
                         <ul className="flex flex-col gap-2 mt-4">
@@ -313,75 +215,23 @@ export default function Sidebar() {
                                     }}
                                 />
                             ))}
-                            
-                            {/* Rename Version Dialog */}
-                            <Dialog open={isRenameDialogOpen} onOpenChange={setIsRenameDialogOpen}>
-                                <DialogContent className="sm:max-w-[425px]">
-                                    <DialogHeader>
-                                        <DialogTitle>Rename Version</DialogTitle>
-                                        <DialogDescription>
-                                            Enter a new name for this version.
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                    <div className="grid gap-4 py-4">
-                                        <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="renameVersion" className="text-right">
-                                                Name
-                                            </Label>
-                                            <div className="col-span-3 space-y-2">
-                                                <Input
-                                                    id="renameVersion"
-                                                    value={newVersionName}
-                                                    onChange={(e) => {
-                                                        setNewVersionName(e.target.value);
-                                                        if (versionError) setVersionError('');
-                                                    }}
-                                                    placeholder="Enter version name"
-                                                    className={versionError ? 'border-red-500' : ''}
-                                                    autoFocus
-                                                    onKeyDown={(e) => {
-                                                        if (e.key === 'Enter') {
-                                                            e.preventDefault();
-                                                            handleConfirmRename();
-                                                        }
-                                                    }}
-                                                />
-                                                {versionError && (
-                                                    <p className="text-sm text-red-500">{versionError}</p>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="flex justify-end gap-2">
-                                        <Button 
-                                            variant="outline" 
-                                            onClick={() => {
-                                                setIsRenameDialogOpen(false);
-                                                setVersionToRename(null);
-                                                setNewVersionName('');
-                                            }}
-                                        >
-                                            Cancel
-                                        </Button>
-                                        <Button 
-                                            onClick={handleConfirmRename}
-                                            disabled={!newVersionName.trim()}
-                                        >
-                                            Save Changes
-                                        </Button>
-                                    </div>
-                                </DialogContent>
-                            </Dialog>
+                            <RenameVersionDialog
+                                isRenameDialogOpen={isRenameDialogOpen}
+                                setIsRenameDialogOpen={setIsRenameDialogOpen}
+                                setVersionToRename={setVersionToRename}
+                                newVersionName={newVersionName}
+                                setNewVersionName={setNewVersionName}
+                                versionError={versionError}
+                                setVersionError={setVersionError}
+                                handleConfirmRename={handleConfirmRename}
+                            />
                         </ul>
                     </ScrollArea>
                 </TabsContent>
                 <TabsContent value="notes">
                     <ScrollArea className="h-[calc(100vh-120px)]">
                         <ul className="flex flex-col gap-2 mt-4">
-                            <NoteItem id="1" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis voluptatum rem corporis eius, ullam recusandae. Repellat unde ea dolore sit iste quo in asperiores, quae esse aut, voluptatum illum aliquid?" createdAt="2025-06-23"/>
-                            <NoteItem id="2" content="Lorem ipsum dolor sit amet consectetur" createdAt="2025-06-23"/>
-                            <NoteItem id="3" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis voluptatum rem corporis eius, ullam recusandae. Repellat unde ea dolore sit iste quo in asperiores, quae esse aut, voluptatum illum aliquid?" createdAt="2025-06-23"/>
-                            <NoteItem id="4" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis voluptatum rem corporis eius, ullam recusandae. Repellat unde ea dolore sit iste quo in asperiores, quae esse aut, voluptatum illum aliquid?" createdAt="2025-06-23"/>
+                            <NoteItem content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis voluptatum rem corporis eius, ullam recusandae. Repellat unde ea dolore sit iste quo in asperiores, quae esse aut, voluptatum illum aliquid?" createdAt="2025-06-23"/>
                         </ul>
                     </ScrollArea>
                 </TabsContent>
