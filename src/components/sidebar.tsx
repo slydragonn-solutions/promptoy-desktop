@@ -1,7 +1,8 @@
-import { HistoryIcon, TrashIcon, Info } from "lucide-react"
+import { HistoryIcon, TrashIcon, Info, Plus, MessageSquare } from "lucide-react"
 import { Button } from "./ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
 import { ScrollArea } from "./ui/scroll-area"
+import { Textarea } from "./ui/textarea"
 import { promptsStore } from "@/store/prompts-store"
 import { useVersionRename } from "@/hooks/use-version-rename"
 import { useVersionManagement } from "@/hooks/use-version-management"
@@ -13,22 +14,7 @@ import NewVersionDialog from "./versions/new-version-dialog"
 import RenameVersionDialog from "./versions/rename-version-dialog"
 import { MAX_VERSIONS } from "@/constants/prompt"
 
-interface NoteItemProps {
-    content: string;
-    createdAt: string;
-}
 
-function NoteItem({ content, createdAt }: NoteItemProps) {
-    return (
-        <li className="flex flex-col gap-2 py-2 px-4 border border-neutral-200 rounded-md bg-neutral-50">
-            <div className="flex justify-between gap-2">
-                <p className="text-xs text-neutral-500">{createdAt}</p>
-                <TrashIcon className="cursor-pointer w-4 h-4 text-neutral-400 hover:text-red-500"/>
-            </div>
-            <p className="text-sm">{content}</p>
-        </li>
-    )
-}
 
 export default function Sidebar() {
     const { selectedPrompt } = promptsStore();
@@ -148,12 +134,81 @@ export default function Sidebar() {
                         </ul>
                     </ScrollArea>
                 </TabsContent>
-                <TabsContent value="notes">
-                    <ScrollArea className="h-[calc(100vh-120px)]">
-                        <ul className="flex flex-col gap-2 mt-4">
-                            <NoteItem content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis voluptatum rem corporis eius, ullam recusandae. Repellat unde ea dolore sit iste quo in asperiores, quae esse aut, voluptatum illum aliquid?" createdAt="2025-06-23"/>
-                        </ul>
-                    </ScrollArea>
+                <TabsContent value="notes" className="relative h-full">
+                    <div className="flex flex-col h-full">
+                        <ScrollArea className="h-[calc(100vh-160px)]">
+                            <div className="p-4 space-y-4">
+                                {selectedPrompt.notes?.length ? (
+                                    [...selectedPrompt.notes]
+                                        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+                                        .map((note) => (
+                                            <div key={note.date} className="flex gap-3 group">
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <span className="text-xs text-muted-foreground">
+                                                            {new Date(note.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                        </span>
+                                                    </div>
+                                                    <div className="relative group">
+                                                        <div className="p-3 rounded-lg bg-muted/50 inline-block max-w-[85%]">
+                                                            <p className="text-sm whitespace-pre-wrap">{note.content}</p>
+                                                        </div>
+                                                        <button 
+                                                            onClick={() => handleDeleteNote(selectedPrompt, note.date)}
+                                                            className="absolute -top-2 -right-2 p-1.5 rounded-full bg-background border shadow-sm opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive hover:text-destructive-foreground"
+                                                            aria-label="Delete note"
+                                                        >
+                                                            <TrashIcon className="w-3 h-3" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))
+                                ) : (
+                                    <div className="h-full flex flex-col items-center justify-center text-center p-8">
+                                        <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                                            <MessageSquare className="w-8 h-8 text-muted-foreground" />
+                                        </div>
+                                        <h3 className="text-lg font-medium mb-1">No notes yet</h3>
+                                        <p className="text-sm text-muted-foreground max-w-md">
+                                            Start a conversation. Add your first note below and keep track of your thoughts.
+                                        </p>
+                                    </div>
+                                )}
+                                <div ref={notesEndRef} />
+                            </div>
+                        </ScrollArea>
+                        
+                        <div className="sticky bottom-0 left-0 right-0 bg-background border-t p-4">
+                            <form onSubmit={(e) => {
+                                e.preventDefault();
+                                handleAddNote(selectedPrompt);
+                            }} className="relative">
+                                <Textarea
+                                    value={newNote}
+                                    onChange={(e) => setNewNote(e.target.value)}
+                                    placeholder="Type a note..."
+                                    className="min-h-[44px] max-h-32 pr-12 resize-none"
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && !e.shiftKey) {
+                                            e.preventDefault();
+                                            handleAddNote(selectedPrompt);
+                                        }
+                                    }}
+                                    rows={1}
+                                />
+                                <Button 
+                                    type="submit" 
+                                    size="icon" 
+                                    className="absolute right-2 bottom-2 h-8 w-8 rounded-full"
+                                    disabled={!newNote.trim()}
+                                >
+                                    <Plus className="w-4 h-4" />
+                                    <span className="sr-only">Send note</span>
+                                </Button>
+                            </form>
+                        </div>
+                    </div>
                 </TabsContent>
             </Tabs>
         </section>

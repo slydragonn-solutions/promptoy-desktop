@@ -18,7 +18,6 @@ export const useNotesManagement = () => {
         if (!newNote.trim() || !selectedPrompt) return;
 
         const newNoteObj = {
-            id: Date.now().toString(),
             content: newNote.trim(),
             date: new Date().toISOString(),
         };
@@ -38,11 +37,11 @@ export const useNotesManagement = () => {
         setTimeout(scrollToBottom, 100);
     }, [newNote, updatePrompt, scrollToBottom]);
 
-    const handleDeleteNote = useCallback((selectedPrompt: any, noteId: string) => {
+    const handleDeleteNote = useCallback((selectedPrompt: any, noteDate: string) => {
         if (!selectedPrompt?.notes) return;
 
         const updatedNotes = selectedPrompt.notes.filter(
-            (note: any) => note.id !== noteId
+            (note: any) => note.date !== noteDate
         );
 
         updatePrompt(selectedPrompt.id, {

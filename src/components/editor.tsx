@@ -304,7 +304,7 @@ export default function Editor() {
                     <span>Updated: {selectedPrompt ? getFormattedDate(selectedPrompt.updatedAt) : 'N/A'}</span>
                 </div>
                 <div className="flex items-center gap-4">
-                    <span>Characters: {content.length.toLocaleString()}/{MAX_CONTENT_LENGTH.toLocaleString()}</span>
+                    <span>Characters: {content?.length.toLocaleString()}/{MAX_CONTENT_LENGTH.toLocaleString()}</span>
                 </div>
             </div>
 
