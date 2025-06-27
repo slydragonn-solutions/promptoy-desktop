@@ -20,7 +20,7 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
                 <h2 className="font-bold text-sm">{name}</h2>
                 <p className="text-xs text-muted-foreground">{updatedAt}</p>
                 {
-                    tags && (
+                    tags && tags.length > 0 && (
                         <div className="flex flex-wrap gap-2 items-center ">
                             <p className="text-xs text-muted-foreground">Tags:</p>
                             {tags.map((tag) => (

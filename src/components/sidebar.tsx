@@ -1,4 +1,4 @@
-import { HistoryIcon, NotebookPenIcon, TrashIcon, CheckIcon, Edit2 } from "lucide-react"
+import { HistoryIcon, TrashIcon, CheckIcon, Edit2, Info } from "lucide-react"
 import { Button } from "./ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
 import { ScrollArea } from "./ui/scroll-area"
@@ -8,6 +8,7 @@ import { PromptContent } from "@/types/prompts"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "./ui/dialog"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip"
 
 interface NoteItemProps {
     id: string;
@@ -80,6 +81,8 @@ function VersionItem({ version, isActive, onSelect, onRename, onDelete }: Versio
     );
 }
 
+const MAX_VERSIONS = 50;
+
 export default function Sidebar() {
     const { selectedPrompt, updatePrompt } = promptsStore();
     const [isVersionDialogOpen, setIsVersionDialogOpen] = useState(false);
@@ -96,6 +99,11 @@ export default function Sidebar() {
     
     const handleCreateNewVersion = useCallback(() => {
         if (!selectedPrompt) return;
+        
+        if (selectedPrompt.versions.length >= MAX_VERSIONS) {
+            setVersionError(`Maximum of ${MAX_VERSIONS} versions allowed`);
+            return;
+        }
         
         if (!newVersionName.trim()) {
             setVersionError('Version name is required');
@@ -205,21 +213,42 @@ export default function Sidebar() {
                 </TabsList>
                 <TabsContent value="versions">
                     <div className="space-y-2">
-                        <Button 
-                            variant="secondary" 
-                            className="w-full gap-2"
-                            onClick={handleOpenVersionDialog}
-                        >
-                            <HistoryIcon className="w-4 h-4" /> 
-                            New Version
-                        </Button>
+                        <div className="relative">
+                            <Button 
+                                variant="outline" 
+                                className="w-full gap-2"
+                                onClick={handleOpenVersionDialog}
+                                disabled={selectedPrompt.versions.length >= MAX_VERSIONS}
+                            >
+                                <HistoryIcon className="w-4 h-4" />
+                                New Version
+                            </Button>
+                            {selectedPrompt.versions.length >= MAX_VERSIONS && (
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Info className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Maximum of {MAX_VERSIONS} versions allowed</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            )}
+                        </div>
+                        <div className="text-xs text-muted-foreground text-right px-1">
+                            {selectedPrompt.versions.length}/{MAX_VERSIONS} versions
+                        </div>
                         
                         <Dialog open={isVersionDialogOpen} onOpenChange={setIsVersionDialogOpen}>
                             <DialogContent className="sm:max-w-[425px]">
                                 <DialogHeader>
                                     <DialogTitle>Create New Version</DialogTitle>
                                     <DialogDescription>
-                                        Enter a name for the new version of this prompt.
+                                        Create a new version of your prompt
+                                        <div className="text-xs text-muted-foreground mt-1">
+                                            {selectedPrompt.versions.length}/{MAX_VERSIONS} versions used
+                                        </div>
                                     </DialogDescription>
                                 </DialogHeader>
                                 <div className="grid gap-4 py-4">
@@ -268,7 +297,7 @@ export default function Sidebar() {
                             </DialogContent>
                         </Dialog>
                     </div>
-                    <ScrollArea className="h-[calc(100vh-120px)]">
+                    <ScrollArea className="h-[calc(100vh-160px)]">
                         <ul className="flex flex-col gap-2 mt-4">
                             {selectedPrompt.versions.map((version) => (
                                 <VersionItem
@@ -347,7 +376,6 @@ export default function Sidebar() {
                     </ScrollArea>
                 </TabsContent>
                 <TabsContent value="notes">
-                    <Button variant="secondary" className="w-full"><NotebookPenIcon /> New Note</Button>
                     <ScrollArea className="h-[calc(100vh-120px)]">
                         <ul className="flex flex-col gap-2 mt-4">
                             <NoteItem id="1" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis voluptatum rem corporis eius, ullam recusandae. Repellat unde ea dolore sit iste quo in asperiores, quae esse aut, voluptatum illum aliquid?" createdAt="2025-06-23"/>
