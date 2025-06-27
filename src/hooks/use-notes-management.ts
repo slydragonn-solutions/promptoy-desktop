@@ -1,0 +1,62 @@
+import { useCallback, useRef, useEffect, useState } from 'react';
+import { promptsStore } from '@/store/prompts-store';
+
+export const useNotesManagement = () => {
+    const { updatePrompt } = promptsStore();
+    const [newNote, setNewNote] = useState('');
+    const notesEndRef = useRef<HTMLDivElement>(null);
+
+    const scrollToBottom = useCallback(() => {
+        notesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, []);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [scrollToBottom]);
+
+    const handleAddNote = useCallback((selectedPrompt: any) => {
+        if (!newNote.trim() || !selectedPrompt) return;
+
+        const newNoteObj = {
+            id: Date.now().toString(),
+            content: newNote.trim(),
+            date: new Date().toISOString(),
+        };
+
+        const updatedNotes = [
+            ...(selectedPrompt.notes || []),
+            newNoteObj
+        ];
+
+        updatePrompt(selectedPrompt.id, {
+            ...selectedPrompt,
+            notes: updatedNotes,
+            updatedAt: new Date().toISOString(),
+        });
+
+        setNewNote('');
+        setTimeout(scrollToBottom, 100);
+    }, [newNote, updatePrompt, scrollToBottom]);
+
+    const handleDeleteNote = useCallback((selectedPrompt: any, noteId: string) => {
+        if (!selectedPrompt?.notes) return;
+
+        const updatedNotes = selectedPrompt.notes.filter(
+            (note: any) => note.id !== noteId
+        );
+
+        updatePrompt(selectedPrompt.id, {
+            ...selectedPrompt,
+            notes: updatedNotes,
+            updatedAt: new Date().toISOString(),
+        });
+    }, [updatePrompt]);
+
+    return {
+        newNote,
+        setNewNote,
+        notesEndRef,
+        handleAddNote,
+        handleDeleteNote,
+    };
+};

@@ -1,28 +1,23 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button";
-import { PromptContent } from "@/types/prompts";
+import { Button } from "@/components/ui/button"
 
 interface RenameVersionDialogProps {
     isRenameDialogOpen: boolean;
     setIsRenameDialogOpen: (open: boolean) => void;
-    setVersionToRename: (version: PromptContent | null) => void;
     newVersionName: string;
     setNewVersionName: (name: string) => void;
     versionError: string;
-    setVersionError: (error: string) => void;
     handleConfirmRename: () => void;
 }
 
 export default function RenameVersionDialog({
     isRenameDialogOpen,
     setIsRenameDialogOpen,
-    setVersionToRename,
     newVersionName,
     setNewVersionName,
-    versionError,   
-    setVersionError,
+    versionError,
     handleConfirmRename
 }: RenameVersionDialogProps) {
     return (
@@ -45,7 +40,6 @@ export default function RenameVersionDialog({
                                 value={newVersionName}
                                 onChange={(e) => {
                                     setNewVersionName(e.target.value);
-                                    if (versionError) setVersionError('');
                                 }}
                                 placeholder="Enter version name"
                                 className={versionError ? 'border-red-500' : ''}
@@ -68,8 +62,6 @@ export default function RenameVersionDialog({
                         variant="outline" 
                         onClick={() => {
                             setIsRenameDialogOpen(false);
-                            setVersionToRename(null);
-                            setNewVersionName('');
                         }}
                     >
                         Cancel
