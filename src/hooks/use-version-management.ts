@@ -22,7 +22,7 @@ export const useVersionManagement = () => {
 
         const newVersion: PromptContent = {
             name: newVersionName.trim(),
-            content: selectedPrompt.content,
+            content: selectedPrompt.versions[0].content,
             date: new Date().toISOString(),
         };
 
@@ -31,7 +31,6 @@ export const useVersionManagement = () => {
         updatePrompt(selectedPrompt.id, {
             ...selectedPrompt,
             versions: updatedVersions,
-            updatedAt: new Date().toISOString(),
         });
 
         setNewVersionName('');
@@ -68,9 +67,6 @@ export const useVersionManagement = () => {
         updatePrompt(selectedPrompt.id, {
             ...selectedPrompt,
             versions: newVersions,
-            updatedAt: new Date().toISOString(),
-            // If we deleted the active version, update the content to the new active version
-            ...(wasActive && { content: updatedVersions[0]?.content || '' })
         });
 
         return true;
@@ -92,9 +88,7 @@ export const useVersionManagement = () => {
 
         updatePrompt(selectedPrompt.id, {
             ...selectedPrompt,
-            content: version.content,
             versions: updatedVersions,
-            updatedAt: new Date().toISOString(),
         });
     }, [updatePrompt]);
 

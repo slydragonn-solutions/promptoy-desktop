@@ -31,7 +31,6 @@ export const useVersionRename = () => {
         updatePrompt(selectedPrompt.id, {
             ...selectedPrompt,
             versions: updatedVersions,
-            updatedAt: new Date().toISOString()
         });
 
         setNewVersionName('');

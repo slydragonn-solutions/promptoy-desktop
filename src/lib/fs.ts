@@ -115,8 +115,6 @@ export async function updatePrompt(updatedPrompt: Partial<Prompt> & { id: string
     const mergedPrompt: Prompt = {
       ...existingPrompt,
       ...updatedPrompt,
-      updatedAt: new Date().toISOString(),
-      isSynced: false
     };
 
     // Validate merged prompt

@@ -46,7 +46,6 @@ export default function Editor() {
       const updatedPrompt = {
         ...selectedPrompt,
         ...updates,
-        updatedAt: new Date().toISOString()
       };
       
       await updatePrompt(selectedPrompt.id, updatedPrompt);
@@ -78,7 +77,6 @@ export default function Editor() {
           },
           ...selectedPrompt.versions.slice(1)
         ],
-        updatedAt: now
       });
     } catch (error) {
       console.error('Error saving prompt:', error);
