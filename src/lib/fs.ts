@@ -9,8 +9,8 @@ function validatePrompt(prompt: Partial<Prompt>): { isValid: boolean; error?: st
   if (!prompt.name || prompt.name.trim() === '') {
     return { isValid: false, error: 'Prompt name is required' };
   }
-  if (!prompt.content || !Array.isArray(prompt.content) || prompt.content.length === 0) {
-    return { isValid: false, error: 'Prompt content is required' };
+  if (!prompt.versions || !Array.isArray(prompt.versions) || prompt.versions.length === 0) {
+    return { isValid: false, error: 'Prompt versions is required' };
   }
   return { isValid: true };
 }

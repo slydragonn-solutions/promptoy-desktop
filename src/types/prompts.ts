@@ -3,13 +3,13 @@ interface PromptTemplate {
     name: string;
 }
 
-interface PromptMetadata {
+export interface PromptMetadata {
     type?: "blank" | "template" | "layout" | "human-lang";
     layout?: string;
     template?: PromptTemplate;
 }
 
-interface PromptContent {
+export interface PromptContent {
     date: string;
     name?: string;
     content: string;
@@ -35,7 +35,7 @@ export interface Prompt {
     name: string;
     createdAt: string;
     updatedAt: string;
-    content: PromptContent[];   
+    versions: PromptContent[];   
     notes: PromptNote[];
     chatHistory: PromptChatHistory[];
     tags?: PromptTag[];

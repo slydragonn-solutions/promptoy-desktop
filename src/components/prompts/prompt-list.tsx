@@ -1,14 +1,10 @@
-import { FilePenIcon, FilterIcon, ChevronDown, Check } from "lucide-react";
+import { Plus, FilterIcon, ChevronDown, Check } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
 import { useMemo, useState, useEffect } from "react";
 import { promptsStore } from "@/store/prompts-store";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from "@/components/ui/tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -16,11 +12,19 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import PromptItem from "./prompt-item";
+import { NewPromptDialog } from "./new-prompt-dialog";
 
 type SortOption = 'a-z' | 'z-a' | 'newest' | 'oldest';
 
 export default function PromptList() {
-    const { prompts, isLoading, getPrompts } = promptsStore();
+    const { 
+        prompts, 
+        isLoading, 
+        getPrompts, 
+        selectedPrompt, 
+        setSelectedPrompt 
+    } = promptsStore();
+    
     const [search, setSearch] = useState('');
     const [sortBy, setSortBy] = useState<SortOption>('newest');
 
@@ -33,9 +37,9 @@ export default function PromptList() {
     const filteredAndSortedPrompts = useMemo(() => {
         const filtered = prompts.filter(prompt => 
             prompt.name.toLowerCase().includes(search.toLowerCase()) ||
-            prompt.content.some(content => 
-                content.content.toLowerCase().includes(search.toLowerCase())
-            )
+            (prompt.versions && prompt.versions.some(version => 
+                version.content.toLowerCase().includes(search.toLowerCase())
+            ))
         );
 
         return [...filtered].sort((a, b) => {
@@ -92,10 +96,12 @@ export default function PromptList() {
                     </DropdownMenuContent>
                 </DropdownMenu>
                 <Tooltip>
-                    <TooltipTrigger>
-                        <Button variant="outline" size="icon">
-                            <FilePenIcon className="h-4 w-4" />
-                        </Button>
+                    <TooltipTrigger asChild>
+                        <NewPromptDialog onPromptCreated={getPrompts}>
+                            <Button variant="outline" size="icon">
+                                <Plus className="h-4 w-4" />
+                            </Button>
+                        </NewPromptDialog>
                     </TooltipTrigger>
                     <TooltipContent>
                         <p>New Prompt</p>
@@ -115,21 +121,17 @@ export default function PromptList() {
                             </div>
                         ) : (
                             <ul className="divide-y">
-                                {filteredAndSortedPrompts.map((prompt) => (
-                                    <PromptItem
-                                        key={prompt.id}
-                                        id={prompt.id}
-                                        name={prompt.name}
-                                        updatedAt={new Date(prompt.updatedAt).toLocaleDateString(undefined, {
-                                            year: 'numeric',
-                                            month: 'short',
-                                            day: 'numeric',
-                                            hour: '2-digit',
-                                            minute: '2-digit'
-                                        })}
-                                        tags={prompt.tags?.map(tag => tag.name)}
-                                    />
-                                ))}
+                                {filteredAndSortedPrompts.map((prompt) => {
+                                    const isSelected = selectedPrompt?.id === prompt.id;
+                                    return (
+                                        <PromptItem 
+                                            key={prompt.id}
+                                            prompt={prompt}
+                                            isSelected={isSelected}
+                                            onSelect={setSelectedPrompt}
+                                        />
+                                    );
+                                })}
                             </ul>
                         )}
                     </ScrollArea>

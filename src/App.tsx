@@ -1,6 +1,6 @@
 import "./App.css";
 import MainMenu from "@/components/main-menu";
-import PromptList from "@/components/prompt/prompt-list";
+import PromptList from "@/components/prompts/prompt-list";
 import Editor from "@/components/editor";
 import Sidebar from "@/components/sidebar";
 

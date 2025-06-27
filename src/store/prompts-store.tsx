@@ -118,7 +118,7 @@ export const promptsStore = create<PromptsStore>((set, get) => ({
                 updatedAt: now,
                 isSynced: false,
                 // Ensure optional arrays are initialized
-                content: newPrompt.content || [],
+                versions: newPrompt.versions || [],
                 notes: newPrompt.notes || [],
                 chatHistory: newPrompt.chatHistory || [],
                 tags: newPrompt.tags || [],
