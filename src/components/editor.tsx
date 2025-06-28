@@ -1,6 +1,7 @@
 import { Editor as MonacoEditor, OnChange, OnMount } from "@monaco-editor/react";
 import { Button } from "./ui/button";
-import { EllipsisVerticalIcon, FileTextIcon, TagIcon, Trash2, Star } from "lucide-react";
+import { EllipsisVerticalIcon, FileTextIcon, TagIcon, Trash2, Star, Tags } from "lucide-react";
+import { TagSelector } from "./tags/tag-selector";
 import { AIChat } from "./ai-chat";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { promptsStore } from "@/store/prompts-store";
@@ -43,9 +44,12 @@ export default function Editor() {
     
     setIsSaving(true);
     try {
+      // Create a new object with the updated values
       const updatedPrompt = {
         ...selectedPrompt,
         ...updates,
+        // Ensure tags is always an array
+        tags: updates.tags || selectedPrompt.tags || [],
       };
       
       await updatePrompt(selectedPrompt.id, updatedPrompt);
@@ -214,12 +218,6 @@ export default function Editor() {
                         >
                             {selectedPrompt.name}
                         </h1>
-                        {isSaving && (
-                            <span className="text-sm text-muted-foreground flex items-center gap-1">
-                                <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
-                                Saving...
-                            </span>
-                        )}
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -274,9 +272,29 @@ export default function Editor() {
                     )}
                 </div>
             </div>
-            <div className="flex items-center gap-1 mr-2">
-                <TagIcon className="h-4 w-4 text-muted-foreground" />
-            </div>
+            <div className="flex items-center gap-2">
+              <TagSelector
+                  value={selectedPrompt.tags || []}
+                  onChange={(tags) => {
+                      // Create a new object to trigger the update
+                      const updatedPrompt = { ...selectedPrompt, tags };
+                      handleUpdatePrompt(updatedPrompt);
+                  }}
+                  className="flex flex-wrap gap-1"
+                  trigger={
+                      <Button type="button" variant="ghost" size="sm" className="h-8 text-muted-foreground hover:text-foreground">
+                          <Tags className="h-4 w-4 mr-1" />
+                          {selectedPrompt.tags?.length ? `${selectedPrompt.tags.length} tags` : 'Add tags'}
+                      </Button>
+                  }
+              />
+              {isSaving && (
+                  <span className="text-sm text-muted-foreground flex items-center gap-1">
+                      <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
+                      Saving...
+                  </span>
+              )}
+          </div>
             <div className="relative h-full">
                 <MonacoEditor
                     height="100%"

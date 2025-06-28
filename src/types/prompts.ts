@@ -25,11 +25,6 @@ interface PromptChatHistory {
     content: string;
 }
 
-interface PromptTag {
-    id: string;
-    name: string;
-}
-
 export interface Prompt {
     id: string;
     name: string;
@@ -38,7 +33,7 @@ export interface Prompt {
     versions: PromptContent[];   
     notes: PromptNote[];
     chatHistory: PromptChatHistory[];
-    tags?: PromptTag[];
+    tags?: string[]; // Array of tag IDs
     isFavorite: boolean;
     isSynced: boolean;
     metadata: PromptMetadata;
