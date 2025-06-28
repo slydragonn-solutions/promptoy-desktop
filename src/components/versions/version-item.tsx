@@ -16,14 +16,14 @@ export default function VersionItem({ version, isActive, onSelect, onRename, onD
         <li 
             className={`group flex justify-between items-center gap-2 p-2 border rounded-md cursor-pointer transition-colors ${
                 isActive 
-                    ? 'border-blue-500 bg-blue-50' 
+                    ? 'border-blue-200 bg-blue-50' 
                     : 'border-neutral-200 bg-neutral-50 hover:bg-neutral-100'
             }`}
             onClick={() => onSelect(version)}
         >
             <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium truncate">{displayText}</p>
+                    <p className="text-sm font-medium truncate max-w-[200px]">{displayText}</p>
                     <div className="flex items-center gap-1">
                         <button 
                             className="p-1 rounded-full hover:bg-neutral-200 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -49,7 +49,7 @@ export default function VersionItem({ version, isActive, onSelect, onRename, onD
                     {new Date(version.date).toLocaleString()}
                 </p>
             </div>
-            {isActive && <CheckIcon className="w-4 h-4 text-blue-500" />}
+            {isActive && <CheckIcon className="w-4 h-4 text-blue-400" />}
         </li>
     );
 }

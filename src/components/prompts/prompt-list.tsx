@@ -66,7 +66,21 @@ export default function PromptList() {
     ];
     return (
         <section className="flex flex-col gap-2 min-w-72 w-72 h-screen border-r border-r-neutral-200">
-            <p className="mt-2 font-bold text-center">All Prompts</p>
+            <div className="flex justify-between items-center p-2">
+                <p className="mt-2 font-bold text-center">All Prompts</p>
+                <Tooltip>
+                    <TooltipTrigger>
+                        <NewPromptDialog onPromptCreated={getPrompts}>
+                            <Button variant="outline" size="icon">
+                                <Plus className="h-4 w-4" />
+                            </Button>
+                        </NewPromptDialog>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>New Prompt</p>
+                    </TooltipContent>
+                </Tooltip>
+            </div>
             <div className="flex gap-2 p-2">
                 <Input 
                     type="text" 
@@ -95,18 +109,6 @@ export default function PromptList() {
                         ))}
                     </DropdownMenuContent>
                 </DropdownMenu>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <NewPromptDialog onPromptCreated={getPrompts}>
-                            <Button variant="outline" size="icon">
-                                <Plus className="h-4 w-4" />
-                            </Button>
-                        </NewPromptDialog>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>New Prompt</p>
-                    </TooltipContent>
-                </Tooltip>
             </div>
             <div className="flex-1 overflow-y-auto">
                 {isLoading && prompts.length === 0 ? (

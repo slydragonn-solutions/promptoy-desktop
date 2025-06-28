@@ -1,8 +1,8 @@
+import { useEffect, useState } from 'react';
 import { Tag as TagComponent } from '../tags/tag';
 import { Prompt } from "@/types/prompts";
 import { cn } from '@/lib/utils';
-import { useTagsStore } from '@/store/tags-store';
-import { useMemo } from 'react';
+import { useTagsStore, type Tag } from '@/store/tags-store';
 
 interface PromptItemProps {
     prompt: Prompt;
@@ -12,16 +12,30 @@ interface PromptItemProps {
 
 export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemProps) {
     const { name, updatedAt, tags: tagIds = [] } = prompt;
-    const { getTagById } = useTagsStore();
+    const { getTagById, loadTags } = useTagsStore();
     
-    // Get full tag objects for the tag IDs
-    const tags = useMemo(() => {
-        return tagIds
+    const [tags, setTags] = useState<Tag[]>([]);
+
+    // Load tags when component mounts
+    useEffect(() => {
+        loadTags();
+    }, [loadTags]);
+
+    // Update tags when tagIds or getTagById changes
+    useEffect(() => {
+        if (!tagIds || !Array.isArray(tagIds) || tagIds.length === 0) {
+            setTags([]);
+            return;
+        }
+
+        const loadedTags = tagIds
             .map(tagId => {
                 const tag = getTagById(tagId);
-                return tag || null;
+                return tag;
             })
-            .filter((tag): tag is NonNullable<typeof tag> => tag !== null);
+            .filter((tag): tag is Tag => tag !== null && tag !== undefined);
+            
+        setTags(loadedTags);
     }, [tagIds, getTagById]);
 
     // Format date to a more readable format
@@ -49,7 +63,7 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
         >
             <div className="flex flex-col gap-1.5">
                 <div className="flex justify-between items-start gap-2">
-                    <h2 className="font-medium text-sm leading-tight line-clamp-2">
+                    <h2 className="font-medium text-sm truncate max-w-[180px]">
                         {name || 'Untitled Prompt'}
                     </h2>
                     <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">

@@ -31,6 +31,7 @@ export const useVersionManagement = () => {
         updatePrompt(selectedPrompt.id, {
             ...selectedPrompt,
             versions: updatedVersions,
+            updatedAt: new Date().toISOString(),
         });
 
         setNewVersionName('');
@@ -67,6 +68,7 @@ export const useVersionManagement = () => {
         updatePrompt(selectedPrompt.id, {
             ...selectedPrompt,
             versions: newVersions,
+            updatedAt: new Date().toISOString(),
         });
 
         return true;

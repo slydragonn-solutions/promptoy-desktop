@@ -1,6 +1,6 @@
 import { Editor as MonacoEditor, OnChange, OnMount } from "@monaco-editor/react";
 import { Button } from "./ui/button";
-import { EllipsisVerticalIcon, FileTextIcon, TagIcon, Trash2, Star, Tags } from "lucide-react";
+import { EllipsisVerticalIcon, FileTextIcon, Trash2, Tags, Heart } from "lucide-react";
 import { TagSelector } from "./tags/tag-selector";
 import { AIChat } from "./ai-chat";
 import { useEffect, useRef, useState, useCallback } from "react";
@@ -16,6 +16,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "./ui/dialog";
 import { Input } from "./ui/input";
+import { Badge } from "./ui/badge";
 
 export default function Editor() {
   const { selectedPrompt, updatePrompt, removePrompt } = promptsStore();
@@ -50,6 +51,7 @@ export default function Editor() {
         ...updates,
         // Ensure tags is always an array
         tags: updates.tags || selectedPrompt.tags || [],
+        updatedAt: new Date().toISOString(),
       };
       
       await updatePrompt(selectedPrompt.id, updatedPrompt);
@@ -81,6 +83,7 @@ export default function Editor() {
           },
           ...selectedPrompt.versions.slice(1)
         ],
+        updatedAt: now
       });
     } catch (error) {
       console.error('Error saving prompt:', error);
@@ -135,7 +138,6 @@ export default function Editor() {
     
     // Add listener for paste events
     const disposable = editor.onDidPaste(() => {
-      const currentContent = editor.getValue();
       // We can't directly access the pasted text, so we'll check the content length after paste
       // and trim if needed
       setTimeout(() => {
@@ -218,6 +220,11 @@ export default function Editor() {
                         >
                             {selectedPrompt.name}
                         </h1>
+                        {isSaving && (
+                            <Badge>
+                                Saving...
+                            </Badge>
+                        )}
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -227,12 +234,12 @@ export default function Editor() {
                             <Button 
                                 variant="ghost" 
                                 size="icon"
-                                className={selectedPrompt.isFavorite ? "text-yellow-500" : ""}
+                                className={selectedPrompt.isFavorite ? "text-red-400" : ""}
                                 onClick={() => {
                                     handleUpdatePrompt({ isFavorite: !selectedPrompt.isFavorite });
                                 }}
                             >
-                                <Star 
+                                <Heart 
                                     className={`h-4 w-4 ${selectedPrompt.isFavorite ? "fill-current" : ""}`} 
                                 />
                             </Button>
@@ -288,12 +295,6 @@ export default function Editor() {
                       </Button>
                   }
               />
-              {isSaving && (
-                  <span className="text-sm text-muted-foreground flex items-center gap-1">
-                      <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
-                      Saving...
-                  </span>
-              )}
           </div>
             <div className="relative h-full">
                 <MonacoEditor
@@ -309,9 +310,6 @@ export default function Editor() {
                         wordWrap: 'on',
                     }}
                 />
-                <div className="absolute bottom-2 right-2 text-xs bg-background/80 px-2 py-1 rounded text-muted-foreground">
-                    {content?.length.toLocaleString()}/{MAX_CONTENT_LENGTH.toLocaleString()} characters
-                </div>
             </div>
             
             <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center gap-2 p-2 border-t border-t-neutral-200 text-xs text-muted-foreground bg-neutral-50">
@@ -319,9 +317,7 @@ export default function Editor() {
                     <span>Created: {selectedPrompt ? getFormattedDate(selectedPrompt.createdAt) : 'N/A'}</span>
                     <span>Updated: {selectedPrompt ? getFormattedDate(selectedPrompt.updatedAt) : 'N/A'}</span>
                 </div>
-                <div className="flex items-center gap-4">
-                    <span>Characters: {content?.length.toLocaleString()}/{MAX_CONTENT_LENGTH.toLocaleString()}</span>
-                </div>
+                <span>Characters: {content?.length.toLocaleString()}/{MAX_CONTENT_LENGTH.toLocaleString()}</span>
             </div>
 
             {/* Rename Prompt Dialog */}

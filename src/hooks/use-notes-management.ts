@@ -30,6 +30,7 @@ export const useNotesManagement = () => {
         updatePrompt(selectedPrompt.id, {
             ...selectedPrompt,
             notes: updatedNotes,
+            updatedAt: new Date().toISOString(),
         });
 
         setNewNote('');
@@ -46,6 +47,7 @@ export const useNotesManagement = () => {
         updatePrompt(selectedPrompt.id, {
             ...selectedPrompt,
             notes: updatedNotes,
+            updatedAt: new Date().toISOString(),
         });
     }, [updatePrompt]);
 

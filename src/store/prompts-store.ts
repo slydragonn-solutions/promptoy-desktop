@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { Prompt } from "@/types/prompts";
-import { createPrompt, updatePrompt, deletePrompt, loadPrompts as loadPromptsFromFs } from "@/lib/fs";
+import { createPrompt, updatePrompt as updatePromptFromFs, deletePrompt, loadPrompts as loadPromptsFromFs } from "@/lib/fs";
 
 interface PromptsStore {
     prompts: Prompt[];
@@ -48,15 +48,15 @@ export const promptsStore = create<PromptsStore>((set, get) => ({
     updatePrompt: async (id: string, updates: Partial<Omit<Prompt, 'id' | 'createdAt'>>) => {
         set({ isLoading: true, error: null });
         try {
-            const { success, error } = await updatePrompt({ id, ...updates });
+            const { success, error } = await updatePromptFromFs({ id, ...updates });
             
             if (success) {
                 set((state) => ({
                     prompts: state.prompts.map((prompt) =>
-                        prompt.id === id ? { ...prompt, ...updates, updatedAt: new Date().toISOString() } : prompt
+                        prompt.id === id ? { ...prompt, ...updates } : prompt
                     ),
                     selectedPrompt: state.selectedPrompt?.id === id 
-                        ? { ...state.selectedPrompt, ...updates, updatedAt: new Date().toISOString() }
+                        ? { ...state.selectedPrompt, ...updates }
                         : state.selectedPrompt,
                     isLoading: false
                 }));

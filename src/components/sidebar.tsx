@@ -1,4 +1,4 @@
-import { HistoryIcon, TrashIcon, Info, Plus, MessageSquare } from "lucide-react"
+import { HistoryIcon, TrashIcon, Info, Plus, NotebookPen } from "lucide-react"
 import { Button } from "./ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
 import { ScrollArea } from "./ui/scroll-area"
@@ -66,7 +66,7 @@ export default function Sidebar() {
     }
     
     return (
-        <section className="flex flex-col gap-2 min-w-80 w-80 h-screen p-2 border-l border-l-neutral-200 bg-neutral-100">
+        <section className="flex flex-col gap-2 min-w-80 h-full w-80 p-2 border-l border-l-neutral-200 bg-neutral-100">
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
                 <TabsList className="w-full">
                     <TabsTrigger value="versions">Versions</TabsTrigger>
@@ -134,9 +134,9 @@ export default function Sidebar() {
                         </ul>
                     </ScrollArea>
                 </TabsContent>
-                <TabsContent value="notes" className="relative h-full">
-                    <div className="flex flex-col h-full">
-                        <ScrollArea className="h-[calc(100vh-160px)]">
+                <TabsContent value="notes">
+                    <div className="flex flex-col">
+                        <ScrollArea className="h-[calc(100vh-100px)]">
                             <div className="p-4 space-y-4">
                                 {selectedPrompt.notes?.length ? (
                                     [...selectedPrompt.notes]
@@ -150,12 +150,12 @@ export default function Sidebar() {
                                                         </span>
                                                     </div>
                                                     <div className="relative group">
-                                                        <div className="p-3 rounded-lg bg-muted/50 inline-block max-w-[85%]">
-                                                            <p className="text-sm whitespace-pre-wrap">{note.content}</p>
+                                                        <div className="p-3 rounded-lg bg-neutral-50 max-w-[85%]">
+                                                            <p className="text-sm break-all">{note.content}</p>
                                                         </div>
                                                         <button 
                                                             onClick={() => handleDeleteNote(selectedPrompt, note.date)}
-                                                            className="absolute -top-2 -right-2 p-1.5 rounded-full bg-background border shadow-sm opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive hover:text-destructive-foreground"
+                                                            className="absolute -top-2 -right-2 p-1.5 rounded-full bg-background border shadow-sm opacity-0 group-hover:opacity-100 transition-opacity hover:text-destructive"
                                                             aria-label="Delete note"
                                                         >
                                                             <TrashIcon className="w-3 h-3" />
@@ -167,48 +167,46 @@ export default function Sidebar() {
                                 ) : (
                                     <div className="h-full flex flex-col items-center justify-center text-center p-8">
                                         <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                                            <MessageSquare className="w-8 h-8 text-muted-foreground" />
+                                            <NotebookPen className="w-8 h-8 text-muted-foreground" />
                                         </div>
                                         <h3 className="text-lg font-medium mb-1">No notes yet</h3>
                                         <p className="text-sm text-muted-foreground max-w-md">
-                                            Start a conversation. Add your first note below and keep track of your thoughts.
+                                            Add your first note below and keep track of your thoughts.
                                         </p>
                                     </div>
                                 )}
                                 <div ref={notesEndRef} />
                             </div>
                         </ScrollArea>
-                        
-                        <div className="sticky bottom-0 left-0 right-0 bg-background border-t p-4">
-                            <form onSubmit={(e) => {
-                                e.preventDefault();
-                                handleAddNote(selectedPrompt);
-                            }} className="relative">
-                                <Textarea
-                                    value={newNote}
-                                    onChange={(e) => setNewNote(e.target.value)}
-                                    placeholder="Type a note..."
-                                    className="min-h-[44px] max-h-32 pr-12 resize-none"
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter' && !e.shiftKey) {
-                                            e.preventDefault();
-                                            handleAddNote(selectedPrompt);
-                                        }
-                                    }}
-                                    rows={1}
-                                />
-                                <Button 
-                                    type="submit" 
-                                    size="icon" 
-                                    className="absolute right-2 bottom-2 h-8 w-8 rounded-full"
-                                    disabled={!newNote.trim()}
-                                >
-                                    <Plus className="w-4 h-4" />
-                                    <span className="sr-only">Send note</span>
-                                </Button>
-                            </form>
-                        </div>
+                        <form onSubmit={(e) => {
+                            e.preventDefault();
+                            handleAddNote(selectedPrompt);
+                        }} className="relative">
+                            <Textarea
+                                value={newNote}
+                                onChange={(e) => setNewNote(e.target.value)}
+                                placeholder="Type a note..."
+                                className="min-h-[40px] max-h-32 pr-12 resize-none bg-neutral-50"
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                        e.preventDefault();
+                                        handleAddNote(selectedPrompt);
+                                    }
+                                }}
+                                rows={1}
+                            />
+                            <Button 
+                                type="submit" 
+                                size="icon"
+                                className="absolute right-2 top-0 bottom-0 m-auto h-6 w-6 rounded-full"
+                                disabled={!newNote.trim()}
+                            >
+                                <Plus className="w-4 h-4" />
+                                <span className="sr-only">Send note</span>
+                            </Button>
+                        </form>
                     </div>
+                    
                 </TabsContent>
             </Tabs>
         </section>
