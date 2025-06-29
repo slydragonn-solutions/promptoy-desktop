@@ -166,7 +166,7 @@ export function TagSelector({
         
         <PopoverContent className="w-[300px] p-0" align="start">
           <Command>
-            <div className="px-2 py-1.5 border-b">
+            <div className="px-2 py-1.5">
               <CommandInput
                 placeholder="Search or create tag..."
                 value={searchQuery}
@@ -195,7 +195,7 @@ export function TagSelector({
                         onChange([...value, tag.id]);
                         setSearchQuery('');
                       }}
-                      className="cursor-pointer"
+                      className="cursor-pointer text-neutral-600"
                     >
                       <div className="flex items-center gap-2 w-full">
                         <div 

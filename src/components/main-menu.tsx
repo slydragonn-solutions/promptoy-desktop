@@ -13,7 +13,7 @@ export default function MainMenu() {
                 <li>
                     <Tooltip>
                         <TooltipTrigger>
-                            <Button variant="ghost"><HouseIcon /></Button>
+                            <Button variant="ghost" className="rounded-full"><HouseIcon /></Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Home</p>
@@ -23,7 +23,7 @@ export default function MainMenu() {
                 <li>
                     <Tooltip>
                         <TooltipTrigger>
-                            <Button variant="ghost"><SquareChevronRight /></Button>
+                            <Button variant="ghost" className="rounded-full"><SquareChevronRight /></Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>All Prompts</p>
@@ -33,7 +33,7 @@ export default function MainMenu() {
                 <li>
                     <Tooltip>
                         <TooltipTrigger>
-                            <Button variant="ghost"><HeartIcon /></Button>
+                            <Button variant="ghost" className="rounded-full"><HeartIcon /></Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Favorite Prompts</p>
@@ -43,7 +43,7 @@ export default function MainMenu() {
                 <li>
                     <Tooltip>
                         <TooltipTrigger>
-                            <Button variant="ghost"><TagIcon /></Button>
+                            <Button variant="ghost" className="rounded-full"><TagIcon /></Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Tags</p>
@@ -55,7 +55,7 @@ export default function MainMenu() {
                 <li>
                     <Tooltip>
                         <TooltipTrigger>
-                            <Button variant="ghost"><PcCaseIcon /></Button>
+                            <Button variant="ghost" className="rounded-full"><PcCaseIcon /></Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Local Prompts</p>
@@ -65,7 +65,7 @@ export default function MainMenu() {
                 <li>
                     <Tooltip>
                         <TooltipTrigger>
-                            <Button variant="ghost"><CloudUploadIcon /></Button>
+                            <Button variant="ghost" className="rounded-full"><CloudUploadIcon /></Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Backup Prompts</p>
@@ -77,7 +77,7 @@ export default function MainMenu() {
                 <li>
                     <Tooltip>
                         <TooltipTrigger>
-                            <Button variant="ghost"><InfoIcon /></Button>
+                            <Button variant="ghost" className="rounded-full"><InfoIcon /></Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Info</p>
@@ -87,7 +87,7 @@ export default function MainMenu() {
                 <li>
                     <Tooltip>
                         <TooltipTrigger>
-                            <Button variant="ghost"><SettingsIcon /></Button>
+                            <Button variant="ghost" className="rounded-full"><SettingsIcon /></Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Settings</p>

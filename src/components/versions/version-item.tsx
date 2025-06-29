@@ -14,7 +14,7 @@ export default function VersionItem({ version, isActive, onSelect, onRename, onD
 
     return (
         <li 
-            className={`group flex justify-between items-center gap-2 p-2 border rounded-md cursor-pointer transition-colors ${
+            className={`group flex justify-between items-center gap-2 p-2 border rounded-2xl cursor-pointer transition-colors ${
                 isActive 
                     ? 'border-blue-200 bg-blue-50' 
                     : 'border-neutral-200 bg-neutral-50 hover:bg-neutral-100'

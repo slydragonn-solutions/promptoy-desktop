@@ -68,16 +68,16 @@ export default function Sidebar() {
     return (
         <section className="flex flex-col gap-2 min-w-80 h-full w-80 p-2 border-l border-l-neutral-200 bg-neutral-100">
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-                <TabsList className="w-full">
-                    <TabsTrigger value="versions">Versions</TabsTrigger>
-                    <TabsTrigger value="notes">Notes</TabsTrigger>
+                <TabsList className="w-full rounded-full bg-neutral-200/60">
+                    <TabsTrigger value="versions" className="rounded-full text-neutral-600">Versions</TabsTrigger>
+                    <TabsTrigger value="notes" className="rounded-full text-neutral-600">Notes</TabsTrigger>
                 </TabsList>
                 <TabsContent value="versions">
                     <div className="space-y-2">
                         <div className="relative">
                             <Button 
                                 variant="outline" 
-                                className="w-full gap-2"
+                                className="w-full gap-2 rounded-full text-neutral-600"
                                 onClick={handleOpenVersionDialog}
                                 disabled={selectedPrompt.versions.length >= MAX_VERSIONS}
                             >
@@ -186,7 +186,7 @@ export default function Sidebar() {
                                 value={newNote}
                                 onChange={(e) => setNewNote(e.target.value)}
                                 placeholder="Type a note..."
-                                className="min-h-[40px] max-h-32 pr-12 resize-none bg-neutral-50"
+                                className="min-h-[40px] max-h-32 pr-12 resize-none bg-neutral-50 rounded-full"
                                 onKeyDown={(e) => {
                                     if (e.key === 'Enter' && !e.shiftKey) {
                                         e.preventDefault();
