@@ -1,7 +1,7 @@
 import "./App.css";
 import MainMenu from "@/components/main-menu";
 import PromptList from "@/components/prompts/prompt-list";
-import Editor from "@/components/editor";
+import Editor from "@/components/editor/editor";
 import Sidebar from "@/components/sidebar";
 import { Toaster } from "@/components/ui/sonner"
 
