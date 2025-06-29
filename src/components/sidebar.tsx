@@ -1,18 +1,17 @@
-import { HistoryIcon, TrashIcon, Info, Plus, NotebookPen } from "lucide-react"
+import { HistoryIcon, Info } from "lucide-react"
 import { Button } from "./ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
 import { ScrollArea } from "./ui/scroll-area"
-import { Textarea } from "./ui/textarea"
 import { promptsStore } from "@/store/prompts-store"
 import { useVersionRename } from "@/hooks/use-version-rename"
 import { useVersionManagement } from "@/hooks/use-version-management"
-import { useNotesManagement } from "@/hooks/use-notes-management"
 import { useTabs } from "@/hooks/use-tabs"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip"
 import VersionItem from "./versions/version-item"
 import NewVersionDialog from "./versions/new-version-dialog"
 import RenameVersionDialog from "./versions/rename-version-dialog"
 import { MAX_VERSIONS } from "@/constants/prompt"
+import NoteList from "./notes/note-list"
 
 
 
@@ -46,14 +45,6 @@ export default function Sidebar() {
         closeRenameDialog,
     } = useVersionRename();
     
-    // Notes management
-    const {
-        newNote,
-        setNewNote,
-        notesEndRef,
-        handleAddNote,
-        handleDeleteNote,
-    } = useNotesManagement();
     
     if (!selectedPrompt) {
         return (
@@ -135,78 +126,7 @@ export default function Sidebar() {
                     </ScrollArea>
                 </TabsContent>
                 <TabsContent value="notes">
-                    <div className="flex flex-col">
-                        <ScrollArea className="h-[calc(100vh-100px)]">
-                            <div className="p-4 space-y-4">
-                                {selectedPrompt.notes?.length ? (
-                                    [...selectedPrompt.notes]
-                                        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-                                        .map((note) => (
-                                            <div key={note.date} className="flex gap-3 group">
-                                                <div className="flex-1 min-w-0">
-                                                    <div className="flex items-center gap-2 mb-1">
-                                                        <span className="text-xs text-muted-foreground">
-                                                            {new Date(note.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                        </span>
-                                                    </div>
-                                                    <div className="relative group">
-                                                        <div className="p-3 rounded-lg bg-neutral-50 max-w-[85%]">
-                                                            <p className="text-sm break-all">{note.content}</p>
-                                                        </div>
-                                                        <button 
-                                                            onClick={() => handleDeleteNote(selectedPrompt, note.date)}
-                                                            className="absolute -top-2 -right-2 p-1.5 rounded-full bg-background border shadow-sm opacity-0 group-hover:opacity-100 transition-opacity hover:text-destructive"
-                                                            aria-label="Delete note"
-                                                        >
-                                                            <TrashIcon className="w-3 h-3" />
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))
-                                ) : (
-                                    <div className="h-full flex flex-col items-center justify-center text-center p-8">
-                                        <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                                            <NotebookPen className="w-8 h-8 text-muted-foreground" />
-                                        </div>
-                                        <h3 className="text-lg font-medium mb-1">No notes yet</h3>
-                                        <p className="text-sm text-muted-foreground max-w-md">
-                                            Add your first note below and keep track of your thoughts.
-                                        </p>
-                                    </div>
-                                )}
-                                <div ref={notesEndRef} />
-                            </div>
-                        </ScrollArea>
-                        <form onSubmit={(e) => {
-                            e.preventDefault();
-                            handleAddNote(selectedPrompt);
-                        }} className="relative">
-                            <Textarea
-                                value={newNote}
-                                onChange={(e) => setNewNote(e.target.value)}
-                                placeholder="Type a note..."
-                                className="min-h-[40px] max-h-32 pr-12 resize-none bg-neutral-50 rounded-full"
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter' && !e.shiftKey) {
-                                        e.preventDefault();
-                                        handleAddNote(selectedPrompt);
-                                    }
-                                }}
-                                rows={1}
-                            />
-                            <Button 
-                                type="submit" 
-                                size="icon"
-                                className="absolute right-2 top-0 bottom-0 m-auto h-6 w-6 rounded-full"
-                                disabled={!newNote.trim()}
-                            >
-                                <Plus className="w-4 h-4" />
-                                <span className="sr-only">Send note</span>
-                            </Button>
-                        </form>
-                    </div>
-                    
+                    <NoteList />
                 </TabsContent>
             </Tabs>
         </section>
