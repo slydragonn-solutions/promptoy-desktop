@@ -19,7 +19,6 @@ import { ReactNode } from "react";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -120,41 +119,28 @@ export function NewPromptDialog({ onPromptCreated, children }: NewPromptDialogPr
   }, [open, prompts]);
 
   // Handle variable form submission
-  const onVariableSubmit = (data: VariableFormData) => {
-    // Update the selected template with the form data
-    setSelectedTemplate(prev => ({
-      ...prev,
-      variables: data
-    }));
-    
-    // Reset the name form and move to the final step
-    nameForm.reset({ name: '' });
-    setStep(3);
-  };
-
-  // Handle final form submission
-  const onSubmit = async (data: NameFormData) => {
+  const onVariableSubmit = async (data: VariableFormData) => {
     try {
-      let content = "";
+      // Get the template data
+      const template = templates.find(t => t.id === selectedTemplate.templateId);
+      if (!template) throw new Error('Template not found');
       
-      if (creationMethod === 'template' && selectedTemplate.templateId) {
-        // Get the selected template
-        const template = templates.find(t => t.id === selectedTemplate.templateId);
-        if (!template) throw new Error("Template not found");
-        
-        // Replace variables in the template
-        content = template.content;
-        Object.entries(selectedTemplate.variables).forEach(([key, value]) => {
-          content = content.replace(new RegExp(`\\{\\{${key}\\}}`, 'g'), value);
-        });
-      }
+      // Get the name from the form
+      const name = nameForm.getValues('name');
       
+      // Replace variables in the template content
+      let content = template.content;
+      Object.entries(data).forEach(([key, value]) => {
+        content = content.replace(new RegExp(`\\{\\{${key}\\}}`, 'g'), value);
+      });
+      
+      // Create the new prompt
       const newPrompt = {
-        name: data.name,
+        name,
         versions: [{
           date: new Date().toISOString(),
-          name: data.name,
-          content: content
+          name,
+          content
         }],
         notes: [],
         chatHistory: [],
@@ -165,7 +151,45 @@ export function NewPromptDialog({ onPromptCreated, children }: NewPromptDialogPr
       const success = await addPrompt(newPrompt);
       
       if (success) {
-        toast.success(`Prompt "${data.name}" created successfully`);
+        toast.success(`Prompt "${name}" created successfully`);
+        onPromptCreated?.();
+        setOpen(false);
+        // Reset forms
+        nameForm.reset();
+        variableForm.reset();
+        setSelectedTemplate({ templateId: null, variables: {} });
+      } else {
+        throw new Error("Failed to create prompt");
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create prompt';
+      toast.error(errorMessage);
+      console.error("Error creating prompt:", error);
+    }
+  };
+
+
+
+  // Handle blank prompt creation
+  const handleCreateBlankPrompt = async (data: NameFormData) => {
+    try {
+      const newPrompt = {
+        name: data.name,
+        versions: [{
+          date: new Date().toISOString(),
+          name: data.name,
+          content: ''
+        }],
+        notes: [],
+        chatHistory: [],
+        tags: [],
+        isFavorite: false,
+      };
+      
+      const success = await addPrompt(newPrompt);
+      
+      if (success) {
+        toast.success(`Blank prompt "${data.name}" created successfully`);
         onPromptCreated?.();
         setOpen(false);
         nameForm.reset();
@@ -230,7 +254,15 @@ export function NewPromptDialog({ onPromptCreated, children }: NewPromptDialogPr
         <Button 
           type="button" 
           disabled={!creationMethod}
-          onClick={() => creationMethod === 'blank' ? setStep(3) : setStep(2)}
+          onClick={() => {
+            if (creationMethod === 'blank') {
+              // For blank prompt, show the name input directly
+              setStep(2);
+            } else {
+              // For template, go to template selection
+              setStep(2);
+            }
+          }}
         >
           Continue
         </Button>
@@ -248,6 +280,9 @@ export function NewPromptDialog({ onPromptCreated, children }: NewPromptDialogPr
       return acc;
     }, {} as Record<string, string>);
     
+    // Set initial name based on template name
+    nameForm.setValue('name', `Copy of ${template.name}`);
+    
     setSelectedTemplate({
       templateId,
       variables: initialValues
@@ -256,100 +291,30 @@ export function NewPromptDialog({ onPromptCreated, children }: NewPromptDialogPr
     variableForm.reset(initialValues);
   };
 
-  // Render step 2: Template selection
-  const renderStep2 = () => (
-    <div className="space-y-6">
-      <DialogHeader>
-        <DialogTitle>Select a Template</DialogTitle>
-        <DialogDescription>
-          Choose a template to use as a starting point for your prompt.
-        </DialogDescription>
-      </DialogHeader>
-      
-      {templates.length === 0 ? (
-        <div className="text-center py-8">
-          <p className="text-muted-foreground">No templates found. Create some prompts with variables first.</p>
-          <Button 
-            variant="outline" 
-            className="mt-4"
-            onClick={() => setStep(1)}
-          >
-            Back
-          </Button>
-        </div>
-      ) : (
-        <ScrollArea className="h-[300px] pr-4">
-          <div className="space-y-2">
-            {templates.map((template) => (
-              <Card 
-                key={template.id}
-                className={`cursor-pointer transition-colors hover:bg-accent ${selectedTemplate.templateId === template.id ? 'border-primary' : ''}`}
-                onClick={() => {
-                  handleTemplateClick(template.id);
-                }}
-              >
-                <CardHeader>
-                  <CardTitle>{template.name}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground line-clamp-2">
-                    {template.content.replace(/\{\{[^}]*\}\}/g, '[variable]')}
-                  </p>
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    {template.variables.map((variable) => (
-                      <span key={variable} className="text-xs bg-muted rounded px-2 py-1">
-                        {variable}
-                      </span>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </ScrollArea>
-      )}
-      
-      <DialogFooter>
-        <Button 
-          type="button" 
-          variant="outline" 
-          onClick={() => setStep(1)}
-        >
-          Back
-        </Button>
-      </DialogFooter>
-    </div>
-  );
-
-  // Render step 2.5: Variable input
-  const renderVariableInputs = () => {
-    if (!selectedTemplate.templateId) return null;
-    
-    const template = templates.find(t => t.id === selectedTemplate.templateId);
-    if (!template) return null;
-    
-    return (
-      <Form {...variableForm}>
-        <form onSubmit={variableForm.handleSubmit(onVariableSubmit)} className="space-y-6">
+  // Render step 2: Template selection or blank prompt name
+  const renderStep2 = () => {
+    // If creating a blank prompt, show the name input
+    if (creationMethod === 'blank') {
+      return (
+        <div className="space-y-6">
           <DialogHeader>
-            <DialogTitle>Fill in Template Variables</DialogTitle>
+            <DialogTitle>Name Your Blank Prompt</DialogTitle>
             <DialogDescription>
-              Provide values for all the variables in the template.
+              Enter a name for your new blank prompt.
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-4">
-            {template.variables.map((variable) => (
+          <Form {...nameForm}>
+            <form onSubmit={nameForm.handleSubmit(handleCreateBlankPrompt)} className="space-y-6">
               <FormField
-                key={variable}
-                control={variableForm.control}
-                name={variable}
+                control={nameForm.control}
+                name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{variable}</FormLabel>
+                    <FormLabel>Prompt Name</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder={`Enter ${variable}`}
+                      <Input 
+                        placeholder="My Awesome Prompt"
                         {...field}
                       />
                     </FormControl>
@@ -357,108 +322,193 @@ export function NewPromptDialog({ onPromptCreated, children }: NewPromptDialogPr
                   </FormItem>
                 )}
               />
-            ))}
-          </div>
+              
+              <DialogFooter>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setStep(1)}
+                  disabled={nameForm.formState.isSubmitting}
+                >
+                  Back
+                </Button>
+                <Button 
+                  type="submit"
+                  disabled={nameForm.formState.isSubmitting}
+                >
+                  {nameForm.formState.isSubmitting ? 'Creating...' : 'Create Prompt'}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </div>
+      );
+    }
+
+    // If we get here, we're working with templates
+    const selectedTemplateData = selectedTemplate.templateId
+      ? templates.find(t => t.id === selectedTemplate.templateId)
+      : null;
+
+    if (!selectedTemplateData) {
+      return (
+        <div className="space-y-6">
+          <DialogHeader>
+            <DialogTitle>Select a Template</DialogTitle>
+            <DialogDescription>
+              Choose a template to use as a starting point for your prompt.
+            </DialogDescription>
+          </DialogHeader>
+          
+          {templates.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">No templates found. Create some prompts with variables first.</p>
+              <Button 
+                variant="outline" 
+                className="mt-4"
+                onClick={() => setStep(1)}
+              >
+                Back
+              </Button>
+            </div>
+          ) : (
+            <ScrollArea className="h-[300px] pr-4">
+              <div className="space-y-2">
+                {templates.map((template) => (
+                  <Card 
+                    key={template.id}
+                    className="cursor-pointer transition-colors hover:bg-accent"
+                    onClick={() => handleTemplateClick(template.id)}
+                  >
+                    <CardHeader>
+                      <CardTitle>{template.name}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground line-clamp-2">
+                        {template.content.replace(/\{\{[^}]*\}\}/g, '[variable]')}
+                      </p>
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {template.variables.map((variable) => (
+                          <span key={variable} className="text-xs bg-muted rounded px-2 py-1">
+                            {variable}
+                          </span>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </ScrollArea>
+          )}
           
           <DialogFooter>
             <Button 
               type="button" 
               variant="outline" 
-              onClick={() => {
-                setStep(2);
-                setSelectedTemplate({ templateId: null, variables: {} });
-              }}
-              disabled={variableForm.formState.isSubmitting}
+              onClick={() => setStep(1)}
             >
               Back
             </Button>
-            <Button 
-              type="submit"
-              disabled={variableForm.formState.isSubmitting}
-            >
-              {variableForm.formState.isSubmitting ? 'Saving...' : 'Continue'}
-            </Button>
           </DialogFooter>
-        </form>
-      </Form>
-    );
-  };
+        </div>
+      );
+    }
 
-  // Render step 3: Name prompt
-  const renderNamePrompt = () => (
-    <Form {...nameForm}>
-      <form onSubmit={nameForm.handleSubmit(onSubmit)} className="space-y-6">
+    // Show template content and variables side by side
+    return (
+      <div className="space-y-6">
         <DialogHeader>
-          <DialogTitle>Name Your Prompt</DialogTitle>
+          <DialogTitle>Customize Template</DialogTitle>
           <DialogDescription>
-            Enter a name for your new prompt.
+            Fill in the variables for your template
           </DialogDescription>
         </DialogHeader>
 
-        <FormField
-          control={nameForm.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <Input 
-                    placeholder="My Awesome Prompt" 
-                    {...field} 
-                    disabled={nameForm.formState.isSubmitting}
-                    className="pr-16"
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Left side: Template content */}
+          <div className="space-y-4">
+            <h3 className="font-medium">Template Preview</h3>
+            <div className="p-4 border rounded-md bg-muted/20 h-[200px] overflow-auto">
+              <pre className="whitespace-pre-wrap text-sm">
+                {selectedTemplateData.content}
+              </pre>
+            </div>
+          </div>
+          
+          {/* Right side: Variables form */}
+          <div className="space-y-4">
+            <h3 className="font-medium">Template Variables</h3>
+            <Form {...variableForm}>
+              <form className="space-y-4">
+                <FormField
+                  control={nameForm.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Prompt Name</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Enter prompt name"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                {selectedTemplateData.variables.map((variable) => (
+                  <FormField
+                    key={variable}
+                    control={variableForm.control}
+                    name={variable}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{variable}</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder={`Enter ${variable}`}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                  <div className={`absolute right-2 top-1/2 -translate-y-1/2 text-xs ${field.value?.length > 45 ? 'text-destructive' : 'text-muted-foreground'}`}>
-                    {field.value?.length || 0}/50
-                  </div>
-                </div>
-              </FormControl>
-              <FormDescription>
-                This will be the display name for your prompt
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <DialogFooter>
+                ))}
+              </form>
+            </Form>
+          </div>
+        </div>
+        <DialogFooter className="pt-4">
           <Button 
             type="button" 
             variant="outline" 
             onClick={() => {
-              if (creationMethod === 'template') {
-                setStep(2);
-              } else {
-                setStep(1);
-              }
+              setSelectedTemplate({ templateId: null, variables: {} });
+              variableForm.reset();
             }}
-            disabled={nameForm.formState.isSubmitting}
           >
-            Back
+            Back to Templates
           </Button>
           <Button 
-            type="submit" 
-            disabled={nameForm.formState.isSubmitting}
+            type="submit"
+            disabled={variableForm.formState.isSubmitting}
+            onClick={variableForm.handleSubmit(onVariableSubmit)}
           >
-            {nameForm.formState.isSubmitting ? 'Creating...' : 'Create Prompt'}
+            {variableForm.formState.isSubmitting ? 'Creating...' : 'Create Prompt'}
           </Button>
         </DialogFooter>
-      </form>
-    </Form>
-  );
+      </div>
+    );
+  };
+
+
 
   // Main render function
   const renderContent = () => {
     if (step === 1) return renderStep1();
-    if (step === 2) {
-      // If we're coming from step 1 with template selected, show variable inputs
-      if (creationMethod === 'template' && selectedTemplate.templateId) {
-        return renderVariableInputs();
-      }
-      return renderStep2();
-    }
-    if (step === 3) return renderNamePrompt();
+    if (step === 2) return renderStep2();
     return null;
   };
 
@@ -467,7 +517,7 @@ export function NewPromptDialog({ onPromptCreated, children }: NewPromptDialogPr
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="w-[800px]">
         {renderContent()}
       </DialogContent>
     </Dialog>
