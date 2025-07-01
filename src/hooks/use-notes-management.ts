@@ -1,5 +1,6 @@
 import { useCallback, useRef, useEffect, useState } from 'react';
 import { promptsStore } from '@/store/prompts-store';
+import { toast } from 'sonner';
 
 export const useNotesManagement = () => {
     const { updatePrompt } = promptsStore();
@@ -17,13 +18,26 @@ export const useNotesManagement = () => {
     const handleAddNote = useCallback((selectedPrompt: any) => {
         if (!newNote.trim() || !selectedPrompt) return;
 
+        // Validate note length
+        if (newNote.length > 500) {
+            toast.error('Note is too long. Maximum 500 characters allowed.');
+            return;
+        }
+
+        // Validate max notes per prompt
+        const currentNotes = selectedPrompt.notes || [];
+        if (currentNotes.length >= 100) {
+            toast.error('Maximum limit of 100 notes per prompt reached.');
+            return;
+        }
+
         const newNoteObj = {
             content: newNote.trim(),
             date: new Date().toISOString(),
         };
 
         const updatedNotes = [
-            ...(selectedPrompt.notes || []),
+            ...currentNotes,
             newNoteObj
         ];
 
