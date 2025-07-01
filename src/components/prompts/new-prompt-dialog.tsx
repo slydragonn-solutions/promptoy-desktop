@@ -104,11 +104,17 @@ export function NewPromptDialog({ onPromptCreated, children }: NewPromptDialogPr
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input 
-                      placeholder="My Awesome Prompt" 
-                      {...field} 
-                      disabled={form.formState.isSubmitting} 
-                    />
+                    <div className="relative">
+                      <Input 
+                        placeholder="My Awesome Prompt" 
+                        {...field} 
+                        disabled={form.formState.isSubmitting}
+                        className="pr-16"
+                      />
+                      <div className={`absolute right-2 top-1/2 -translate-y-1/2 text-xs ${field.value?.length > 45 ? 'text-destructive' : 'text-muted-foreground'}`}>
+                        {field.value?.length || 0}/50
+                      </div>
+                    </div>
                   </FormControl>
                   <FormDescription>
                     This will be the display name for your prompt
