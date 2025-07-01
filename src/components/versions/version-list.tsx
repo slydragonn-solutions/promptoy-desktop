@@ -1,3 +1,4 @@
+import { PromptContent } from "@/types/prompts";
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -11,8 +12,15 @@ import { promptsStore } from "@/store/prompts-store"
 import { useVersionManagement } from "@/hooks/use-version-management"
 import { useVersionRename } from "@/hooks/use-version-rename"
 
-export default function VersionList() {
+
+interface VersionListProps {
+    onCompareVersion?: (version: PromptContent) => void;
+    isComparing?: boolean;
+}
+
+export default function VersionList({ onCompareVersion, isComparing = false }: VersionListProps) {
     const { selectedPrompt } = promptsStore();
+    const currentVersion = selectedPrompt?.versions?.[0]; // Most recent version is the current one
     
     // Version management
     const {
@@ -88,10 +96,13 @@ export default function VersionList() {
                         <VersionItem
                             key={version.date}
                             version={version}
-                            isActive={version.date === selectedPrompt.versions[0]?.date}
+                            isCurrentVersion={version.date === currentVersion?.date}
+                            isActive={!isComparing && version.date === selectedPrompt.versions[0]?.date}
                             onSelect={(version) => selectedPrompt && handleSelectVersion(selectedPrompt, version)}
                             onDelete={(version) => selectedPrompt && handleDeleteVersion(selectedPrompt, version)}
                             onRename={handleRenameVersion}
+                            onCompare={onCompareVersion}
+                            isComparing={isComparing}
                         />
                     ))}
                     <RenameVersionDialog

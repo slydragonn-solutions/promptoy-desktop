@@ -15,9 +15,24 @@ import { Input } from "../ui/input";
 import EditorFooter from "./editor-footer";
 import EditorNotFound from "./editor-not-found";
 import EditorHeader from "./editor-header";
+import { DiffEditor } from "./diff-editor";
 
-export default function Editor() {
+interface EditorProps {
+  isComparing: boolean;
+  compareVersion: {
+    content: string;
+    date: string;
+    name?: string;
+  } | null;
+  onCloseCompare: () => void;
+}
+
+export default function Editor({ isComparing, compareVersion, onCloseCompare }: EditorProps) {
   const { selectedPrompt } = promptsStore();
+  
+  // Get the current version (most recent one)
+  const currentVersion = selectedPrompt?.versions?.[0];
+
   const {
     content,
     isSaving,
@@ -34,6 +49,8 @@ export default function Editor() {
     handleCopyToClipboard,
     handleDeletePrompt,
   } = useEditor(selectedPrompt);
+
+
 
   if (!selectedPrompt) {
     return <EditorNotFound />;
@@ -81,24 +98,38 @@ export default function Editor() {
 
       {/* Editor */}
       <div className="relative h-full">
-        <MonacoEditor
-          height="calc(100vh - 200px)"
-          defaultLanguage="markdown"
-          value={content}
-          onChange={handleEditorChange}
-          onMount={handleEditorDidMount}
-          options={{
-            minimap: { enabled: false },
-            fontSize: 14,
-            wordWrap: "on",
-            automaticLayout: true,
-            padding: { top: 16 },
-          }}
-        />
+        {isComparing && compareVersion ? (
+          <div className="h-full border rounded-md overflow-hidden">
+            <DiffEditor
+              original={compareVersion.content}
+              modified={content}
+              originalTitle={`${compareVersion.name || 'Version'} (${new Date(compareVersion.date).toLocaleString()})`}
+              modifiedTitle={`${currentVersion?.name || 'Current Version'} (${new Date(currentVersion?.date || selectedPrompt?.updatedAt).toLocaleString()})`}
+              onClose={onCloseCompare}
+            />
+          </div>
+        ) : (
+          <MonacoEditor
+            height="calc(100vh - 200px)"
+            defaultLanguage="markdown"
+            value={content}
+            onChange={handleEditorChange}
+            onMount={handleEditorDidMount}
+            options={{
+              minimap: { enabled: false },
+              fontSize: 14,
+              wordWrap: "on",
+              automaticLayout: true,
+              padding: { top: 16 },
+            }}
+          />
+        )}
       </div>
 
       {/* Footer */}
       <EditorFooter selectedPrompt={selectedPrompt} content={content} />
+
+
 
       {/* Rename Prompt Dialog */}
       <Dialog open={isRenameDialogOpen} onOpenChange={setIsRenameDialogOpen}>

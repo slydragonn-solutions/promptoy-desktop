@@ -3,9 +3,14 @@ import { promptsStore } from "@/store/prompts-store"
 import { useTabs } from "@/hooks/use-tabs"
 import NoteList from "./notes/note-list"
 import VersionList from "./versions/version-list"
+import { PromptContent } from "@/types/prompts"
 
+interface SidebarProps {
+  onCompareVersion?: (version: PromptContent) => void;
+  isComparing?: boolean;
+}
 
-export default function Sidebar() {
+export default function Sidebar({ onCompareVersion, isComparing = false }: SidebarProps) {
     const { selectedPrompt } = promptsStore();
     
     // Tabs management
@@ -30,7 +35,10 @@ export default function Sidebar() {
                     <TabsTrigger value="notes" className="rounded-full text-neutral-600">Notes</TabsTrigger>
                 </TabsList>
                 <TabsContent value="versions">
-                    <VersionList />
+                    <VersionList 
+                      onCompareVersion={onCompareVersion}
+                      isComparing={isComparing}
+                    />
                 </TabsContent>
                 <TabsContent value="notes">
                     <NoteList />
