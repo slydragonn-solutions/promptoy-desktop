@@ -1,14 +1,3 @@
-interface PromptTemplate {
-    id: string;
-    name: string;
-}
-
-export interface PromptMetadata {
-    type?: "blank" | "template" | "layout" | "human-lang";
-    layout?: string;
-    template?: PromptTemplate;
-}
-
 export interface PromptContent {
     date: string;
     name?: string;
@@ -36,5 +25,4 @@ export interface Prompt {
     tags?: string[]; // Array of tag IDs
     isFavorite: boolean;
     isSynced: boolean;
-    metadata: PromptMetadata;
 }

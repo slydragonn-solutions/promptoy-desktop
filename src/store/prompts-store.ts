@@ -122,7 +122,6 @@ export const promptsStore = create<PromptsStore>((set, get) => ({
                 notes: newPrompt.notes || [],
                 chatHistory: newPrompt.chatHistory || [],
                 tags: newPrompt.tags || [],
-                metadata: newPrompt.metadata || { type: 'blank' },
                 isFavorite: newPrompt.isFavorite || false
             };
 
