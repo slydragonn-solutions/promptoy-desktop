@@ -1,4 +1,4 @@
-import { X } from 'lucide-react';
+import { X, Pencil } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TagColorScheme, getTagColorClasses } from '@/constants/tags';
 
@@ -8,6 +8,7 @@ export interface TagProps {
   className?: string;
   onRemove?: (e: React.MouseEvent) => void;
   onClick?: (e: React.MouseEvent) => void;
+  showEditButton?: boolean;
 }
 
 export function Tag({ 
@@ -15,7 +16,8 @@ export function Tag({
   color, 
   className, 
   onRemove, 
-  onClick 
+  onClick,
+  showEditButton = false
 }: TagProps) {
   // If color is a string (legacy support) or undefined, use default gray
   const colorClasses = typeof color === 'object' && color !== null 
@@ -33,19 +35,33 @@ export function Tag({
       )}
       onClick={onClick}
     >
-      {name}
-      {onRemove && (
-        <button
-          type="button"
-          className="ml-0.5 -mr-1 rounded-full p-0.5 hover:bg-black/10 dark:hover:bg-white/20"
-          onClick={(e) => {
-            e.stopPropagation();
-            onRemove(e);
-          }}
-        >
-          <X className="h-3 w-3" />
-        </button>
-      )}
+      <span className="truncate">{name}</span>
+      <div className="flex items-center">
+        {showEditButton && onClick && (
+          <button
+            type="button"
+            className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 rounded-full hover:bg-black/10 dark:hover:bg-white/20"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClick(e);
+            }}
+          >
+            <Pencil className="h-3 w-3" />
+          </button>
+        )}
+        {onRemove && (
+          <button
+            type="button"
+            className="ml-0.5 -mr-1 rounded-full p-0.5 hover:bg-black/10 dark:hover:bg-white/20"
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemove(e);
+            }}
+          >
+            <X className="h-3 w-3" />
+          </button>
+        )}
+      </div>
     </div>
   );
 }

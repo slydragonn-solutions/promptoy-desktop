@@ -3,6 +3,7 @@ import { Tag as TagComponent } from '../tags/tag';
 import { Prompt } from "@/types/prompts";
 import { cn } from '@/lib/utils';
 import { useTagsStore, type Tag } from '@/store/tags-store';
+import type { TagColorScheme } from '@/constants/tags';
 
 interface PromptItemProps {
     prompt: Prompt;
@@ -21,7 +22,7 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
         loadTags();
     }, [loadTags]);
 
-    // Update tags when tagIds or getTagById changes
+    // Update tags when tagIds, getTagById, or tags store changes
     useEffect(() => {
         if (!tagIds || !Array.isArray(tagIds) || tagIds.length === 0) {
             setTags([]);
@@ -29,14 +30,11 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
         }
 
         const loadedTags = tagIds
-            .map(tagId => {
-                const tag = getTagById(tagId);
-                return tag;
-            })
-            .filter((tag): tag is Tag => tag !== null && tag !== undefined);
+            .map(tagId => getTagById(tagId))
+            .filter((tag): tag is Tag => tag !== null);
             
         setTags(loadedTags);
-    }, [tagIds, getTagById]);
+    }, [tagIds, getTagById, useTagsStore.getState().tags]);
 
     // Format date to a more readable format
     const formatDate = (dateString: string) => {
@@ -73,7 +71,7 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
                 
                 {tags.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mt-1">
-                        {tags.slice(0, 3).map(tag => (
+                        {tags.slice(0, 3).map(tag => tag && (
                             <TagComponent
                                 key={tag.id}
                                 name={tag.name}

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { Prompt } from "@/types/prompts";
 import { TagColorScheme, getRandomTagColor } from "@/constants/tags";
+import { promptsStore } from "./prompts-store";
 
 export interface Tag {
   id: string;
@@ -119,8 +120,21 @@ export const useTagsStore = create<TagsStore>((set, get) => ({
     }
   },
 
-  removeTag: (id) => {
+  removeTag: (id: string) => {
     try {
+      // First get all prompts that have this tag
+      const { prompts, updatePrompt } = promptsStore.getState();
+      const promptsToUpdate = prompts.filter((prompt: Prompt) => 
+        prompt.tags && prompt.tags.includes(id)
+      );
+
+      // Remove the tag from each prompt
+      promptsToUpdate.forEach((prompt: Prompt) => {
+        const updatedTags = prompt.tags?.filter((tagId: string) => tagId !== id) || [];
+        updatePrompt(prompt.id, { tags: updatedTags });
+      });
+
+      // Then remove the tag from the tags store
       set((state) => {
         const updatedTags = state.tags.filter((tag) => tag.id !== id);
         saveTagsToStorage(updatedTags);
