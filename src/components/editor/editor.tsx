@@ -4,6 +4,8 @@ import { Tags } from "lucide-react";
 import { TagSelector } from "../tags/tag-selector";
 import { useEditor } from "@/hooks/use-editor";
 import { promptsStore } from "@/store/prompts-store";
+import { useRef } from "react";
+import { MarkdownToolbar } from "./markdown-toolbar";
 import {
   Dialog,
   DialogContent,
@@ -33,22 +35,28 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
   // Get the current version (most recent one)
   const currentVersion = selectedPrompt?.versions?.[0];
 
+  const editorRef = useRef(null);
+  
   const {
     content,
     isSaving,
     isRenameDialogOpen,
     newName,
-    editorRef: _editorRef,
     setNewName,
     setIsRenameDialogOpen,
     handleEditorChange,
-    handleEditorDidMount,
+    handleEditorDidMount: originalHandleEditorDidMount,
     handleUpdatePrompt,
     handleRename,
     handleKeyDown,
     handleCopyToClipboard,
     handleDeletePrompt,
   } = useEditor(selectedPrompt);
+
+  const handleEditorDidMount = (editor: any, monaco: any) => {
+    editorRef.current = editor;
+    originalHandleEditorDidMount(editor);
+  };
 
 
 
@@ -97,7 +105,13 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
       </div>
 
       {/* Editor */}
-      <div className="relative h-full">
+      <div className="relative h-full border rounded-md overflow-hidden">
+        {!isComparing && (
+          <MarkdownToolbar 
+            editorRef={editorRef} 
+            onCopy={handleCopyToClipboard} 
+          />
+        )}
         {isComparing && compareVersion ? (
           <div className="h-full border rounded-md overflow-hidden">
             <DiffEditor
@@ -116,7 +130,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
             options={{
-              minimap: { enabled: false },
+              minimap: { enabled: true },
               fontSize: 14,
               wordWrap: "on",
               automaticLayout: true,
