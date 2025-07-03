@@ -8,7 +8,6 @@ import {
     Heart,
 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { AIChat } from "@/components/ai-chat";
 
 interface EditorHeaderProps {
     promptName: string;
@@ -47,12 +46,12 @@ export default function EditorHeader({
             {isSaving && <Badge>Saving...</Badge>}
           </div>
         </div>
-        <div className="flex items-center gap-2 rounded-full bg-neutral-50 text-neutral-600 shadow-lg">
+        <div className="flex items-center gap-2">
             <>
               <Button
                 variant="ghost"
                 size="icon"
-                className={`rounded-full ${isFavorite ? "text-red-300" : ""}`}
+                className={`rounded-full bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg ${isFavorite ? "text-red-300" : ""}`}
                 onClick={() => {
                   handleUpdatePrompt({
                     isFavorite: !isFavorite,
@@ -63,10 +62,9 @@ export default function EditorHeader({
                   className={`h-4 w-4 ${isFavorite ? "fill-current" : ""}`}
                 />
               </Button>
-              <AIChat />
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <Button variant="ghost" size="icon" className="rounded-full">
+                  <Button variant="ghost" size="icon" className="rounded-full bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg">
                     <EllipsisVerticalIcon className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
