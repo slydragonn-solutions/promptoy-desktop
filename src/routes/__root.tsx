@@ -15,7 +15,7 @@ export const Route = createRootRoute({
             <nav className="flex flex-col h-screen items-center justify-between gap-2 p-2 bg-neutral-900 text-neutral-400">
                 <ul className="flex flex-col gap-2">
                     <li>
-                        <Link to="/" className="[&.active]:text-orange-500">
+                        <Link to="/" className="[&.active]:text-neutral-50">
                         <Tooltip>
                             <TooltipTrigger>
                                 <Button variant="ghost" size="icon" className="rounded-full"><HouseIcon /></Button>
@@ -27,10 +27,10 @@ export const Route = createRootRoute({
                         </Link>
                     </li>
                     <li>
-                        <Link to="/all" className="[&.active]:text-orange-500">
+                        <Link to="/all" className="[&.active]:text-neutral-50">
                         <Tooltip>
                             <TooltipTrigger>
-                                <Button variant="ghost" size="icon" className="rounded-full text-neutral-50 bg-neutral-800"><SquareChevronRight /></Button>
+                                <Button variant="ghost" size="icon" className="rounded-full"><SquareChevronRight /></Button>
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>All Prompts</p>
@@ -39,7 +39,7 @@ export const Route = createRootRoute({
                         </Link>
                     </li>
                     <li>
-                        <Link to="/favorites" className="[&.active]:text-orange-500">
+                        <Link to="/favorites" className="[&.active]:text-neutral-50">
                         <Tooltip>
                             <TooltipTrigger>
                                 <Button variant="ghost" size="icon" className="rounded-full"><HeartIcon /></Button>
@@ -51,7 +51,7 @@ export const Route = createRootRoute({
                         </Link>
                     </li>
                     <li>
-                        <Link to="/tags" className="[&.active]:text-orange-500">
+                        <Link to="/tags" className="[&.active]:text-neutral-50">
                         <Tooltip>
                             <TooltipTrigger>
                                 <Button variant="ghost" size="icon" className="rounded-full"><TagIcon /></Button>
@@ -63,9 +63,9 @@ export const Route = createRootRoute({
                         </Link>
                     </li>
                 </ul>
-                <ul className="flex flex-col gap-2">
+                <ul className="flex flex-col gap-4">
                     <li>
-                        <Link to="/local" className="[&.active]:text-orange-500">
+                        <Link to="/local" className="[&.active]:text-neutral-50">
                         <Tooltip>
                             <TooltipTrigger>
                                 <Button variant="ghost" size="icon" className="rounded-full"><PcCaseIcon /></Button>
@@ -77,7 +77,7 @@ export const Route = createRootRoute({
                         </Link>
                     </li>
                     <li>
-                        <Link to="/backup" className="[&.active]:text-orange-500">
+                        <Link to="/backup" className="[&.active]:text-neutral-50">
                         <Tooltip>
                             <TooltipTrigger>
                                 <Button variant="ghost" size="icon" className="rounded-full"><CloudUploadIcon /></Button>
@@ -91,7 +91,7 @@ export const Route = createRootRoute({
                 </ul>
                 <ul className="flex flex-col gap-2">
                     <li>
-                        <Link to="/info" className="[&.active]:text-orange-500">
+                        <Link to="/info" className="[&.active]:text-neutral-50">
                         <Tooltip>
                             <TooltipTrigger>
                                 <Button variant="ghost" size="icon" className="rounded-full"><InfoIcon /></Button>
@@ -103,7 +103,7 @@ export const Route = createRootRoute({
                         </Link>
                     </li>
                     <li>
-                        <Link to="/settings" className="[&.active]:text-orange-500">
+                        <Link to="/settings" className="[&.active]:text-neutral-50">
                         <Tooltip>
                             <TooltipTrigger>
                                 <Button variant="ghost" size="icon" className="rounded-full"><SettingsIcon /></Button>

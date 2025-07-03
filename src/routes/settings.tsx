@@ -1,15 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 
-export const Route = createFileRoute("/")({
-  component: Index,
+export const Route = createFileRoute("/settings")({
+  component: Settings,
 })
 
-function Index() {
+function Settings() {
 
   return (
     <div className="flex h-screen w-full items-center justify-center">
-     Dashboard
+     Settings
     </div>
   )
 }
