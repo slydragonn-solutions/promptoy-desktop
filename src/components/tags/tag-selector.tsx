@@ -319,7 +319,6 @@ export function TagSelector({
           </div>
         </ScrollArea>
       </div>
-      {renderDeleteDialog()}
     </div>
   );
 
@@ -469,6 +468,7 @@ export function TagSelector({
           ))}
         </div>
       )}
+      {renderDeleteDialog()}
     </div>
   );
 }
