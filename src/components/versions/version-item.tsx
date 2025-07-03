@@ -29,7 +29,7 @@ export default function VersionItem({
       className={`group flex items-center justify-between p-2 rounded-lg border border-neutral-200 cursor-pointer hover:bg-neutral-100 ${
         isActive ? 'bg-neutral-100' : ''
       }`}
-      onClick={() => onSelect(version)}
+      onClick={isComparing ? undefined : () => onSelect(version)}
     >
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between">
