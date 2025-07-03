@@ -1,15 +1,20 @@
-import "./App.css";
+import { createFileRoute } from '@tanstack/react-router'
 import PromptList from "@/components/prompts/prompt-list";
 import Editor from "@/components/editor/editor";
 import Sidebar from "@/components/editor/sidebar";
 import { Toaster } from "@/components/ui/sonner"
 import { useVersionComparison } from "@/hooks/use-version-comparison";
 
-function App() {
+
+export const Route = createFileRoute("/")({
+  component: Index,
+})
+
+function Index() {
   const versionComparison = useVersionComparison();
 
   return (
-    <main className="flex h-screen items-center justify-center">
+    <>
       <PromptList />
       <Editor 
         isComparing={versionComparison.isComparing}
@@ -21,8 +26,6 @@ function App() {
         isComparing={versionComparison.isComparing}
       />
       <Toaster />
-    </main>
+    </>
   )
 }
-
-export default App
