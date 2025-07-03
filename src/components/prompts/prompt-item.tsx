@@ -3,7 +3,6 @@ import { Tag as TagComponent } from '../tags/tag';
 import { Prompt } from "@/types/prompts";
 import { cn } from '@/lib/utils';
 import { useTagsStore, type Tag } from '@/store/tags-store';
-import type { TagColorScheme } from '@/constants/tags';
 
 interface PromptItemProps {
     prompt: Prompt;
@@ -55,7 +54,7 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
             className={cn(
                 'flex flex-col p-3 border-b border-border cursor-pointer transition-colors',
                 'hover:bg-neutral-100',
-                isSelected && 'bg-blue-50 hover:bg-blue-50',
+                isSelected && 'bg-neutral-100 hover:bg-neutral-100 border-l-4 border-l-neutral-600',
             )}
             onClick={() => onSelect(prompt)}
         >

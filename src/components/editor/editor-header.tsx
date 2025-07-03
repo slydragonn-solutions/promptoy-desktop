@@ -32,11 +32,11 @@ export default function EditorHeader({
     handleDeletePrompt,
 }: EditorHeaderProps) {
     return (
-        <div className="flex justify-between items-center">
+      <div className="flex justify-between items-start">
         <div className="flex flex-col gap-2 flex-1">
           <div className="flex items-center gap-2">
             <h1
-              className="font-bold text-xl cursor-text hover:bg-accent/50 px-2 py-1 rounded-md"
+              className="font-semibold text-xl cursor-text text-neutral-800 hover:text-neutral-600 px-2 py-1 rounded-md"
               onClick={() => {
                 setNewName(promptName);
                 setIsRenameDialogOpen(true);
@@ -47,7 +47,7 @@ export default function EditorHeader({
             {isSaving && <Badge>Saving...</Badge>}
           </div>
         </div>
-        <div className="flex items-center gap-2 rounded-full bg-neutral-200/60 text-neutral-600">
+        <div className="flex items-center gap-2 rounded-full bg-neutral-50 text-neutral-600 shadow-lg">
             <>
               <Button
                 variant="ghost"

@@ -105,7 +105,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
       </div>
 
       {/* Editor */}
-      <div className="relative h-full border rounded-md overflow-hidden">
+      <div className="relative h-full">
         {!isComparing && (
           <MarkdownToolbar 
             editorRef={editorRef} 

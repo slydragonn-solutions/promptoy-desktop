@@ -26,8 +26,8 @@ export default function VersionItem({
 
   return (
     <div
-      className={`group flex items-center justify-between p-2 rounded-md cursor-pointer hover:bg-neutral-100 ${
-        isActive ? 'bg-blue-50' : ''
+      className={`group flex items-center justify-between p-2 rounded-lg border border-neutral-200 cursor-pointer hover:bg-neutral-100 ${
+        isActive ? 'bg-neutral-100' : ''
       }`}
       onClick={() => onSelect(version)}
     >
@@ -82,7 +82,7 @@ export default function VersionItem({
           {new Date(version.date).toLocaleString()}
         </p>
       </div>
-      {isActive && <CheckIcon className="w-4 h-4 text-blue-400" />}
+      {isActive && <CheckIcon className="w-4 h-4 text-neutral-500" />}
     </div>
   );
 }

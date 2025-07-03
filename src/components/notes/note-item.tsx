@@ -1,5 +1,5 @@
 import { Prompt } from "@/types/prompts";
-import { TrashIcon } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
 interface NoteItemProps {
     date: string;
@@ -22,16 +22,14 @@ export default function NoteItem({
                         {new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                 </div>
-                <div className="relative group">
-                    <div className="p-3 rounded-lg bg-neutral-50 max-w-[85%]">
-                        <p className="text-sm break-all">{content}</p>
-                    </div>
+                <div className="relative group p-3 rounded-lg bg-neutral-100 max-w-[100%]">
+                    <p className="text-sm break-all text-neutral-700">{content}</p>
                     <button 
                         onClick={() => handleDeleteNote(selectedPrompt, date)}
-                        className="absolute -top-2 -right-2 p-1.5 rounded-full bg-background border shadow-sm opacity-0 group-hover:opacity-100 transition-opacity hover:text-destructive"
+                        className="absolute top-2 right-2 p-1.5 rounded-sm text-neutral-600 bg-neutral-100 hover:bg-red-100 opacity-0 group-hover:opacity-100 transition-opacity"
                         aria-label="Delete note"
                     >
-                        <TrashIcon className="w-3 h-3" />
+                        <Trash2 className="w-4 h-4" />
                     </button>
                 </div>
             </div>

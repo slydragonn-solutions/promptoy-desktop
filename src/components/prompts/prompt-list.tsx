@@ -72,23 +72,48 @@ export default function PromptList() {
   return (
     <section className="flex flex-col gap-2 min-w-72 w-72 h-screen border-r border-r-neutral-200">
       <div className="flex justify-between items-center p-2">
-        <p className="mt-2 font-bold text-center">All Prompts</p>
-        <Tooltip>
-          <TooltipTrigger>
-            <NewPromptDialog onPromptCreated={getPrompts}>
+        <p className="mt-2 font-semibold text-center text-sm">All Prompts</p>
+        <div className="flex gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger>
               <Button
                 variant="secondary"
-                size="icon"
-                className="rounded-full bg-neutral-200/60 hover:bg-neutral-200 text-neutral-600"
+                className="flex items-center gap-2 rounded-full bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg"
               >
-                <Plus className="h-4 w-4" />
+                <FilterIcon className="h-4 w-4" />
+                <ChevronDown className="h-4 w-4" />
               </Button>
-            </NewPromptDialog>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>New Prompt</p>
-          </TooltipContent>
-        </Tooltip>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48 text-neutral-600">
+              {sortOptions.map((option) => (
+                <DropdownMenuItem
+                  key={option.value}
+                  onClick={() => setSortBy(option.value)}
+                  className="flex items-center justify-between cursor-pointer"
+                >
+                  <span>{option.label}</span>
+                  {sortBy === option.value && <Check className="h-4 w-4" />}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Tooltip>
+            <TooltipTrigger>
+              <NewPromptDialog onPromptCreated={getPrompts}>
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="rounded-full bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg"
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </NewPromptDialog>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>New Prompt</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
       </div>
       <div className="flex gap-2 p-2">
         <Input
@@ -96,31 +121,8 @@ export default function PromptList() {
           placeholder="Search your prompts..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 rounded-full"
+          className="flex-1 rounded-full bg-neutral-50 text-neutral-600"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Button
-              variant="secondary"
-              className="flex items-center gap-2 rounded-full bg-neutral-200/60 hover:bg-neutral-200 text-neutral-600"
-            >
-              <FilterIcon className="h-4 w-4" />
-              <ChevronDown className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48 text-neutral-600">
-            {sortOptions.map((option) => (
-              <DropdownMenuItem
-                key={option.value}
-                onClick={() => setSortBy(option.value)}
-                className="flex items-center justify-between cursor-pointer"
-              >
-                <span>{option.label}</span>
-                {sortBy === option.value && <Check className="h-4 w-4" />}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
       <div className="flex-1 overflow-y-auto">
         {isLoading && prompts.length === 0 ? (

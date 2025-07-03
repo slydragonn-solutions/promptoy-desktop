@@ -79,6 +79,7 @@ export function DiffEditor({
               handleMouseWheel: true,
             },
             renderSideBySide: true,
+            wordWrap: "on",
           }}
           originalModelPath="original"
           modifiedModelPath="modified"

@@ -64,7 +64,7 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
         cursorOffset = selectedText ? 0 : -8;
         break;
       case 'bold':
-        newText = `**${selectedText || 'bold text'}`;
+        newText = `**${selectedText || 'bold text'}**`;
         cursorOffset = selectedText ? 0 : -9;
         break;
       case 'italic':
@@ -142,7 +142,7 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
   };
 
   return (
-    <div className="flex flex-wrap gap-1 p-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="flex flex-wrap gap-1 py-2 px-6 bg-neutral-100 rounded-full mb-2">
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Button 

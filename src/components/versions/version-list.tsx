@@ -2,15 +2,15 @@ import { PromptContent } from "@/types/prompts";
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Info } from "lucide-react"
+import { Info, Plus } from "lucide-react"
 import { MAX_VERSIONS } from "@/constants/prompt"
-import { HistoryIcon } from "lucide-react"
 import NewVersionDialog from "./new-version-dialog"
 import VersionItem from "./version-item"
 import RenameVersionDialog from "./rename-version-dialog"
 import { promptsStore } from "@/store/prompts-store"
 import { useVersionManagement } from "@/hooks/use-version-management"
 import { useVersionRename } from "@/hooks/use-version-rename"
+import { Input } from "../ui/input";
 
 
 interface VersionListProps {
@@ -54,15 +54,23 @@ export default function VersionList({ onCompareVersion, isComparing = false }: V
         <>
             <div className="space-y-2">
                 <div className="relative">
+                    <div className="flex gap-2">
+                    <Input
+                        type="text"
+                        placeholder="Search your versions..."
+                        className="flex-1 rounded-full bg-neutral-50 text-neutral-600"
+                    />
                     <Button 
-                        variant="outline" 
-                        className="w-full gap-2 rounded-full text-neutral-600"
+                        variant="secondary"
+                        size="icon"
+                        title="Create new version"
+                        className="rounded-full text-neutral-600 bg-neutral-50 hover:bg-neutral-200 shadow-lg"
                         onClick={handleOpenVersionDialog}
                         disabled={selectedPrompt.versions.length >= MAX_VERSIONS}
                     >
-                        <HistoryIcon className="w-4 h-4" />
-                        New Version
+                        <Plus className="w-4 h-4" />
                     </Button>
+                    </div>
                     {selectedPrompt.versions.length >= MAX_VERSIONS && (
                         <TooltipProvider>
                             <Tooltip>
@@ -77,7 +85,7 @@ export default function VersionList({ onCompareVersion, isComparing = false }: V
                     )}
                 </div>
                 <div className="text-xs text-muted-foreground text-right px-1">
-                    {selectedPrompt.versions.length}/{MAX_VERSIONS} versions
+                    {selectedPrompt.versions.length}/{MAX_VERSIONS}
                 </div>
                 <NewVersionDialog
                     isVersionDialogOpen={isVersionDialogOpen}

@@ -457,14 +457,14 @@ export function TagSelector({
       </Popover>
       
       {selectedTags.length > 0 && (
-        <div className="flex flex-wrap gap-1">
+        <div className="flex justify-start items-center flex-wrap gap-2">
           {selectedTags.map(tag => (
             <TagComponent
               key={tag.id}
               name={tag.name}
               color={tag.color}
               onRemove={(e) => handleRemoveTag(e, tag.id)}
-              className="text-xs py-0.5 px-1.5"
+              className="text-xs py-0.5 px-2"
             />
           ))}
         </div>

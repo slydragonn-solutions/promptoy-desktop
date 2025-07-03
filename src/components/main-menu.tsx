@@ -8,12 +8,12 @@ import { HouseIcon, SquareChevronRight, HeartIcon, TagIcon, PcCaseIcon, CloudUpl
 
 export default function MainMenu() {
     return (
-        <nav className="flex flex-col h-screen items-center justify-between gap-2 p-1 bg-neutral-900 text-neutral-400">
+        <nav className="flex flex-col h-screen items-center justify-between gap-2 p-2 bg-neutral-900 text-neutral-400">
             <ul className="flex flex-col gap-2">
                 <li>
                     <Tooltip>
                         <TooltipTrigger>
-                            <Button variant="ghost" className="rounded-full"><HouseIcon /></Button>
+                            <Button variant="ghost" size="icon" className="rounded-full"><HouseIcon /></Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Home</p>
@@ -23,7 +23,7 @@ export default function MainMenu() {
                 <li>
                     <Tooltip>
                         <TooltipTrigger>
-                            <Button variant="ghost" className="rounded-full"><SquareChevronRight /></Button>
+                            <Button variant="ghost" size="icon" className="rounded-full text-neutral-50 bg-neutral-800"><SquareChevronRight /></Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>All Prompts</p>
@@ -33,7 +33,7 @@ export default function MainMenu() {
                 <li>
                     <Tooltip>
                         <TooltipTrigger>
-                            <Button variant="ghost" className="rounded-full"><HeartIcon /></Button>
+                            <Button variant="ghost" size="icon" className="rounded-full"><HeartIcon /></Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Favorite Prompts</p>
@@ -43,7 +43,7 @@ export default function MainMenu() {
                 <li>
                     <Tooltip>
                         <TooltipTrigger>
-                            <Button variant="ghost" className="rounded-full"><TagIcon /></Button>
+                            <Button variant="ghost" size="icon" className="rounded-full"><TagIcon /></Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Tags</p>
@@ -55,7 +55,7 @@ export default function MainMenu() {
                 <li>
                     <Tooltip>
                         <TooltipTrigger>
-                            <Button variant="ghost" className="rounded-full"><PcCaseIcon /></Button>
+                            <Button variant="ghost" size="icon" className="rounded-full"><PcCaseIcon /></Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Local Prompts</p>
@@ -65,7 +65,7 @@ export default function MainMenu() {
                 <li>
                     <Tooltip>
                         <TooltipTrigger>
-                            <Button variant="ghost" className="rounded-full"><CloudUploadIcon /></Button>
+                            <Button variant="ghost" size="icon" className="rounded-full"><CloudUploadIcon /></Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Backup Prompts</p>
@@ -77,7 +77,7 @@ export default function MainMenu() {
                 <li>
                     <Tooltip>
                         <TooltipTrigger>
-                            <Button variant="ghost" className="rounded-full"><InfoIcon /></Button>
+                            <Button variant="ghost" size="icon" className="rounded-full"><InfoIcon /></Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Info</p>
@@ -87,7 +87,7 @@ export default function MainMenu() {
                 <li>
                     <Tooltip>
                         <TooltipTrigger>
-                            <Button variant="ghost" className="rounded-full"><SettingsIcon /></Button>
+                            <Button variant="ghost" size="icon" className="rounded-full"><SettingsIcon /></Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Settings</p>
