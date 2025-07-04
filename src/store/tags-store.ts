@@ -1,15 +1,9 @@
 import { create } from "zustand";
 import { Prompt } from "@/types/prompts";
-import { TagColorScheme, getRandomTagColor } from "@/constants/tags";
+import { getRandomTagColor } from "@/constants/tags";
 import { promptsStore } from "./prompts-store";
+import { Tag } from "@/types/tags";
 
-export interface Tag {
-  id: string;
-  name: string;
-  color: TagColorScheme;
-  createdAt: string;
-  updatedAt: string;
-}
 
 interface TagsStore {
   tags: Tag[];

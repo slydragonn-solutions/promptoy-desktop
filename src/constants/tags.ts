@@ -1,12 +1,4 @@
-export interface TagColorScheme {
-  bg: string;
-  bgDark: string;
-  text: string;
-  textDark: string;
-  border: string;
-  borderDark: string;
-  name: string;
-}
+import { TagColorScheme } from "@/types/tags";
 
 export const TAG_COLORS: TagColorScheme[] = [
   {

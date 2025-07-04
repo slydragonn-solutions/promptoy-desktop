@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Tag as TagComponent } from '../tags/tag';
 import { Prompt } from "@/types/prompts";
 import { cn } from '@/lib/utils';
-import { useTagsStore, type Tag } from '@/store/tags-store';
+import { useTagsStore } from '@/store/tags-store';
+import { Tag } from '@/types/tags';
 
 interface PromptItemProps {
     prompt: Prompt;

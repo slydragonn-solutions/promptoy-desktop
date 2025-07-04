@@ -25,4 +25,5 @@ export interface Prompt {
     tags?: string[]; // Array of tag IDs
     isFavorite: boolean;
     isSynced: boolean;
+    group: string; // Group ID
 }
