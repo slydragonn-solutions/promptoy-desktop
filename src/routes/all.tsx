@@ -1,31 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
-import PromptList from "@/components/prompts/prompt-list";
-import Editor from "@/components/editor/editor";
-import Sidebar from "@/components/editor/sidebar";
-import { Toaster } from "@/components/ui/sonner"
-import { useVersionComparison } from "@/hooks/use-version-comparison";
-
+import EditorLayout from '@/layouts/editor-layout'
 
 export const Route = createFileRoute("/all")({
   component: AllPrompts,
 })
 
 function AllPrompts() {
-  const versionComparison = useVersionComparison();
-
-  return (
-    <>
-      <PromptList />
-      <Editor 
-        isComparing={versionComparison.isComparing}
-        compareVersion={versionComparison.compareVersion}
-        onCloseCompare={versionComparison.handleCloseCompare}
-      />
-      <Sidebar 
-        onCompareVersion={versionComparison.handleCompareVersion}
-        isComparing={versionComparison.isComparing}
-      />
-      <Toaster />
-    </>
-  )
+  return <EditorLayout listBy="all" title="All Prompts"/>
 }

@@ -19,8 +19,14 @@ import PromptItem from "./prompt-item";
 import { NewPromptDialog } from "./new-prompt-dialog";
 
 type SortOption = "a-z" | "z-a" | "newest" | "oldest";
+type ListByOption = "all" | "favorites" | "local" | "backup";
 
-export default function PromptList() {
+interface PromptListProps {
+  listBy?: ListByOption;
+  title?: string;
+}
+
+export default function PromptList({ listBy = "all", title = "All Prompts" }: PromptListProps) {
   const { prompts, isLoading, getPrompts, selectedPrompt, setSelectedPrompt } =
     promptsStore();
 
@@ -32,9 +38,26 @@ export default function PromptList() {
     getPrompts();
   }, [getPrompts]);
 
-  // Filter and sort prompts based on search and sort options
+  // Filter prompts based on listBy prop and search
   const filteredAndSortedPrompts = useMemo(() => {
-    const filtered = prompts.filter(
+    let filtered = [...prompts];
+
+    // Apply listBy filter
+    switch (listBy) {
+      case 'favorites':
+        filtered = filtered.filter(prompt => prompt.isFavorite === true);
+        break;
+      case 'local':
+        filtered = filtered.filter(prompt => prompt.isSynced === false);
+        break;
+      case 'backup':
+        filtered = filtered.filter(prompt => prompt.isSynced === true);
+        break;
+      // 'all' case - no additional filtering needed
+    }
+
+    // Apply search filter
+    filtered = filtered.filter(
       (prompt) =>
         prompt.name.toLowerCase().includes(search.toLowerCase()) ||
         (prompt.versions &&
@@ -61,7 +84,7 @@ export default function PromptList() {
           return 0;
       }
     });
-  }, [prompts, search, sortBy]);
+  }, [prompts, search, sortBy, listBy]);
 
   const sortOptions: { value: SortOption; label: string }[] = [
     { value: "a-z", label: "A to Z" },
@@ -72,7 +95,7 @@ export default function PromptList() {
   return (
     <section className="flex flex-col gap-2 min-w-72 w-72 h-screen border-r border-r-neutral-200">
       <div className="flex justify-between items-center p-2">
-        <p className="mt-2 font-semibold text-center text-sm">All Prompts</p>
+        <p className="mt-2 font-semibold text-center text-sm">{title}</p>
         <div className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger>

@@ -1,4 +1,4 @@
-import { createRootRoute, Link, Outlet } from '@tanstack/react-router';
+import { createRootRoute, Link, Outlet, useRouterState } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import {
     Tooltip,
@@ -7,10 +7,22 @@ import {
   } from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
 import { HouseIcon, SquareChevronRight, HeartIcon, TagIcon, PcCaseIcon, CloudUploadIcon, InfoIcon, SettingsIcon } from "lucide-react"
+import { useEffect } from 'react';
+import { promptsStore } from '@/store/prompts-store';
+import { Toaster } from '@/components/ui/sonner';
 
 
 export const Route = createRootRoute({
-    component: () => (
+    component: () => {
+        const router = useRouterState()
+        const currentPath = router.location.pathname
+        const { setSelectedPrompt } = promptsStore()
+
+        useEffect(() => {
+            setSelectedPrompt(null)
+        }, [currentPath])
+
+        return (
         <main className="flex h-screen items-center justify-center">
             <nav className="flex flex-col h-screen items-center justify-between gap-2 p-2 bg-neutral-900 text-neutral-400">
                 <ul className="flex flex-col gap-2">
@@ -118,6 +130,7 @@ export const Route = createRootRoute({
             </nav>
             <Outlet />
             <TanStackRouterDevtools />
+            <Toaster />
         </main>
-    )
+    )}
 })

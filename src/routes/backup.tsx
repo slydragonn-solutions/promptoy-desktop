@@ -1,15 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
-
+import EditorLayout from '@/layouts/editor-layout'
 
 export const Route = createFileRoute("/backup")({
   component: Backup,
 })
 
 function Backup() {
-
-  return (
-    <div className="flex h-screen w-full items-center justify-center">
-     Backup
-    </div>
-  )
+  return <EditorLayout listBy="backup" title="Backup Prompts"/>
 }

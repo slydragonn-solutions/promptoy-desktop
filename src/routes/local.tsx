@@ -1,15 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
-
+import EditorLayout from '@/layouts/editor-layout'
 
 export const Route = createFileRoute("/local")({
   component: Local,
 })
 
 function Local() {
-
-  return (
-    <div className="flex h-screen w-full items-center justify-center">
-     Local
-    </div>
-  )
+  return <EditorLayout listBy="local" title="Local Prompts"/>
 }
