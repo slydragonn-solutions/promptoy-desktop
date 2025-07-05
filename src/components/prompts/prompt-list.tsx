@@ -221,14 +221,39 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
       <div className="flex justify-between items-center p-2">
         <div className="flex items-center gap-2">
           <p className="font-semibold text-sm">{title}</p>
+        </div>
+        <div className="flex gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Button
+                variant="secondary"
+                className="flex items-center gap-2 rounded-full bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg"
+              >
+                <FilterIcon className="h-4 w-4" />
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48 text-neutral-600">
+              {sortOptions.map((option) => (
+                <DropdownMenuItem
+                  key={option.value}
+                  onClick={() => setSortBy(option.value)}
+                  className="flex items-center justify-between cursor-pointer"
+                >
+                  <span>{option.label}</span>
+                  {sortBy === option.value && <Check className="h-4 w-4" />}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Dialog open={isGroupDialogOpen} onOpenChange={setIsGroupDialogOpen}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <DialogTrigger asChild>
                   <Button
-                    variant="ghost"
+                    variant="secondary"
                     size="icon"
-                    className="h-6 w-6 text-muted-foreground hover:text-foreground"
+                    className="rounded-full bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg"
                   >
                     <FolderPlus className="h-4 w-4" />
                   </Button>
@@ -267,31 +292,6 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
               </DialogFooter>
             </DialogContent>
           </Dialog>
-        </div>
-        <div className="flex gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Button
-                variant="secondary"
-                className="flex items-center gap-2 rounded-full bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg"
-              >
-                <FilterIcon className="h-4 w-4" />
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48 text-neutral-600">
-              {sortOptions.map((option) => (
-                <DropdownMenuItem
-                  key={option.value}
-                  onClick={() => setSortBy(option.value)}
-                  className="flex items-center justify-between cursor-pointer"
-                >
-                  <span>{option.label}</span>
-                  {sortBy === option.value && <Check className="h-4 w-4" />}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
           <Tooltip>
             <TooltipTrigger>
               <NewPromptDialog onPromptCreated={getPrompts}>
@@ -319,7 +319,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
           className="flex-1 rounded-full bg-neutral-50 text-neutral-600"
         />
       </div>
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto w-full">
         {isLoading && prompts.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <p className="text-muted-foreground">Loading prompts...</p>
@@ -331,7 +331,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
               <AccordionItem value="ungrouped" defaultChecked>
                 <AccordionTrigger className="px-4 py-2 hover:no-underline">
                   <div className="flex items-center gap-2">
-                    <span>All Prompts</span>
+                    <span>All</span>
                     <span className="text-xs text-muted-foreground">
                       ({filteredAndSortedPrompts.length})
                     </span>

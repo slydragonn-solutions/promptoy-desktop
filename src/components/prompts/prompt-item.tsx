@@ -154,9 +154,9 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
                         )}
                         onClick={() => onSelect(prompt)}
                     >
-            <div className="flex flex-col gap-1.5">
+            <div className="flex flex-col gap-1.5 w-full">
                 <div className="flex justify-between items-start gap-2">
-                    <h2 className="font-medium text-sm truncate max-w-[180px]">
+                    <h2 className="font-medium text-sm truncate max-w-[160px]">
                         {name || 'Untitled Prompt'}
                     </h2>
                     <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
