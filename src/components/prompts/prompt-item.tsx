@@ -3,7 +3,31 @@ import { Tag as TagComponent } from '../tags/tag';
 import { Prompt } from "@/types/prompts";
 import { cn } from '@/lib/utils';
 import { useTagsStore } from '@/store/tags-store';
+import { useGroupsStore } from '@/store/groups-store';
+import { promptsStore } from '@/store/prompts-store';
 import { Tag } from '@/types/tags';
+import { toast } from 'sonner';
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from '@/components/ui/context-menu';
+import { Edit, Star, Trash2, MoveRight } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 interface PromptItemProps {
     prompt: Prompt;
@@ -12,10 +36,17 @@ interface PromptItemProps {
 }
 
 export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemProps) {
-    const { name, updatedAt, tags: tagIds = [] } = prompt;
+    const { name, updatedAt, tags: tagIds = [], id, isFavorite } = prompt;
     const { getTagById, loadTags } = useTagsStore();
+    const { updatePrompt, removePrompt } = promptsStore();
+    const { groups } = useGroupsStore();
     
     const [tags, setTags] = useState<Tag[]>([]);
+    const [isRenaming, setIsRenaming] = useState(false);
+    const [newName, setNewName] = useState(name);
+    const [isMoving, setIsMoving] = useState(false);
+    const [selectedGroup, setSelectedGroup] = useState(prompt.group || '');
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
     // Load tags when component mounts
     useEffect(() => {
@@ -50,15 +81,79 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
         }
     };
 
+    const handleRename = async () => {
+        const trimmedName = newName.trim();
+        if (!trimmedName) return;
+        
+        if (trimmedName.length > 50) {
+            toast.error("Prompt name must be 50 characters or less");
+            return;
+        }
+        
+        try {
+            await updatePrompt(id, { name: trimmedName });
+            toast.success("Prompt renamed successfully");
+            setIsRenaming(false);
+        } catch (error) {
+            toast.error("Failed to rename prompt");
+        }
+    };
+    
+    const CHAR_LIMIT = 50;
+    const isNearLimit = newName.length >= CHAR_LIMIT * 0.9; // 90% of limit
+    const isAtLimit = newName.length >= CHAR_LIMIT;
+
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value.length <= CHAR_LIMIT) {
+            setNewName(e.target.value);
+        }
+    };
+
+    const handleToggleFavorite = async () => {
+        try {
+            await updatePrompt(id, { isFavorite: !isFavorite });
+            toast.success(isFavorite ? "Removed from favorites" : "Added to favorites");
+        } catch (error) {
+            toast.error("Failed to update favorite status");
+        }
+    };
+
+    const handleDeleteClick = () => {
+        setShowDeleteDialog(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+        try {
+            await removePrompt(id);
+            toast.success("Prompt deleted successfully");
+            setShowDeleteDialog(false);
+        } catch (error) {
+            toast.error("Failed to delete prompt");
+        }
+    };
+
+    const handleMoveToGroup = async (groupId: string) => {
+        try {
+            await updatePrompt(id, { group: groupId });
+            toast.success("Prompt moved successfully");
+            setIsMoving(false);
+        } catch (error) {
+            toast.error("Failed to move prompt");
+        }
+    };
+
     return (
-        <li 
-            className={cn(
-                'flex flex-col p-3 border-b border-border cursor-pointer transition-colors',
-                'hover:bg-neutral-100',
-                isSelected && 'bg-neutral-100 hover:bg-neutral-100 border-l-4 border-l-neutral-600',
-            )}
-            onClick={() => onSelect(prompt)}
-        >
+        <>
+            <ContextMenu>
+                <ContextMenuTrigger asChild>
+                    <li 
+                        className={cn(
+                            'flex flex-col p-3 border-b border-border cursor-pointer transition-colors',
+                            'hover:bg-neutral-100',
+                            isSelected && 'bg-neutral-100 hover:bg-neutral-100 border-l-4 border-l-neutral-600',
+                        )}
+                        onClick={() => onSelect(prompt)}
+                    >
             <div className="flex flex-col gap-1.5">
                 <div className="flex justify-between items-start gap-2">
                     <h2 className="font-medium text-sm truncate max-w-[180px]">
@@ -87,6 +182,127 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
                     </div>
                 )}
             </div>
-        </li>
+                    </li>
+                </ContextMenuTrigger>
+                <ContextMenuContent className="w-48">
+                    <ContextMenuItem onClick={() => setIsRenaming(true)}>
+                        <Edit className="mr-2 h-4 w-4" />
+                        Rename
+                    </ContextMenuItem>
+                    <ContextMenuItem onClick={handleToggleFavorite}>
+                        <Star className="mr-2 h-4 w-4" fill={isFavorite ? 'currentColor' : 'none'} />
+                        {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+                    </ContextMenuItem>
+                    <ContextMenuItem onClick={() => setIsMoving(true)}>
+                        <MoveRight className="mr-2 h-4 w-4" />
+                        Move to Group
+                    </ContextMenuItem>
+                    <ContextMenuSeparator />
+                    <ContextMenuItem 
+                        className="text-red-600 focus:text-red-600" 
+                        onClick={handleDeleteClick}
+                    >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete
+                    </ContextMenuItem>
+                </ContextMenuContent>
+            </ContextMenu>
+
+        {/* Rename Dialog */}
+        <Dialog open={isRenaming} onOpenChange={setIsRenaming}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Rename Prompt</DialogTitle>
+                    <DialogDescription>
+                        Enter a new name for this prompt.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-2">
+                    <Input
+                        value={newName}
+                        onChange={handleNameChange}
+                        onKeyDown={(e) => e.key === 'Enter' && handleRename()}
+                        placeholder="Enter new name (max 50 characters)"
+                        autoFocus
+                    />
+                    <div className={cn(
+                        "text-xs text-right",
+                        isNearLimit && !isAtLimit ? "text-amber-500" : "text-muted-foreground",
+                        isAtLimit && "text-red-500 font-medium"
+                    )}>
+                        {newName.length}/{CHAR_LIMIT} characters
+                        {isAtLimit && " - Maximum length reached"}
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => setIsRenaming(false)}>
+                        Cancel
+                    </Button>
+                    <Button onClick={handleRename}>Save</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+
+        {/* Move to Group Dialog */}
+        <Dialog open={isMoving} onOpenChange={setIsMoving}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Move to Group</DialogTitle>
+                    <DialogDescription>
+                        Select a group to move this prompt to.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-2">
+                    {groups.map((group) => (
+                        <div 
+                            key={group.id}
+                            className={`p-2 rounded-md cursor-pointer hover:bg-accent ${selectedGroup === group.id ? 'bg-accent' : ''}`}
+                            onClick={() => {
+                                setSelectedGroup(group.id);
+                                handleMoveToGroup(group.id);
+                            }}
+                        >
+                            {group.name}
+                        </div>
+                    ))}
+                    {groups.length === 0 && (
+                        <p className="text-sm text-muted-foreground">No groups available</p>
+                    )}
+                </div>
+                <DialogFooter>
+                    <Button 
+                        variant="outline" 
+                        onClick={() => {
+                            setSelectedGroup('');
+                            handleMoveToGroup('');
+                        }}
+                    >
+                        Remove from Group
+                    </Button>
+                    <Button onClick={() => setIsMoving(false)}>Done</Button>
+                </DialogFooter>
+            </DialogContent>
+            </Dialog>
+            {/* Delete Confirmation Dialog */}
+            <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This will permanently delete the prompt "{name}" and cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction 
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            onClick={handleDeleteConfirm}
+                        >
+                            Delete
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </>
     );
 }

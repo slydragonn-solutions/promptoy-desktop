@@ -1,9 +1,17 @@
-import { Plus, FilterIcon, ChevronDown, Check } from "lucide-react";
+import { FilterIcon, ChevronDown, Check, FolderPlus, ChevronRight, ChevronDown as ChevronDownIcon, Pencil, Trash2, Plus } from "lucide-react";
+import { toast } from 'sonner';
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "../ui/context-menu";
 import { useMemo, useState, useEffect } from "react";
 import { promptsStore } from "@/store/prompts-store";
+import { useGroupsStore } from "@/store/groups-store";
 import {
   Tooltip,
   TooltipContent,
@@ -15,8 +23,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import PromptItem from "./prompt-item";
 import { NewPromptDialog } from "./new-prompt-dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 
 type SortOption = "a-z" | "z-a" | "newest" | "oldest";
 type ListByOption = "all" | "favorites" | "local" | "backup";
@@ -27,11 +43,119 @@ interface PromptListProps {
 }
 
 export default function PromptList({ listBy = "all", title = "All Prompts" }: PromptListProps) {
-  const { prompts, isLoading, getPrompts, selectedPrompt, setSelectedPrompt } =
-    promptsStore();
-
+  const { prompts, isLoading, getPrompts, selectedPrompt, setSelectedPrompt } = promptsStore();
+  const { groups, loadGroups, addGroup, updateGroup, removeGroup } = useGroupsStore();
+  const { updatePrompt } = promptsStore();
+  
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("newest");
+  const [newGroupName, setNewGroupName] = useState("");
+  const [isGroupDialogOpen, setIsGroupDialogOpen] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
+  const [editingGroupId, setEditingGroupId] = useState<string | null>(null);
+  const [editingGroupName, setEditingGroupName] = useState("");
+  const [contextMenu, setContextMenu] = useState<{
+    x: number;
+    y: number;
+    groupId: string | null;
+  }>({ x: 0, y: 0, groupId: null });
+  
+  // Load groups when component mounts
+  useEffect(() => {
+    loadGroups();
+  }, [loadGroups]);
+  
+  // Toggle group expansion
+  const toggleGroup = (groupId: string) => {
+    setExpandedGroups(prev => ({
+      ...prev,
+      [groupId]: !prev[groupId]
+    }));
+  };
+  
+  // Handle creating a new group
+  const handleCreateGroup = () => {
+    if (newGroupName.trim()) {
+      addGroup(newGroupName.trim());
+      setNewGroupName("");
+      setIsGroupDialogOpen(false);
+    }
+  };
+
+  const handleContextMenu = (e: React.MouseEvent, groupId: string) => {
+    e.preventDefault();
+    setContextMenu({ x: e.clientX, y: e.clientY, groupId });
+  };
+
+  const handleRenameGroup = () => {
+    if (!contextMenu.groupId) return;
+    const group = groups.find(g => g.id === contextMenu.groupId);
+    if (group) {
+      setEditingGroupId(group.id);
+      setEditingGroupName(group.name);
+      setContextMenu({ x: 0, y: 0, groupId: null });
+      
+      // Focus the input after a small delay
+      setTimeout(() => {
+        const input = document.querySelector(`[data-group-input="${group.id}"]`);
+        if (input instanceof HTMLInputElement) {
+          input.focus();
+          input.select();
+        }
+      }, 10);
+    }
+  };
+
+  const handleDeleteGroup = async () => {
+    if (!contextMenu.groupId) return;
+    
+    try {
+      // Check if group has prompts
+      const groupPrompts = prompts.filter(p => p.group === contextMenu.groupId);
+      if (groupPrompts.length > 0) {
+        if (!confirm(`This group contains ${groupPrompts.length} prompt(s). All prompts will be removed from this group. Are you sure you want to proceed?`)) {
+          return;
+        }
+        
+        // Remove group reference from all prompts in this group
+        const updatePromises = groupPrompts.map(prompt => 
+          updatePrompt(prompt.id, { ...prompt, group: undefined })
+        );
+        
+        await Promise.all(updatePromises);
+      }
+      
+      // Now it's safe to delete the group
+      await removeGroup(contextMenu.groupId);
+      
+      toast.success('Group deleted successfully');
+    } catch (error) {
+      console.error('Error deleting group:', error);
+      toast.error('Failed to delete group');
+    } finally {
+      setContextMenu({ x: 0, y: 0, groupId: null });
+    }
+  };
+
+  const handleSaveRename = (groupId: string) => {
+    if (editingGroupName.trim()) {
+      updateGroup(groupId, { name: editingGroupName.trim() });
+      setEditingGroupId(null);
+      setEditingGroupName('');
+      toast.success('Group renamed successfully');
+    } else {
+      toast.error('Group name cannot be empty');
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent, groupId: string) => {
+    if (e.key === 'Enter') {
+      handleSaveRename(groupId);
+    } else if (e.key === 'Escape') {
+      setEditingGroupId(null);
+      setEditingGroupName('');
+    }
+  };
 
   // Load prompts when component mounts
   useEffect(() => {
@@ -95,7 +219,55 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
   return (
     <section className="flex flex-col gap-2 min-w-72 w-72 h-screen border-r border-r-neutral-200">
       <div className="flex justify-between items-center p-2">
-        <p className="mt-2 font-semibold text-center text-sm">{title}</p>
+        <div className="flex items-center gap-2">
+          <p className="font-semibold text-sm">{title}</p>
+          <Dialog open={isGroupDialogOpen} onOpenChange={setIsGroupDialogOpen}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 text-muted-foreground hover:text-foreground"
+                  >
+                    <FolderPlus className="h-4 w-4" />
+                  </Button>
+                </DialogTrigger>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>New Group</p>
+              </TooltipContent>
+            </Tooltip>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create New Group</DialogTitle>
+                <DialogDescription>
+                  Organize your prompts into groups for better management.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="group-name" className="text-right">
+                    Name
+                  </Label>
+                  <Input
+                    id="group-name"
+                    value={newGroupName}
+                    onChange={(e) => setNewGroupName(e.target.value)}
+                    className="col-span-3"
+                    placeholder="Enter group name"
+                    onKeyDown={(e) => e.key === 'Enter' && handleCreateGroup()}
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button type="submit" onClick={handleCreateGroup}>
+                  Create Group
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
         <div className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger>
@@ -154,25 +326,140 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
           </div>
         ) : (
           <ScrollArea className="h-full">
-            {filteredAndSortedPrompts.length === 0 ? (
-              <div className="flex items-center justify-center h-32 text-muted-foreground">
-                {search ? "No matching prompts found" : "No prompts available"}
-              </div>
-            ) : (
-              <ul className="divide-y">
-                {filteredAndSortedPrompts.map((prompt) => {
-                  const isSelected = selectedPrompt?.id === prompt.id;
-                  return (
-                    <PromptItem
-                      key={prompt.id}
-                      prompt={prompt}
-                      isSelected={isSelected}
-                      onSelect={setSelectedPrompt}
-                    />
-                  );
-                })}
-              </ul>
-            )}
+            <Accordion type="multiple" className="w-full">
+              {/* Ungrouped Prompts */}
+              <AccordionItem value="ungrouped" defaultChecked>
+                <AccordionTrigger className="px-4 py-2 hover:no-underline">
+                  <div className="flex items-center gap-2">
+                    <span>All Prompts</span>
+                    <span className="text-xs text-muted-foreground">
+                      ({filteredAndSortedPrompts.length})
+                    </span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  {filteredAndSortedPrompts.length === 0 ? (
+                    <div className="flex items-center justify-center h-32 text-muted-foreground">
+                      {search ? "No matching prompts found" : "No prompts available"}
+                    </div>
+                  ) : (
+                    <ul className="divide-y">
+                      {filteredAndSortedPrompts.map((prompt) => {
+                        const isSelected = selectedPrompt?.id === prompt.id;
+                        return (
+                          <PromptItem
+                            key={prompt.id}
+                            prompt={prompt}
+                            isSelected={isSelected}
+                            onSelect={setSelectedPrompt}
+                          />
+                        );
+                      })}
+                    </ul>
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* Groups */}
+              {groups.length > 0 && (
+                <AccordionItem value="groups">
+                  <AccordionTrigger className="px-4 py-2 hover:no-underline">
+                    <div className="flex items-center gap-2">
+                      <span>Groups</span>
+                      <span className="text-xs text-muted-foreground">
+                        ({groups.length})
+                      </span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-1">
+                      {groups.map((group) => {
+                        const groupPrompts = filteredAndSortedPrompts.filter(p => 
+                          p.group === group.id
+                        );
+                        
+                        return (
+                          <div key={group.id} className="mb-2 group" onContextMenu={(e) => handleContextMenu(e, group.id)}>
+                            <ContextMenu>
+                              <ContextMenuTrigger asChild>
+                                <button
+                                  onClick={() => toggleGroup(group.id)}
+                                  className="flex items-center w-full px-3 py-1.5 text-sm font-medium text-left rounded-md hover:bg-accent"
+                                >
+                                  {expandedGroups[group.id] ? (
+                                    <ChevronDownIcon className="w-4 h-4 mr-2 flex-shrink-0" />
+                                  ) : (
+                                    <ChevronRight className="w-4 h-4 mr-2 flex-shrink-0" />
+                                  )}
+                                  
+                                  {editingGroupId === group.id ? (
+                                    <div className="flex-1 flex items-center">
+                                      <Input
+                                        value={editingGroupName}
+                                        onChange={(e) => setEditingGroupName(e.target.value)}
+                                        onKeyDown={(e) => handleKeyDown(e, group.id)}
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="h-6 text-sm px-2 py-1"
+                                        data-group-input={group.id}
+                                      />
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-6 w-6 ml-1"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleSaveRename(group.id);
+                                        }}
+                                      >
+                                        <Check className="h-3.5 w-3.5" />
+                                      </Button>
+                                    </div>
+                                  ) : (
+                                    <>
+                                      <span className="truncate">{group.name}</span>
+                                      <span className="ml-auto text-xs text-muted-foreground">
+                                        {groupPrompts.length}
+                                      </span>
+                                    </>
+                                  )}
+                                </button>
+                              </ContextMenuTrigger>
+                              <ContextMenuContent>
+                                <ContextMenuItem onClick={handleRenameGroup}>
+                                  <Pencil className="mr-2 h-4 w-4" />
+                                  Rename
+                                </ContextMenuItem>
+                                <ContextMenuItem onClick={handleDeleteGroup} className="text-destructive">
+                                  <Trash2 className="mr-2 h-4 w-4" />
+                                  Delete
+                                </ContextMenuItem>
+                              </ContextMenuContent>
+                            </ContextMenu>
+                            
+                            {expandedGroups[group.id] && (
+                              <ul className="mt-1 ml-6 space-y-1">
+                                {groupPrompts.map((prompt) => {
+                                  const isSelected = selectedPrompt?.id === prompt.id;
+                                  return (
+                                    <li key={prompt.id}>
+                                      <PromptItem
+                                        prompt={prompt}
+                                        isSelected={isSelected}
+                                        onSelect={setSelectedPrompt}
+                                      />
+                                    </li>
+                                  );
+                                })}
+                              </ul>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
+            </Accordion>
           </ScrollArea>
         )}
       </div>

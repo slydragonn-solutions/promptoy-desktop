@@ -71,6 +71,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
         promptName={selectedPrompt.name}
         isFavorite={selectedPrompt.isFavorite}
         isSaving={isSaving}
+        currentGroupId={selectedPrompt.group || null}
         setIsRenameDialogOpen={setIsRenameDialogOpen}
         setNewName={setNewName}
         handleUpdatePrompt={handleUpdatePrompt}
