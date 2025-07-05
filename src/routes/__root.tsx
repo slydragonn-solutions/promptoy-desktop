@@ -1,10 +1,5 @@
 import { createRootRoute, Link, Outlet, useRouterState } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-  } from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
 import { HouseIcon, SquareChevronRight, HeartIcon, TagIcon, PcCaseIcon, CloudUploadIcon, InfoIcon, SettingsIcon } from "lucide-react"
 import { useEffect } from 'react';
@@ -28,108 +23,52 @@ export const Route = createRootRoute({
                 <ul className="flex flex-col gap-2">
                     <li>
                         <Link to="/" className="[&.active]:text-neutral-50">
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <Button variant="ghost" size="icon" className="rounded-full"><HouseIcon /></Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Home</p>
-                            </TooltipContent>
-                        </Tooltip>
+                            <Button variant="ghost" size="icon" className="rounded-full" title='Home'><HouseIcon /></Button>
                         </Link>
                     </li>
                     <li>
                         <Link to="/all" className="[&.active]:text-neutral-50">
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <Button variant="ghost" size="icon" className="rounded-full"><SquareChevronRight /></Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>All Prompts</p>
-                            </TooltipContent>
-                        </Tooltip>
+                            <Button variant="ghost" size="icon" className="rounded-full" title='All Prompts'><SquareChevronRight /></Button>
                         </Link>
                     </li>
                     <li>
                         <Link to="/favorites" className="[&.active]:text-neutral-50">
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <Button variant="ghost" size="icon" className="rounded-full"><HeartIcon /></Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Favorite Prompts</p>
-                            </TooltipContent>
-                        </Tooltip>
+                            <Button variant="ghost" size="icon" className="rounded-full" title='Favorite Prompts'><HeartIcon /></Button>
                         </Link>
                     </li>
                     <li>
                         <Link to="/tags" className="[&.active]:text-neutral-50">
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <Button variant="ghost" size="icon" className="rounded-full"><TagIcon /></Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Tags</p>
-                            </TooltipContent>
-                        </Tooltip>
+                            <Button variant="ghost" size="icon" className="rounded-full" title='Tags'><TagIcon /></Button>
                         </Link>
                     </li>
                 </ul>
                 <ul className="flex flex-col gap-4">
                     <li>
                         <Link to="/local" className="[&.active]:text-neutral-50">
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <Button variant="ghost" size="icon" className="rounded-full"><PcCaseIcon /></Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Local Prompts</p>
-                            </TooltipContent>
-                        </Tooltip>
+                            <Button variant="ghost" size="icon" className="rounded-full" title='Local Prompts'><PcCaseIcon /></Button>
                         </Link>
                     </li>
                     <li>
                         <Link to="/backup" className="[&.active]:text-neutral-50">
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <Button variant="ghost" size="icon" className="rounded-full"><CloudUploadIcon /></Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Backup Prompts</p>
-                            </TooltipContent>
-                        </Tooltip>
+                            <Button variant="ghost" size="icon" className="rounded-full" title='Backup Prompts'><CloudUploadIcon /></Button>
                         </Link>
                     </li>
                 </ul>
                 <ul className="flex flex-col gap-2">
                     <li>
                         <Link to="/info" className="[&.active]:text-neutral-50">
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <Button variant="ghost" size="icon" className="rounded-full"><InfoIcon /></Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Info</p>
-                            </TooltipContent>
-                        </Tooltip>
+                            <Button variant="ghost" size="icon" className="rounded-full" title='Info'><InfoIcon /></Button>
                         </Link>
                     </li>
                     <li>
                         <Link to="/settings" className="[&.active]:text-neutral-50">
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <Button variant="ghost" size="icon" className="rounded-full"><SettingsIcon /></Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Settings</p>
-                            </TooltipContent>
-                        </Tooltip>
+                            <Button variant="ghost" size="icon" className="rounded-full" title='Settings'><SettingsIcon /></Button>
                         </Link>
                     </li>
                 </ul>
             </nav>
             <Outlet />
-            <TanStackRouterDevtools />
+            <TanStackRouterDevtools position='bottom-right' />
             <Toaster />
         </main>
     )}
