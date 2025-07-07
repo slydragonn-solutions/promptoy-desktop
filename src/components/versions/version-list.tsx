@@ -10,7 +10,7 @@ import RenameVersionDialog from "./rename-version-dialog"
 import { promptsStore } from "@/store/prompts-store"
 import { useVersionManagement } from "@/hooks/use-version-management"
 import { Input } from "../ui/input";
-
+import { useState } from "react";
 
 interface VersionListProps {
     onCompareVersion?: (version: PromptContent) => void;
@@ -20,7 +20,7 @@ interface VersionListProps {
 export default function VersionList({ onCompareVersion, isComparing = false }: VersionListProps) {
     const { selectedPrompt } = promptsStore();
     const currentVersion = selectedPrompt?.versions?.[0]; // Most recent version is the current one
-    
+    const [search, setSearch] = useState("");    
     // Version management and rename functionality
     const {
         isVersionDialogOpen,
@@ -53,6 +53,8 @@ export default function VersionList({ onCompareVersion, isComparing = false }: V
                         type="text"
                         placeholder="Search your versions..."
                         className="flex-1 rounded-full bg-neutral-50 text-neutral-600"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
                     />
                     <Button 
                         variant="secondary"
@@ -94,7 +96,7 @@ export default function VersionList({ onCompareVersion, isComparing = false }: V
             </div>
             <ScrollArea className="h-[calc(100vh-160px)]">
                 <ul className="flex flex-col gap-2 mt-4">
-                    {selectedPrompt.versions.map((version) => (
+                    {selectedPrompt.versions.filter((version) => version.name?.toLowerCase().includes(search.toLowerCase())).map((version) => (
                         <VersionItem
                             key={version.date}
                             version={version}
