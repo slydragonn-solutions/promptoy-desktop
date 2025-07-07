@@ -9,7 +9,6 @@ import VersionItem from "./version-item"
 import RenameVersionDialog from "./rename-version-dialog"
 import { promptsStore } from "@/store/prompts-store"
 import { useVersionManagement } from "@/hooks/use-version-management"
-import { useVersionRename } from "@/hooks/use-version-rename"
 import { Input } from "../ui/input";
 
 
@@ -22,11 +21,13 @@ export default function VersionList({ onCompareVersion, isComparing = false }: V
     const { selectedPrompt } = promptsStore();
     const currentVersion = selectedPrompt?.versions?.[0]; // Most recent version is the current one
     
-    // Version management
+    // Version management and rename functionality
     const {
         isVersionDialogOpen,
+        isRenameDialogOpen,
         newVersionName,
         versionError,
+        renameError,
         setNewVersionName,
         setVersionError,
         setIsVersionDialogOpen,
@@ -34,17 +35,10 @@ export default function VersionList({ onCompareVersion, isComparing = false }: V
         handleCreateVersion: handleCreateNewVersion,
         handleDeleteVersion,
         handleSelectVersion,
-    } = useVersionManagement();
-    
-    // Version rename functionality
-    const {
-        isRenameDialogOpen,
-        newVersionName: renameVersionName,
-        setNewVersionName: setRenameVersionName,
         handleRenameVersion,
-        handleConfirmRename: handleRenameConfirm,
+        handleConfirmRename,
         closeRenameDialog,
-    } = useVersionRename();
+    } = useVersionManagement();
     
     if (!selectedPrompt) {
         return null;
@@ -116,10 +110,10 @@ export default function VersionList({ onCompareVersion, isComparing = false }: V
                     <RenameVersionDialog
                         isRenameDialogOpen={isRenameDialogOpen}
                         setIsRenameDialogOpen={closeRenameDialog}
-                        newVersionName={renameVersionName}
-                        setNewVersionName={setRenameVersionName}
-                        versionError={versionError}
-                        handleConfirmRename={() => handleRenameConfirm(selectedPrompt)}
+                        newVersionName={newVersionName}
+                        setNewVersionName={setNewVersionName}
+                        versionError={renameError}
+                        handleConfirmRename={() => handleConfirmRename(selectedPrompt)}
                     />
                 </ul>
             </ScrollArea>

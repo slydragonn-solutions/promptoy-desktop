@@ -53,7 +53,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
     handleDeletePrompt,
   } = useEditor(selectedPrompt);
 
-  const handleEditorDidMount = (editor: any, monaco: any) => {
+  const handleEditorDidMount = (editor: any, _monaco: any) => {
     editorRef.current = editor;
     originalHandleEditorDidMount(editor);
   };
