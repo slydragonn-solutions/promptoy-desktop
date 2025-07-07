@@ -1,6 +1,7 @@
 import { X, Pencil } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { TagColorScheme, getTagColorClasses } from '@/constants/tags';
+import { getTagColorClasses } from '@/constants/tags';
+import { TagColorScheme } from '@/types/tags';
 
 export interface TagProps {
   name: string;

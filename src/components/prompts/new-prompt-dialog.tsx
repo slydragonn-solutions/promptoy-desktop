@@ -146,6 +146,7 @@ export function NewPromptDialog({ onPromptCreated, children }: NewPromptDialogPr
         chatHistory: [],
         tags: [],
         isFavorite: false,
+        group: undefined,
       };
       
       const success = await addPrompt(newPrompt);
@@ -184,6 +185,7 @@ export function NewPromptDialog({ onPromptCreated, children }: NewPromptDialogPr
         chatHistory: [],
         tags: [],
         isFavorite: false,
+        group: undefined,
       };
       
       const success = await addPrompt(newPrompt);
