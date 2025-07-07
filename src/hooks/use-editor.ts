@@ -160,7 +160,7 @@ export const useEditor = (initialPrompt: Prompt | null) => {
     setNewName,
     setIsRenameDialogOpen,
     handleEditorChange,
-    handleEditorDidMount: (editor: any) => {
+    handleEditorDidMount: (editor: any, _monaco: any) => {
       editorRef.current = editor;
     },
     handleUpdatePrompt,

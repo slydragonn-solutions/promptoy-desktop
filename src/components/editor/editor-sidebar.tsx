@@ -6,12 +6,12 @@ import VersionList from "../versions/version-list"
 import { PromptContent } from "@/types/prompts"
 import { GitCompare, Notebook } from "lucide-react"
 
-interface SidebarProps {
+interface EditorSidebarProps {
   onCompareVersion?: (version: PromptContent) => void;
   isComparing?: boolean;
 }
 
-export default function Sidebar({ onCompareVersion, isComparing = false }: SidebarProps) {
+export default function EditorSidebar({ onCompareVersion, isComparing = false }: EditorSidebarProps) {
     const { selectedPrompt } = promptsStore();
     
     // Tabs management

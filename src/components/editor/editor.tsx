@@ -4,7 +4,6 @@ import { Tags } from "lucide-react";
 import { TagSelector } from "../tags/tag-selector";
 import { useEditor } from "@/hooks/use-editor";
 import { promptsStore } from "@/store/prompts-store";
-import { useRef } from "react";
 import { MarkdownToolbar } from "./markdown-toolbar";
 import {
   Dialog,
@@ -34,30 +33,23 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
   
   // Get the current version (most recent one)
   const currentVersion = selectedPrompt?.versions?.[0];
-
-  const editorRef = useRef(null);
   
   const {
     content,
     isSaving,
     isRenameDialogOpen,
     newName,
+    editorRef,
     setNewName,
     setIsRenameDialogOpen,
     handleEditorChange,
-    handleEditorDidMount: originalHandleEditorDidMount,
+    handleEditorDidMount,
     handleUpdatePrompt,
     handleRename,
     handleKeyDown,
     handleCopyToClipboard,
     handleDeletePrompt,
   } = useEditor(selectedPrompt);
-
-  const handleEditorDidMount = (editor: any, _monaco: any) => {
-    editorRef.current = editor;
-    originalHandleEditorDidMount(editor);
-  };
-
 
 
   if (!selectedPrompt) {

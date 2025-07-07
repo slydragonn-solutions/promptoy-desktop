@@ -1,5 +1,4 @@
 import { FilterIcon, ChevronDown, Check, FolderPlus, ChevronRight, ChevronDown as ChevronDownIcon, Pencil, Trash2, Plus } from "lucide-react";
-import { toast } from 'sonner';
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
@@ -9,9 +8,10 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "../ui/context-menu";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { promptsStore } from "@/store/prompts-store";
 import { useGroupsStore } from "@/store/groups-store";
+import usePromptsGroup from "@/hooks/use-prompts-group";
 import {
   Tooltip,
   TooltipContent,
@@ -43,124 +43,44 @@ interface PromptListProps {
 }
 
 export default function PromptList({ listBy = "all", title = "All Prompts" }: PromptListProps) {
-  const { prompts, isLoading, getPrompts, selectedPrompt, setSelectedPrompt } = promptsStore();
-  const { groups, loadGroups, addGroup, updateGroup, removeGroup } = useGroupsStore();
-  const { updatePrompt } = promptsStore();
-  
+  const { prompts, isLoading, updatePrompt, getPrompts, selectedPrompt, setSelectedPrompt } = promptsStore();
+  const { loadGroups } = useGroupsStore();
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("newest");
-  const [newGroupName, setNewGroupName] = useState("");
   const [isGroupDialogOpen, setIsGroupDialogOpen] = useState(false);
-  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
-  const [editingGroupId, setEditingGroupId] = useState<string | null>(null);
-  const [editingGroupName, setEditingGroupName] = useState("");
-  const [contextMenu, setContextMenu] = useState<{
-    x: number;
-    y: number;
-    groupId: string | null;
-  }>({ x: 0, y: 0, groupId: null });
+  const [newGroupName, setNewGroupName] = useState("");
   
-  // Load groups when component mounts
+  // Use the new usePromptsGroup hook
+  const {
+    groups,
+    expandedGroups,
+    editingGroupId,
+    editingGroupName,
+    contextMenu,
+    setEditingGroupName,
+    toggleGroup,
+    handleCreateGroup: createGroup,
+    handleContextMenu,
+    handleRenameGroup,
+    handleDeleteGroup,
+    handleSaveRename,
+    handleKeyDown
+  } = usePromptsGroup(prompts);
+  
+  // Load prompts and groups when component mounts
   useEffect(() => {
+    getPrompts();
     loadGroups();
-  }, [loadGroups]);
+  }, [getPrompts, loadGroups]);
   
-  // Toggle group expansion
-  const toggleGroup = (groupId: string) => {
-    setExpandedGroups(prev => ({
-      ...prev,
-      [groupId]: !prev[groupId]
-    }));
-  };
-  
-  // Handle creating a new group
+  // Handle creating a new group from the dialog
   const handleCreateGroup = () => {
     if (newGroupName.trim()) {
-      addGroup(newGroupName.trim());
+      createGroup(newGroupName.trim());
       setNewGroupName("");
       setIsGroupDialogOpen(false);
     }
   };
-
-  const handleContextMenu = (e: React.MouseEvent, groupId: string) => {
-    e.preventDefault();
-    setContextMenu({ x: e.clientX, y: e.clientY, groupId });
-  };
-
-  const handleRenameGroup = () => {
-    if (!contextMenu.groupId) return;
-    const group = groups.find(g => g.id === contextMenu.groupId);
-    if (group) {
-      setEditingGroupId(group.id);
-      setEditingGroupName(group.name);
-      setContextMenu({ x: 0, y: 0, groupId: null });
-      
-      // Focus the input after a small delay
-      setTimeout(() => {
-        const input = document.querySelector(`[data-group-input="${group.id}"]`);
-        if (input instanceof HTMLInputElement) {
-          input.focus();
-          input.select();
-        }
-      }, 10);
-    }
-  };
-
-  const handleDeleteGroup = async () => {
-    if (!contextMenu.groupId) return;
-    
-    try {
-      // Check if group has prompts
-      const groupPrompts = prompts.filter(p => p.group === contextMenu.groupId);
-      if (groupPrompts.length > 0) {
-        if (!confirm(`This group contains ${groupPrompts.length} prompt(s). All prompts will be removed from this group. Are you sure you want to proceed?`)) {
-          return;
-        }
-        
-        // Remove group reference from all prompts in this group
-        const updatePromises = groupPrompts.map(prompt => 
-          updatePrompt(prompt.id, { ...prompt, group: undefined })
-        );
-        
-        await Promise.all(updatePromises);
-      }
-      
-      // Now it's safe to delete the group
-      await removeGroup(contextMenu.groupId);
-      
-      toast.success('Group deleted successfully');
-    } catch (error) {
-      console.error('Error deleting group:', error);
-      toast.error('Failed to delete group');
-    } finally {
-      setContextMenu({ x: 0, y: 0, groupId: null });
-    }
-  };
-
-  const handleSaveRename = (groupId: string) => {
-    if (editingGroupName.trim()) {
-      updateGroup(groupId, { name: editingGroupName.trim() });
-      setEditingGroupId(null);
-      setEditingGroupName('');
-      toast.success('Group renamed successfully');
-    } else {
-      toast.error('Group name cannot be empty');
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent, groupId: string) => {
-    if (e.key === 'Enter') {
-      handleSaveRename(groupId);
-    } else if (e.key === 'Escape') {
-      setEditingGroupId(null);
-      setEditingGroupName('');
-    }
-  };
-
-  // Load prompts when component mounts
-  useEffect(() => {
-    getPrompts();
-  }, [getPrompts]);
 
   // Filter prompts based on listBy prop and search
   const filteredAndSortedPrompts = useMemo(() => {
@@ -216,6 +136,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
     { value: "newest", label: "Newest First" },
     { value: "oldest", label: "Oldest First" },
   ];
+
   return (
     <section className="flex flex-col gap-2 min-w-72 w-72 h-screen border-r border-r-neutral-200">
       <div className="flex justify-between items-center p-2">
@@ -429,7 +350,14 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                                   <Pencil className="mr-2 h-4 w-4" />
                                   Rename
                                 </ContextMenuItem>
-                                <ContextMenuItem onClick={handleDeleteGroup} className="text-destructive">
+                                <ContextMenuItem 
+                                  onClick={async () => {
+                                    if (contextMenu.groupId) {
+                                      await handleDeleteGroup(updatePrompt);
+                                    }
+                                  }}
+                                  className="text-destructive"
+                                >
                                   <Trash2 className="mr-2 h-4 w-4" />
                                   Delete
                                 </ContextMenuItem>
