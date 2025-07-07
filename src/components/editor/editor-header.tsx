@@ -20,10 +20,10 @@ import {
 import { useGroupsStore } from "@/store/groups-store";
 import { useState } from "react";
 import { toast } from "sonner";
+import { GroupPrompt } from "@/types/groups";
 
 interface EditorHeaderProps {
-    promptName: string;
-    isFavorite: boolean;
+    selectedPrompt: Prompt;
     isSaving: boolean;
     currentGroupId?: string | null;
     setIsRenameDialogOpen: (open: boolean) => void;
@@ -34,8 +34,7 @@ interface EditorHeaderProps {
 }
 
 export default function EditorHeader({
-    promptName,
-    isFavorite,
+    selectedPrompt,
     isSaving,
     currentGroupId,
     setIsRenameDialogOpen,
@@ -44,7 +43,7 @@ export default function EditorHeader({
     handleCopyToClipboard,
     handleDeletePrompt,
 }: EditorHeaderProps) {
-    const { groups } = useGroupsStore();
+    const { groups, updateGroup } = useGroupsStore();
     const [isLoading, setIsLoading] = useState(false);
 
     const handleMoveToGroup = async (groupId: string | null) => {
@@ -57,6 +56,23 @@ export default function EditorHeader({
             });
             if (success) {
                 const groupName = groupId ? groups.find(g => g.id === groupId)?.name : 'Ungrouped';
+                const groupPrompt: GroupPrompt = {
+                    id: selectedPrompt.id,
+                    name: selectedPrompt.name,
+                    createdAt: selectedPrompt.createdAt,
+                    updatedAt: selectedPrompt.updatedAt,
+                    tags: selectedPrompt.tags,
+                };
+                const removeGroupPrompt = groups.find(g => g.id === currentGroupId)
+                if (removeGroupPrompt) {
+                    removeGroupPrompt.prompts = removeGroupPrompt.prompts?.filter(p => p.id !== selectedPrompt.id);
+                    updateGroup(removeGroupPrompt.id, { prompts: removeGroupPrompt.prompts });
+                }
+                
+                if (groupId) {
+                    updateGroup(groupId, { prompts: [...(groups.find(g => g.id === groupId)?.prompts || []), groupPrompt] });
+                }
+
                 toast.success(`Moved to ${groupName}`);
             } else {
                 toast.error('Failed to move prompt');
@@ -75,11 +91,11 @@ export default function EditorHeader({
             <h1
               className="font-semibold text-xl cursor-text text-neutral-800 hover:text-neutral-600 px-2 py-1 rounded-md"
               onClick={() => {
-                setNewName(promptName);
+                setNewName(selectedPrompt.name);
                 setIsRenameDialogOpen(true);
               }}
             >
-              {promptName}
+              {selectedPrompt.name}
             </h1>
             {isSaving && <Badge>Saving...</Badge>}
           </div>
@@ -144,17 +160,17 @@ export default function EditorHeader({
             <Button
                 variant="ghost"
                 size="icon"
-                className={`rounded-full bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg ${isFavorite ? "text-red-300" : ""}`}
+                className={`rounded-full bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg ${selectedPrompt.isFavorite ? "text-red-300" : ""}`}
                 onClick={() => {
                     handleUpdatePrompt({
-                        isFavorite: !isFavorite,
+                        isFavorite: !selectedPrompt.isFavorite,
                         group: currentGroupId || undefined // Convert null to undefined for TypeScript
                     });
                 }}
                 disabled={isLoading}
             >
                 <Heart
-                    className={`h-4 w-4 ${isFavorite ? "fill-current" : ""}`}
+                    className={`h-4 w-4 ${selectedPrompt.isFavorite ? "fill-current" : ""}`}
                 />
             </Button>
               <DropdownMenu>
@@ -166,7 +182,7 @@ export default function EditorHeader({
                 <DropdownMenuContent align="end" className="w-48 text-neutral-600">
                   <DropdownMenuItem
                     onClick={() => {
-                      setNewName(promptName);
+                      setNewName(selectedPrompt.name);
                       setIsRenameDialogOpen(true);
                     }}
                   >

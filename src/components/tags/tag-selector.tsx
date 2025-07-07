@@ -183,7 +183,8 @@ export function TagSelector({
   const handleRemoveTag = (e: React.MouseEvent, tagId: string) => {
     e.stopPropagation();
     const newTags = (value || []).filter(id => id !== tagId);
-    onChange(newTags);  };
+    onChange(newTags);  
+  };
 
   const handleDeleteTag = async () => {
     if (!deletingTagId) return;
