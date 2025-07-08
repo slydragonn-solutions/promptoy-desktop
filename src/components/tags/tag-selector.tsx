@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react';
-import { ChevronDown, Pencil, Check, X, Trash2 } from 'lucide-react';
+import { Pencil, Check, X, Trash2 } from 'lucide-react';
 import { useTagsStore } from '@/store/tags-store';
 import { Tag as TagComponent } from './tag';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Tag as TagType, TagColorScheme } from '@/types/tags';
+import { Tag as TagType, TagColorScheme, TagPrompt } from '@/types/tags';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { TAG_COLORS } from '@/constants/tags';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Prompt } from '@/types/prompts';
 
 type TagWithHandlers = TagType & {
   onRemove: (e: React.MouseEvent) => void;
@@ -23,16 +24,16 @@ interface TagSelectorProps {
   value: string[];
   onChange: (value: string[]) => void;
   className?: string;
-  placeholder?: string;
   trigger?: React.ReactNode;
+  selectedPrompt: Prompt
 }
 
 export function TagSelector({
   value = [],
   onChange,
   className = '',
-  placeholder = 'Select tags...',
   trigger,
+  selectedPrompt
 }: TagSelectorProps) {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -105,28 +106,30 @@ export function TagSelector({
       const existingTag = tags.find(tag => 
         tag.name.toLowerCase() === tagName.toLowerCase()
       );
+
+      const tagPrompt: TagPrompt = {
+        id: selectedPrompt.id,
+        name: selectedPrompt.name,
+        createdAt: selectedPrompt.createdAt,
+        updatedAt: selectedPrompt.updatedAt
+      };
       
       if (existingTag) {
         // If tag exists, add it if not already in the value array
         if (!value.includes(existingTag.id)) {
+          updateTag(existingTag.id, { prompts: [...(existingTag.prompts || []), tagPrompt] });
           onChange([...value, existingTag.id]);
         }
       } else {
-        try {
-          // Add the tag to the store
-          const newTag = addTag(tagName);
+        
+        // Add the tag to the store
+        const newTag = addTag(tagName, tagPrompt);
           
-          if (newTag) {
-            onChange([...value, newTag.id]);
-            toast.success(`Tag "${tagName}" created`);
-          } else {
-            throw new Error('Failed to create tag');
-          }
-        } catch (error: unknown) {
-          console.error('Error creating tag:', error);
-          const errorMessage = error instanceof Error ? error.message : 'Failed to create tag';
-          toast.error(`Failed to create tag: ${errorMessage}`);
-          return; // Exit early on error
+        if (newTag) {
+          onChange([...value, newTag.id]);
+          toast.success(`Tag "${tagName}" created`);
+        } else {
+          throw new Error('Failed to create tag');
         }
       }
       
@@ -152,7 +155,7 @@ export function TagSelector({
     setSelectedColor(null);
   };
 
-  const handleSaveEdit = async () => {
+  const handleSaveEdit = () => {
     if (!editingTagId || !editedTagName.trim()) return;
     
     const trimmedName = editedTagName.trim();
@@ -162,7 +165,7 @@ export function TagSelector({
     }
 
     try {
-      const success = await updateTag(editingTagId, { 
+      const success = updateTag(editingTagId, { 
         name: trimmedName,
         color: selectedColor || getTagById(editingTagId)?.color 
       });
@@ -182,7 +185,9 @@ export function TagSelector({
 
   const handleRemoveTag = (e: React.MouseEvent, tagId: string) => {
     e.stopPropagation();
+    const tag = getTagById(tagId);
     const newTags = (value || []).filter(id => id !== tagId);
+    updateTag(tagId, { prompts: tag?.prompts?.filter(prompt => prompt.id !== selectedPrompt.id) || [] });
     onChange(newTags);  
   };
 
@@ -322,41 +327,11 @@ export function TagSelector({
     </div>
   );
 
-  const renderTagList = () => {
-    if (selectedTags.length === 0) {
-      return <span className="text-muted-foreground">{placeholder}</span>;
-    }
-
-    return selectedTags.map(tag => (
-      <TagComponent 
-        key={tag.id} 
-        name={tag.name} 
-        color={tag.color}
-        onRemove={tag.onRemove}
-        onClick={tag.onEdit}
-        className="max-w-[200px] truncate group"
-        showEditButton
-      />
-    ));
-  };
-
   return (
     <div className={className}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger>
-          {trigger || (
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={open}
-              className="w-full justify-between"
-            >
-              <div className="flex items-center gap-2 flex-wrap max-w-full overflow-hidden">
-                {renderTagList()}
-              </div>
-              <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          )}
+          {trigger}
         </PopoverTrigger>
         
         <PopoverContent className="w-[300px] p-0" align="start">
@@ -400,6 +375,12 @@ export function TagSelector({
                     <CommandItem
                       key={tag.id}
                       onSelect={() => {
+                        if(tag.isSelected) {
+                          updateTag(tag.id, { prompts: tag.prompts?.filter(prompt => prompt.id !== selectedPrompt.id) || [] });
+                        } else {
+                          updateTag(tag.id, { prompts: [...(tag.prompts || []), { id: selectedPrompt.id, name: selectedPrompt.name, createdAt: selectedPrompt.createdAt, updatedAt: selectedPrompt.updatedAt }] });
+                        }
+
                         const newValue = tag.isSelected
                           ? value.filter(id => id !== tag.id)
                           : [...value, tag.id];

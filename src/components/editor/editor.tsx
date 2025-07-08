@@ -106,6 +106,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
                 : "Add tags"}
             </Button>
           }
+          selectedPrompt={selectedPrompt}
         />
       </div>
 

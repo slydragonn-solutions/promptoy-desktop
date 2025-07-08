@@ -8,10 +8,18 @@ export interface TagColorScheme {
     name: string;
 }
 
+export interface TagPrompt {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Tag {
   id: string;
   name: string;
   color: TagColorScheme;
   createdAt: string;
   updatedAt: string;
+  prompts?: TagPrompt[];
 }
