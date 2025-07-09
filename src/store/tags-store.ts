@@ -11,7 +11,7 @@ interface TagsStore {
   isLoading: boolean;
   error: string | null;
   loadTags: () => void;
-  addTag: (name: string, prompt: TagPrompt) => Tag | null;
+  addTag: (name: string, prompt?: TagPrompt) => Tag | null;
   updateTag: (id: string, updates: Partial<Omit<Tag, 'id' | 'createdAt'>>) => boolean;
   removeTag: (id: string) => boolean;
   toggleTag: (id: string) => void;
@@ -74,7 +74,7 @@ export const useTagsStore = create<TagsStore>((set, get) => ({
         color: colorScheme,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        prompts: [prompt]
+        prompts: prompt ? [prompt] : []
       };
 
       set((state) => {

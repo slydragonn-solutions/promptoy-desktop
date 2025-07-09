@@ -14,7 +14,7 @@ interface PromptsStore {
     updatePrompt: (id: string, updates: Partial<Omit<Prompt, 'id' | 'createdAt'>>) => Promise<boolean>;
     removePrompt: (id: string) => Promise<boolean>;
     // Selection
-    setSelectedPrompt: (prompt: Prompt | null) => boolean;
+    setSelectedPrompt: (promptId: string | null) => boolean;
     // Utils
     clearError: () => void;
 }
@@ -153,27 +153,27 @@ export const promptsStore = create<PromptsStore>((set, get) => ({
     },
 
     // Set the currently selected prompt
-    setSelectedPrompt: (prompt) => {
+    setSelectedPrompt: (promptId) => {
         try {
             // Allow clearing the selection
-            if (prompt === null) {
+            if (promptId === null) {
                 set({ selectedPrompt: null });
                 return true;
             }
 
             // Validate the prompt object
-            if (!prompt?.id || typeof prompt.id !== 'string') {
+            if (!promptId || typeof promptId !== 'string') {
                 throw new Error('Invalid prompt: missing or invalid ID');
             }
 
             // Check if the prompt exists in the store
-            const promptExists = get().prompts.some(p => p.id === prompt.id);
+            const promptExists = get().prompts.some(p => p.id === promptId);
             if (!promptExists) {
                 throw new Error('Cannot select a prompt that is not in the store');
             }
 
             set({ 
-                selectedPrompt: prompt,
+                selectedPrompt: get().prompts.find(p => p.id === promptId),
                 error: null
             });
             return true;

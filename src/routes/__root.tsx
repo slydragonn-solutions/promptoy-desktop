@@ -14,7 +14,9 @@ export const Route = createRootRoute({
         const { setSelectedPrompt } = promptsStore()
 
         useEffect(() => {
-            setSelectedPrompt(null)
+            if(currentPath !== "/all"){
+                setSelectedPrompt(null)
+            }
         }, [currentPath])
 
         return (

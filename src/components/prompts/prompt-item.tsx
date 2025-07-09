@@ -33,7 +33,7 @@ import { GroupPrompt } from '@/types/groups';
 interface PromptItemProps {
     prompt: Prompt;
     isSelected: boolean;
-    onSelect: (prompt: Prompt) => void;
+    onSelect: (promptId: string) => void;
 }
 
 export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemProps) {
@@ -173,7 +173,7 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
                             'hover:bg-neutral-100',
                             isSelected && 'bg-neutral-100 hover:bg-neutral-100 border-l-4 border-l-neutral-600',
                         )}
-                        onClick={() => onSelect(prompt)}
+                        onClick={() => onSelect(prompt.id)}
                     >
             <div className="flex flex-col gap-1.5 w-full">
                 <div className="flex justify-between items-start gap-2">
