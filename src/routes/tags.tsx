@@ -155,7 +155,7 @@ function Tags() {
             <CardContent className="flex flex-col">
               <h3 className="text-xs mb-2">Associated Prompts ({tag.prompts?.length})</h3>
               {tag.prompts && tag.prompts.length > 0 ? (
-                  <ScrollArea className="overflow-y-auto h-[80px]">
+                  <ScrollArea className="overflow-y-auto h-[100px]">
                     {tag.prompts.map((prompt) => (
                       <div
                         key={prompt.id}
@@ -185,7 +185,7 @@ function Tags() {
         <Accordion type="single" collapsible className="w-full"> 
           {tags.map((tag) => (
             <AccordionItem value={tag.id} key={tag.id}>
-              <AccordionTrigger>
+              <AccordionTrigger className={`flex items-center justify-between w-full ${getTagColorClasses(tag.color)} my-2 p-2`}>
                 <Badge
                   variant="outline"
                   className={`${getTagColorClasses(tag.color)} rounded-full text-sm`}
@@ -193,10 +193,39 @@ function Tags() {
                   {tag.name}
                 </Badge>
               </AccordionTrigger>
-              <AccordionContent>
-                <ScrollArea className="overflow-y-auto h-[80px]">
+              <AccordionContent className={`flex flex-col ${getTagColorClasses(tag.color)} mb-2 p-2 rounded-md`}>
+              <div className="flex items-center mb-2 justify-between">
+                <div className="text-xs text-muted-foreground">
+                    Created: {new Date(tag.createdAt).toLocaleDateString()}
+                  </div>
+                <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className='hover:bg-neutral-200 text-neutral-600'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    startEdit(tag.id, tag.name, tag.color);
+                  }}
+                >
+                  <Pen />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className='hover:bg-red-200 text-neutral-600'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDeletingTagId(tag.id);
+                  }}
+                >
+                  <Trash2 />
+                </Button>
+                </div>
+                </div>
+                <p className="text-xs mb-2">Associated Prompts ({tag.prompts?.length})</p>
                   {tag.prompts && tag.prompts.length > 0 ? (
-                      <ScrollArea className="overflow-y-auto h-[80px]">
+                      <div>
                         {tag.prompts.map((prompt) => (
                           <div
                             key={prompt.id}
@@ -210,14 +239,10 @@ function Tags() {
                             <span className="text-neutral-400">{new Date(prompt.createdAt).toLocaleDateString()}</span>
                           </div>
                         ))}
-                      </ScrollArea>
+                      </div>
                   ) : (
                     <p className="text-xs text-muted-foreground">No prompts associated with this tag</p>
                   )}
-                  <div className="text-xs text-muted-foreground mt-2">
-                    Created: {new Date(tag.createdAt).toLocaleDateString()}
-                  </div>
-                </ScrollArea>
               </AccordionContent>
             </AccordionItem>
           ))}
