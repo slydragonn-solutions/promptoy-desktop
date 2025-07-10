@@ -1,14 +1,29 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useEffect, useState } from "react";
-import { useTagsStore } from "@/store/tags-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, TagsIcon, Trash2 } from "lucide-react";
+import { Pen, TagsIcon, Trash2 } from "lucide-react";
 import { getTagColorClasses } from '@/constants/tags';
 import { promptsStore } from '@/store/prompts-store';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import useTagsManagement from '@/hooks/use-tags-management';
+import { useTagsStore } from '@/store/tags-store';
+import TagEditForm from '@/components/tags/tag-edit-form';
+import { useGroupsStore } from '@/store/groups-store';
+import Alert from '@/components/common/alert';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 export const Route = createFileRoute("/tags")({
   component: Tags,
@@ -16,38 +31,49 @@ export const Route = createFileRoute("/tags")({
 
 function Tags() {
   const navigate = useNavigate({from: "/tags"})
-  const { tags, isLoading, addTag, removeTag, loadTags } = useTagsStore();
-  const { setSelectedPrompt } = promptsStore();
-  const [newTagName, setNewTagName] = useState("");
+  const { setSelectedPrompt, selectedPrompt, updatePrompt } = promptsStore();
+  const { groups, updateGroup } = useGroupsStore();
+  const { tags } = useTagsStore();
 
-
-
-  useEffect(() => {
-    // Load tags from storage on component mount
-    loadTags();
-  }, []);
-
-  const handleAddTag = () => {
-    if (!newTagName.trim()) return;
-
-    const newTag = addTag(newTagName);
-
-    if (newTag) {
-      setNewTagName("");
+  const {
+    newTagName,
+    editingTagId,
+    selectedColor,
+    deletingTagId,
+    editedTagName,
+    createTag,
+    startEdit,
+    cancelEdit,
+    saveEdit,
+    deleteTag,
+    setNewTagName,
+    setEditedTagName,
+    setSelectedColor,
+    setDeletingTagId
+  } = useTagsManagement([], (tags) => {
+    // Create a new object to trigger the update
+    const updatedPrompt = { ...selectedPrompt, tags };
+    if(selectedPrompt?.id){
+      updatePrompt(selectedPrompt.id, updatedPrompt);
     }
 
-  };
-
-  const handleDeleteTag = (tagId: string) => {
-    if (window.confirm("Are you sure you want to delete this tag?")) {
-      removeTag(tagId);
+    if(selectedPrompt?.group){
+      const group = groups.find(g => g.id === selectedPrompt.group)
+      if(group){
+        updateGroup(group.id, { prompts: group.prompts?.map(p => 
+          p.id === selectedPrompt.id 
+            ? { ...p, tags } 
+            : p
+        )});
+      }
     }
-  };
+  })
 
-  if (isLoading) {
+
+  if (tags.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-[200px]">
-        <Loader2 className="h-8 w-8 animate-spin" />
+        <p className="text-center text-muted-foreground">No tags found</p>
       </div>
     );
   }
@@ -62,11 +88,32 @@ function Tags() {
             value={newTagName}
             onChange={(e) => setNewTagName(e.target.value)}
           />
-          <Button onClick={handleAddTag} className='rounded-full' disabled={!newTagName.trim()}><TagsIcon />Add Tag</Button>
+          <Button onClick={() => createTag()} className='rounded-full' disabled={!newTagName.trim()}><TagsIcon />Add Tag</Button>
         </div>
       </div>
 
+      {
+        editingTagId && (
+          <TagEditForm
+            editedTagName={editedTagName}
+            setEditedTagName={setEditedTagName}
+            saveEdit={saveEdit}
+            cancelEdit={cancelEdit}
+            selectedColor={selectedColor}
+            setSelectedColor={setSelectedColor}
+            setDeletingTagId={setDeletingTagId}
+            editingTagId={editingTagId}
+          />
+        )
+      }
+
       <ScrollArea className="h-[calc(100vh-100px)]">
+      <Tabs defaultValue="grid">
+        <TabsList>
+          <TabsTrigger value="grid">Grid</TabsTrigger>
+          <TabsTrigger value="list">List</TabsTrigger>
+        </TabsList>
+        <TabsContent value="grid">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {tags.map((tag) => {
         const colorClasses = getTagColorClasses(tag.color);
@@ -82,14 +129,28 @@ function Tags() {
                   {tag.name}
                 </Badge>
               </CardTitle>
-              <Button
-                variant="ghost"
-                size="icon"
-                className='hover:bg-red-200 text-neutral-600'
-                onClick={() => handleDeleteTag(tag.id)}
-              >
-                <Trash2 />
-              </Button>
+              <div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className='hover:bg-neutral-200 text-neutral-600'
+                  onClick={() => {
+                    startEdit(tag.id, tag.name, tag.color);
+                  }}
+                >
+                  <Pen />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className='hover:bg-red-200 text-neutral-600'
+                  onClick={() => {
+                    setDeletingTagId(tag.id);
+                  }}
+                >
+                  <Trash2 />
+                </Button>
+              </div>
             </CardHeader>
             <CardContent className="flex flex-col">
               <h3 className="text-xs mb-2">Associated Prompts ({tag.prompts?.length})</h3>
@@ -119,7 +180,59 @@ function Tags() {
           </Card>
         )})}
       </div>
+      </TabsContent>
+      <TabsContent value="list">
+        <Accordion type="single" collapsible className="w-full"> 
+          {tags.map((tag) => (
+            <AccordionItem value={tag.id} key={tag.id}>
+              <AccordionTrigger>
+                <Badge
+                  variant="outline"
+                  className={`${getTagColorClasses(tag.color)} rounded-full text-sm`}
+                >
+                  {tag.name}
+                </Badge>
+              </AccordionTrigger>
+              <AccordionContent>
+                <ScrollArea className="overflow-y-auto h-[80px]">
+                  {tag.prompts && tag.prompts.length > 0 ? (
+                      <ScrollArea className="overflow-y-auto h-[80px]">
+                        {tag.prompts.map((prompt) => (
+                          <div
+                            key={prompt.id}
+                            className="flex flex-row items-center justify-between text-xs hover:bg-neutral-200 cursor-pointer bg-neutral-50 p-2 rounded-md mb-2"
+                            onClick={() => {
+                              setSelectedPrompt(prompt.id);
+                              navigate({to: "/all"})
+                            }}
+                          >
+                            <span className="text-neutral-700">{prompt.name}</span>
+                            <span className="text-neutral-400">{new Date(prompt.createdAt).toLocaleDateString()}</span>
+                          </div>
+                        ))}
+                      </ScrollArea>
+                  ) : (
+                    <p className="text-xs text-muted-foreground">No prompts associated with this tag</p>
+                  )}
+                  <div className="text-xs text-muted-foreground mt-2">
+                    Created: {new Date(tag.createdAt).toLocaleDateString()}
+                  </div>
+                </ScrollArea>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </TabsContent>
+      </Tabs>
       </ScrollArea>
+      <Alert
+        open={!!deletingTagId}
+        onOpenChange={(open: boolean) => !open && setDeletingTagId(null)}
+        onAction={deleteTag}
+        title="Delete Tag"
+        description="Are you sure you want to delete this tag? This action cannot be undone."
+        actionText="Delete"
+      />
     </div>
   );
 }
