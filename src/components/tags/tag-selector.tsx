@@ -1,18 +1,15 @@
-import { useState, useEffect } from 'react';
-import { Pencil, Check, X, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { Pencil, Check, Trash2 } from 'lucide-react';
 import { useTagsStore } from '@/store/tags-store';
 import { Tag as TagComponent } from './tag';
-import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Tag as TagType, TagColorScheme, TagPrompt } from '@/types/tags';
+import { Tag as TagType } from '@/types/tags';
 import { cn } from '@/lib/utils';
-import { toast } from 'sonner';
-import { TAG_COLORS } from '@/constants/tags';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Prompt } from '@/types/prompts';
+import useTagsManagement from '@/hooks/use-tags-management';
+import Alert from '../common/alert';
+import TagEditForm from './tag-edit-form';
 
 type TagWithHandlers = TagType & {
   onRemove: (e: React.MouseEvent) => void;
@@ -37,25 +34,28 @@ export function TagSelector({
 }: TagSelectorProps) {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [newTagName, setNewTagName] = useState('');
-  const [editingTagId, setEditingTagId] = useState<string | null>(null);
-  const [deletingTagId, setDeletingTagId] = useState<string | null>(null);
-  const [editedTagName, setEditedTagName] = useState('');
-  const [selectedColor, setSelectedColor] = useState<TagColorScheme | null>(null);
+  const {
+    editingTagId,
+    selectedColor,
+    deletingTagId,
+    editedTagName,
+    createTag,
+    startEdit,
+    cancelEdit,
+    saveEdit,
+    removeTagFromPrompt,
+    deleteTag,
+    setNewTagName,
+    setEditedTagName,
+    setSelectedColor,
+    setDeletingTagId
+  } = useTagsManagement(value, onChange);
   
   const { 
     tags, 
-    addTag,
     updateTag,
-    removeTag,
-    loadTags,
     getTagById
   } = useTagsStore();
-  
-  // Load tags on mount
-  useEffect(() => {
-    loadTags();
-  }, [loadTags]);
 
 
   
@@ -65,9 +65,9 @@ export function TagSelector({
     if (tag) {
       acc.push({
         ...tag,
-        onRemove: (_e: React.MouseEvent) => handleRemoveTag(_e, tag.id),
+        onRemove: (_e: React.MouseEvent) => removeTagFromPrompt(_e, tag.id, selectedPrompt.id),
         onClick: (_e: React.MouseEvent) => _e.stopPropagation(),
-        onEdit: (_e: React.MouseEvent) => handleStartEdit(tag.id, tag.name, tag.color)
+        onEdit: (_e: React.MouseEvent) => startEdit(tag.id, tag.name, tag.color)
       });
     }
     return acc;
@@ -87,139 +87,16 @@ export function TagSelector({
     .map(tag => ({
       ...tag,
       isSelected: value.includes(tag.id),
-      onRemove: (_e: React.MouseEvent) => handleRemoveTag(_e, tag.id),
+      onRemove: (_e: React.MouseEvent) => removeTagFromPrompt(_e, tag.id, selectedPrompt.id),
       onClick: (_e: React.MouseEvent) => _e.stopPropagation(),
-      onEdit: (_e: React.MouseEvent) => handleStartEdit(tag.id, tag.name, tag.color)
+      onEdit: (_e: React.MouseEvent) => startEdit(tag.id, tag.name, tag.color)
     })) as (TagWithHandlers & { isSelected: boolean })[];
   
   const handleCreateTag = async () => {
-    const tagName = newTagName.trim();
-    if (!tagName) return;
-    
-    if (tagName.length > 25) {
-      toast.error('Tag name must be 25 characters or less');
-      return;
-    }
-
-    try {
-      // First check if tag with same name already exists in the current tags
-      const existingTag = tags.find(tag => 
-        tag.name.toLowerCase() === tagName.toLowerCase()
-      );
-
-      const tagPrompt: TagPrompt = {
-        id: selectedPrompt.id,
-        name: selectedPrompt.name,
-        createdAt: selectedPrompt.createdAt,
-        updatedAt: selectedPrompt.updatedAt
-      };
-      
-      if (existingTag) {
-        // If tag exists, add it if not already in the value array
-        if (!value.includes(existingTag.id)) {
-          updateTag(existingTag.id, { prompts: [...(existingTag.prompts || []), tagPrompt] });
-          onChange([...value, existingTag.id]);
-        }
-      } else {
-        
-        // Add the tag to the store
-        const newTag = addTag(tagName, tagPrompt);
-          
-        if (newTag) {
-          onChange([...value, newTag.id]);
-          toast.success(`Tag "${tagName}" created`);
-        } else {
-          throw new Error('Failed to create tag');
-        }
-      }
-      
-      // Clear input fields only if everything was successful
-      setNewTagName('');
-      setSearchQuery('');
-    } catch (error: unknown) {
-      console.error('Error in handleCreateTag:', error);
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      toast.error(`Error: ${errorMessage}`);
-    }
+    createTag();
+    setSearchQuery('');
   };
 
-  const handleStartEdit = (tagId: string, currentName: string, currentColor: TagColorScheme) => {
-    setEditingTagId(tagId);
-    setEditedTagName(currentName);
-    setSelectedColor(currentColor);
-  };
-
-  const handleCancelEdit = () => {
-    setEditingTagId(null);
-    setEditedTagName('');
-    setSelectedColor(null);
-  };
-
-  const handleSaveEdit = () => {
-    if (!editingTagId || !editedTagName.trim()) return;
-    
-    const trimmedName = editedTagName.trim();
-    if (trimmedName.length > 25) {
-      toast.error('Tag name must be 25 characters or less');
-      return;
-    }
-
-    try {
-      const success = updateTag(editingTagId, { 
-        name: trimmedName,
-        color: selectedColor || getTagById(editingTagId)?.color 
-      });
-      
-      if (success) {
-        toast.success('Tag updated successfully');
-      } else {
-        throw new Error('Failed to update tag');
-      }
-    } catch (error) {
-      console.error('Error updating tag:', error);
-      toast.error('Failed to update tag');
-    } finally {
-      handleCancelEdit();
-    }
-  };
-
-  const handleRemoveTag = (e: React.MouseEvent, tagId: string) => {
-    e.stopPropagation();
-    const tag = getTagById(tagId);
-    const newTags = (value || []).filter(id => id !== tagId);
-    updateTag(tagId, { prompts: tag?.prompts?.filter(prompt => prompt.id !== selectedPrompt.id) || [] });
-    onChange(newTags);  
-  };
-
-  const handleDeleteTag = async () => {
-    if (!deletingTagId) return;
-    
-    try {
-      const success = await removeTag(deletingTagId);
-      if (success) {
-        // Remove the tag from the current selection if it's selected
-        const newTags = (value || []).filter(id => id !== deletingTagId);
-        if (newTags.length !== (value || []).length) {
-          onChange(newTags);
-        }
-        // Close the edit form if the deleted tag was being edited
-        if (editingTagId === deletingTagId) {
-          setEditingTagId(null);
-          setEditedTagName('');
-          setSelectedColor(null);
-        }
-        toast.success('Tag deleted successfully');
-      } else {
-        throw new Error('Failed to delete tag');
-      }
-    } catch (error) {
-      console.error('Error deleting tag:', error);
-      toast.error('Failed to delete tag');
-    } finally {
-      setDeletingTagId(null);
-    }
-  };
-  
   const handleKeyDown = async (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -228,104 +105,7 @@ export function TagSelector({
       setNewTagName('');
     }
   };
-  
-  // Render the delete confirmation dialog
-  const renderDeleteDialog = () => (
-    <AlertDialog 
-      open={!!deletingTagId} 
-      onOpenChange={(open: boolean) => !open && setDeletingTagId(null)}
-    >
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Delete Tag</AlertDialogTitle>
-          <AlertDialogDescription>
-            Are you sure you want to delete this tag? This action cannot be undone.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction 
-            onClick={handleDeleteTag}
-            className="bg-destructive hover:bg-destructive/90"
-          >
-            Delete
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
 
-  // Render the tag edit form when a tag is being edited
-  const renderTagEditForm = () => (
-    <div className="p-3 space-y-4">
-      <div className="space-y-2">
-        <div className="flex gap-2">
-          <Input
-            value={editedTagName}
-            onChange={(e) => setEditedTagName(e.target.value)}
-            maxLength={25}
-            className="flex-1"
-            autoFocus
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') handleSaveEdit();
-              else if (e.key === 'Escape') handleCancelEdit();
-            }}
-          />
-          <div className="flex gap-1">
-            <Button 
-              size="icon" 
-              variant="ghost" 
-              onClick={handleSaveEdit}
-              disabled={!editedTagName.trim()}
-            >
-              <Check className="h-4 w-4" />
-            </Button>
-            <Button 
-              size="icon" 
-              variant="ghost" 
-              onClick={handleCancelEdit}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-            <Button 
-              size="icon" 
-              variant="ghost" 
-              className="text-destructive hover:text-destructive/90"
-              onClick={(e) => {
-                e.stopPropagation();
-                setDeletingTagId(editingTagId);
-              }}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-        <p className="text-xs text-muted-foreground text-right">
-          {editedTagName.length}/25 characters
-        </p>
-      </div>
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Color</label>
-        <ScrollArea className="h-48">
-          <div className="grid grid-cols-5 gap-2 p-1">
-            {TAG_COLORS.map((color) => (
-              <button
-                key={color.name}
-                type="button"
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${color.bg} ${color.border} ${selectedColor?.name === color.name ? 'ring-2 ring-offset-2 ring-primary' : ''}`}
-                onClick={() => setSelectedColor(color)}
-                title={color.name}
-              >
-                {selectedColor?.name === color.name && (
-                  <Check className="h-4 w-4 text-white" />
-                )}
-              </button>
-            ))}
-          </div>
-        </ScrollArea>
-      </div>
-    </div>
-  );
 
   return (
     <div className={className}>
@@ -336,7 +116,16 @@ export function TagSelector({
         
         <PopoverContent className="w-[300px] p-0" align="start">
           {editingTagId ? (
-            renderTagEditForm()
+            <TagEditForm
+              editedTagName={editedTagName}
+              setEditedTagName={setEditedTagName}
+              saveEdit={saveEdit}
+              cancelEdit={cancelEdit}
+              selectedColor={selectedColor}
+              setSelectedColor={setSelectedColor}
+              setDeletingTagId={setDeletingTagId}
+              editingTagId={editingTagId}
+            />
           ) : (
             <Command>
               <div className="px-2 py-1.5">
@@ -407,7 +196,7 @@ export function TagSelector({
                             className="p-1 rounded hover:bg-accent"
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleStartEdit(tag.id, tag.name, tag.color);
+                              startEdit(tag.id, tag.name, tag.color);
                             }}
                           >
                             <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
@@ -443,13 +232,21 @@ export function TagSelector({
               key={tag.id}
               name={tag.name}
               color={tag.color}
-              onRemove={(e) => handleRemoveTag(e, tag.id)}
+              onRemove={(e) => removeTagFromPrompt(e, tag.id, selectedPrompt.id)}
               className="text-xs py-0.5 px-2"
             />
           ))}
         </div>
       )}
-      {renderDeleteDialog()}
+
+      <Alert
+        open={!!deletingTagId}
+        onOpenChange={(open: boolean) => !open && setDeletingTagId(null)}
+        onAction={deleteTag}
+        title="Delete Tag"
+        description="Are you sure you want to delete this tag? This action cannot be undone."
+        actionText="Delete"
+      />
     </div>
   );
 }
