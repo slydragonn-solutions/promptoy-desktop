@@ -93,7 +93,13 @@ export function TagSelector({
     })) as (TagWithHandlers & { isSelected: boolean })[];
   
   const handleCreateTag = async () => {
-    createTag();
+    const tagPrompt = {
+      id: selectedPrompt.id,
+      name: selectedPrompt.name,
+      createdAt: selectedPrompt.createdAt,
+      updatedAt: selectedPrompt.updatedAt
+    };
+    createTag(tagPrompt);
     setSearchQuery('');
   };
 
