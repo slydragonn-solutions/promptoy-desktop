@@ -30,7 +30,7 @@ function StatCard({ title, value }: { title: string; value: string }) {
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
+        <div className="text-3xl font-bold">{value}</div>
       </CardContent>
     </Card>
   );
@@ -38,7 +38,7 @@ function StatCard({ title, value }: { title: string; value: string }) {
 
 function Index() {
   const navigate = useNavigate({from: "/"})
-  const { groups, loadGroups, selectGroup, selectedGroupId } = useGroupsStore();
+  const { groups, loadGroups } = useGroupsStore();
   const { prompts, getPrompts, setSelectedPrompt } = promptsStore();
   const { getTagById, loadTags } = useTagsStore();
   const [isCommandOpen, setIsCommandOpen] = useState(false);
@@ -99,8 +99,15 @@ function Index() {
   });
 
   const redirectToPrompt = (promptId: string) => {
-    setSelectedPrompt(promptId);
-    navigate({to: "/all"});
+    if (promptId === 'new') {
+      // Clear any selected prompt when creating a new one
+      setSelectedPrompt(null);
+      navigate({ to: '/all' });
+    } else {
+      // Navigate to existing prompt
+      setSelectedPrompt(promptId);
+      navigate({ to: '/all' });
+    }
   }
 
   return (
@@ -136,14 +143,14 @@ function Index() {
         </header>
 
         {/* Dashboard Content */}
-        <main className="flex-1 overflow-y-auto p-6">
-          <div className="mb-8">
+        <main className="flex-1 overflow-y-auto p-4">
+          <div className="mb-4">
             <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
             <p className="text-neutral-500">Welcome back! Here's what's happening with your prompts.</p>
           </div>
 
           {/* Stats Grid */}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-4">
             <StatCard 
               title="Total Prompts" 
               value={stats.totalPrompts.toLocaleString()} 
@@ -163,10 +170,19 @@ function Index() {
           </div>
 
           {/* Recent Activity */}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-4">
-              <CardHeader>
+          <div className="w-full">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Recent Activity</CardTitle>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  className="flex items-center gap-1"
+                  onClick={() => redirectToPrompt('new')}
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>New Prompt</span>
+                </Button>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -197,7 +213,7 @@ function Index() {
                         return (
                           <div 
                             key={prompt.id} 
-                            className="flex items-center p-2 rounded-lg hover:bg-accent/50 cursor-pointer"
+                            className="flex items-center w-full p-2 rounded-lg hover:bg-accent/50 cursor-pointer"
                             onClick={() => {
                               redirectToPrompt(prompt.id);
                             }}
@@ -209,57 +225,9 @@ function Index() {
                               <p className="text-sm font-medium truncate">{prompt.name || 'Untitled Prompt'}</p>
                               <p className="text-xs text-muted-foreground">Updated {timeAgo}</p>
                             </div>
-                            <Button variant="ghost" size="sm">View</Button>
                           </div>
                         );
                       })
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Prompt Groups */}
-            <Card className="col-span-3">
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <CardTitle>Prompt Groups</CardTitle>
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="divide-y">
-                  {groups.map((group) => {
-                    const isSelected = selectedGroupId === group.id;
-                    const promptCount = group.prompts?.length || 0;
-                    
-                    return (
-                      <div 
-                        key={group.id}
-                        onClick={() => selectGroup(group.id)}
-                        className={`p-3 cursor-pointer transition-colors ${
-                          isSelected 
-                            ? 'bg-blue-50 border-l-4 border-blue-500' 
-                            : 'hover:bg-neutral-50'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="font-medium truncate">{group.name}</div>
-                          <div className="text-sm text-neutral-500 bg-neutral-100 rounded-full px-2 py-0.5">
-                            {promptCount}
-                          </div>
-                        </div>
-                        <div className="text-xs text-neutral-500 truncate">
-                          {new Date(group.updatedAt).toLocaleDateString()}
-                        </div>
-                      </div>
-                    );
-                  })}
-                  {groups.length === 0 && (
-                    <div className="p-4 text-center text-sm text-neutral-500">
-                      No groups yet. Create one to get started.
-                    </div>
                   )}
                 </div>
               </CardContent>
