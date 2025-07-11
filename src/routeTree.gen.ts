@@ -13,7 +13,6 @@ import { Route as TagsRouteImport } from './routes/tags'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as LocalRouteImport } from './routes/local'
 import { Route as InfoRouteImport } from './routes/info'
-import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as BackupRouteImport } from './routes/backup'
 import { Route as AllRouteImport } from './routes/all'
 import { Route as IndexRouteImport } from './routes/index'
@@ -38,11 +37,6 @@ const InfoRoute = InfoRouteImport.update({
   path: '/info',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FavoritesRoute = FavoritesRouteImport.update({
-  id: '/favorites',
-  path: '/favorites',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const BackupRoute = BackupRouteImport.update({
   id: '/backup',
   path: '/backup',
@@ -63,7 +57,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/all': typeof AllRoute
   '/backup': typeof BackupRoute
-  '/favorites': typeof FavoritesRoute
   '/info': typeof InfoRoute
   '/local': typeof LocalRoute
   '/settings': typeof SettingsRoute
@@ -73,7 +66,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/all': typeof AllRoute
   '/backup': typeof BackupRoute
-  '/favorites': typeof FavoritesRoute
   '/info': typeof InfoRoute
   '/local': typeof LocalRoute
   '/settings': typeof SettingsRoute
@@ -84,7 +76,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/all': typeof AllRoute
   '/backup': typeof BackupRoute
-  '/favorites': typeof FavoritesRoute
   '/info': typeof InfoRoute
   '/local': typeof LocalRoute
   '/settings': typeof SettingsRoute
@@ -96,27 +87,17 @@ export interface FileRouteTypes {
     | '/'
     | '/all'
     | '/backup'
-    | '/favorites'
     | '/info'
     | '/local'
     | '/settings'
     | '/tags'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/all'
-    | '/backup'
-    | '/favorites'
-    | '/info'
-    | '/local'
-    | '/settings'
-    | '/tags'
+  to: '/' | '/all' | '/backup' | '/info' | '/local' | '/settings' | '/tags'
   id:
     | '__root__'
     | '/'
     | '/all'
     | '/backup'
-    | '/favorites'
     | '/info'
     | '/local'
     | '/settings'
@@ -127,7 +108,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AllRoute: typeof AllRoute
   BackupRoute: typeof BackupRoute
-  FavoritesRoute: typeof FavoritesRoute
   InfoRoute: typeof InfoRoute
   LocalRoute: typeof LocalRoute
   SettingsRoute: typeof SettingsRoute
@@ -164,13 +144,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InfoRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/favorites': {
-      id: '/favorites'
-      path: '/favorites'
-      fullPath: '/favorites'
-      preLoaderRoute: typeof FavoritesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/backup': {
       id: '/backup'
       path: '/backup'
@@ -199,7 +172,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AllRoute: AllRoute,
   BackupRoute: BackupRoute,
-  FavoritesRoute: FavoritesRoute,
   InfoRoute: InfoRoute,
   LocalRoute: LocalRoute,
   SettingsRoute: SettingsRoute,
