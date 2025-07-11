@@ -35,7 +35,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from "@/components/ui/label";
 
 type SortOption = "a-z" | "z-a" | "newest" | "oldest";
-type ListByOption = "all" | "favorites" | "local" | "backup";
+type ListByOption = "all" | "local" | "backup";
 
 interface PromptListProps {
   listBy?: ListByOption;
@@ -47,6 +47,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
   const { loadGroups } = useGroupsStore();
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("newest");
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [isGroupDialogOpen, setIsGroupDialogOpen] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
   
@@ -88,9 +89,6 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
 
     // Apply listBy filter
     switch (listBy) {
-      case 'favorites':
-        filtered = filtered.filter(prompt => prompt.isFavorite === true);
-        break;
       case 'local':
         filtered = filtered.filter(prompt => prompt.isSynced === false);
         break;
@@ -98,6 +96,11 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
         filtered = filtered.filter(prompt => prompt.isSynced === true);
         break;
       // 'all' case - no additional filtering needed
+    }
+
+    // Apply favorites filter
+    if (showFavoritesOnly) {
+      filtered = filtered.filter(prompt => prompt.isFavorite === true);
     }
 
     // Apply search filter
@@ -128,7 +131,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
           return 0;
       }
     });
-  }, [prompts, search, sortBy, listBy]);
+  }, [prompts, search, sortBy, listBy, showFavoritesOnly]);
 
   const sortOptions: { value: SortOption; label: string }[] = [
     { value: "a-z", label: "A to Z" },
@@ -155,6 +158,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48 text-neutral-600">
+              <div className="px-2 py-1.5 text-xs font-medium text-neutral-500">Sort By</div>
               {sortOptions.map((option) => (
                 <DropdownMenuItem
                   key={option.value}
@@ -165,6 +169,14 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                   {sortBy === option.value && <Check className="h-4 w-4" />}
                 </DropdownMenuItem>
               ))}
+              <div className="h-px bg-neutral-200 my-1" />
+              <DropdownMenuItem
+                onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
+                className="flex items-center justify-between cursor-pointer"
+              >
+                <span>Favorites Only</span>
+                {showFavoritesOnly && <Check className="h-4 w-4" />}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <Dialog open={isGroupDialogOpen} onOpenChange={setIsGroupDialogOpen}>
