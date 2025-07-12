@@ -17,8 +17,6 @@ import EditorFooter from "./editor-footer";
 import EditorNotFound from "./editor-not-found";
 import EditorHeader from "./editor-header";
 import { DiffEditor } from "./diff-editor";
-import { useGroupsStore } from "@/store/groups-store";
-
 interface EditorProps {
   isComparing: boolean;
   compareVersion: {
@@ -31,7 +29,6 @@ interface EditorProps {
 
 export default function Editor({ isComparing, compareVersion, onCloseCompare }: EditorProps) {
   const { selectedPrompt } = promptsStore();
-  const { groups, updateGroup } = useGroupsStore();
   
   // Get the current version (most recent one)
   const currentVersion = selectedPrompt?.versions?.[0];
@@ -80,17 +77,6 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
             // Create a new object to trigger the update
             const updatedPrompt = { ...selectedPrompt, tags };
             handleUpdatePrompt(updatedPrompt);
-
-            if(selectedPrompt.group){
-              const group = groups.find(g => g.id === selectedPrompt.group)
-              if(group){
-                updateGroup(group.id, { prompts: group.prompts?.map(p => 
-                  p.id === selectedPrompt.id 
-                    ? { ...p, tags } 
-                    : p
-                )});
-              }
-            }
           }}
           className="flex flex-wrap gap-1"
           trigger={

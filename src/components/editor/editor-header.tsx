@@ -20,7 +20,6 @@ import {
 import { useGroupsStore } from "@/store/groups-store";
 import { useState } from "react";
 import { toast } from "sonner";
-import { GroupPrompt } from "@/types/groups";
 
 interface EditorHeaderProps {
     selectedPrompt: Prompt;
@@ -56,21 +55,15 @@ export default function EditorHeader({
             });
             if (success) {
                 const groupName = groupId ? groups.find(g => g.id === groupId)?.name : 'Ungrouped';
-                const groupPrompt: GroupPrompt = {
-                    id: selectedPrompt.id,
-                    name: selectedPrompt.name,
-                    createdAt: selectedPrompt.createdAt,
-                    updatedAt: selectedPrompt.updatedAt,
-                    tags: selectedPrompt.tags,
-                };
+               
                 const removeGroupPrompt = groups.find(g => g.id === currentGroupId)
                 if (removeGroupPrompt) {
-                    removeGroupPrompt.prompts = removeGroupPrompt.prompts?.filter(p => p.id !== selectedPrompt.id);
+                    removeGroupPrompt.prompts = removeGroupPrompt.prompts?.filter(promptId => promptId !== selectedPrompt.id);
                     updateGroup(removeGroupPrompt.id, { prompts: removeGroupPrompt.prompts });
                 }
                 
                 if (groupId) {
-                    updateGroup(groupId, { prompts: [...(groups.find(g => g.id === groupId)?.prompts || []), groupPrompt] });
+                    updateGroup(groupId, { prompts: [...(groups.find(g => g.id === groupId)?.prompts || []), selectedPrompt.id] });
                 }
 
                 toast.success(`Moved to ${groupName}`);

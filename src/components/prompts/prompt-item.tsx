@@ -28,7 +28,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { GroupPrompt } from '@/types/groups';
 
 interface PromptItemProps {
     prompt: Prompt;
@@ -37,7 +36,7 @@ interface PromptItemProps {
 }
 
 export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemProps) {
-    const { name, updatedAt, createdAt, tags: tagIds = [], id, isFavorite } = prompt;
+    const { name, updatedAt, tags: tagIds = [], id, isFavorite } = prompt;
     const { getTagById, loadTags } = useTagsStore();
     const { updatePrompt, removePrompt } = promptsStore();
     const { groups, updateGroup } = useGroupsStore();
@@ -143,19 +142,12 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
 
         try {
             await updatePrompt(id, { group: groupId });
-            const groupPrompt: GroupPrompt = {
-                id,
-                name,
-                createdAt,
-                updatedAt,
-                tags: tagIds,
-            };
             const removeGroupPrompt = groups.find(g => g.id === prompt.group)
             if (removeGroupPrompt) {
-                removeGroupPrompt.prompts = removeGroupPrompt.prompts?.filter(p => p.id !== id);
+                removeGroupPrompt.prompts = removeGroupPrompt.prompts?.filter(promptId => promptId !== id);
                 updateGroup(removeGroupPrompt.id, { prompts: removeGroupPrompt.prompts });
             }
-            updateGroup(groupId, { prompts: [...(groups.find(g => g.id === groupId)?.prompts || []), groupPrompt] });
+            updateGroup(groupId, { prompts: [...(groups.find(g => g.id === groupId)?.prompts || []), id] });
             toast.success("Prompt moved successfully");
             setIsMoving(false);
         } catch (error) {
