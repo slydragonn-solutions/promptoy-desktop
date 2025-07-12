@@ -1,4 +1,4 @@
-import { FilterIcon, ChevronDown, Check, FolderPlus, ChevronRight, ChevronDown as ChevronDownIcon, Pencil, Trash2, Plus } from "lucide-react";
+import { FilterIcon, ChevronDown, Check, FolderPlus, ChevronRight, ChevronDown as ChevronDownIcon, Pencil, Trash2, Plus, FileText, LayoutTemplate } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
@@ -31,7 +31,6 @@ import {
 } from "@/components/ui/accordion";
 import PromptItem from "./prompt-item";
 import { NewPromptDialog } from "./new-prompt-dialog";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 
 type SortOption = "a-z" | "z-a" | "newest" | "oldest";
@@ -48,7 +47,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("newest");
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
-  const [isGroupDialogOpen, setIsGroupDialogOpen] = useState(false);
+
   const [newGroupName, setNewGroupName] = useState("");
   
   // Use the new usePromptsGroup hook
@@ -79,7 +78,6 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
     if (newGroupName.trim()) {
       createGroup(newGroupName.trim());
       setNewGroupName("");
-      setIsGroupDialogOpen(false);
     }
   };
 
@@ -179,10 +177,10 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Dialog open={isGroupDialogOpen} onOpenChange={setIsGroupDialogOpen}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <DialogTrigger asChild>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
                   <Button
                     variant="secondary"
                     size="icon"
@@ -190,57 +188,110 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                   >
                     <FolderPlus className="h-4 w-4" />
                   </Button>
-                </DialogTrigger>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>New Group</p>
-              </TooltipContent>
-            </Tooltip>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Create New Group</DialogTitle>
-                <DialogDescription>
-                  Organize your prompts into groups for better management.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="group-name" className="text-right">
-                    Name
-                  </Label>
-                  <Input
-                    id="group-name"
-                    value={newGroupName}
-                    onChange={(e) => setNewGroupName(e.target.value)}
-                    className="col-span-3"
-                    placeholder="Enter group name"
-                    onKeyDown={(e) => e.key === 'Enter' && handleCreateGroup()}
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button type="submit" onClick={handleCreateGroup}>
-                  Create Group
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-64 p-4">
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="group-name" className="sr-only">
+                        Group Name
+                      </Label>
+                      <Input
+                        id="group-name"
+                        value={newGroupName}
+                        onChange={(e) => setNewGroupName(e.target.value)}
+                        placeholder="Enter group name"
+                        onKeyDown={(e) => e.key === 'Enter' && handleCreateGroup()}
+                        className="w-full"
+                      />
+                    </div>
+                    <Button 
+                      onClick={handleCreateGroup}
+                      className="w-full"
+                      disabled={newGroupName.trim() === ""}
+                    >
+                      Create Group
+                    </Button>
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>New Group</p>
+            </TooltipContent>
+          </Tooltip>
           <Tooltip>
-            <TooltipTrigger>
-              <NewPromptDialog onPromptCreated={getPrompts}>
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  className="rounded-full bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg"
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </NewPromptDialog>
+            <TooltipTrigger asChild>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Button
+                    variant="secondary"
+                    size="icon"
+                    className="rounded-full bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-48 p-2">
+                  <div className="space-y-1">
+                    <NewPromptDialog onPromptCreated={getPrompts} promptType="blank">
+                      <DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
+                        <Button 
+                          variant="ghost" 
+                          className="w-full justify-start"
+                          onClick={() => {
+                            const dialogTrigger = document.querySelector('button[data-state="closed"]');
+                            if (dialogTrigger) {
+                              (dialogTrigger as HTMLElement).click();
+                              // Set to blank prompt mode
+                              setTimeout(() => {
+                                const blankButton = document.querySelector('button[value="blank"]');
+                                if (blankButton) {
+                                  (blankButton as HTMLElement).click();
+                                }
+                              }, 100);
+                            }
+                          }}
+                        >
+                          <FileText className="mr-2 h-4 w-4" />
+                          <span>Blank Prompt</span>
+                        </Button>
+                      </DropdownMenuItem>
+                    </NewPromptDialog>
+                    <NewPromptDialog onPromptCreated={getPrompts} promptType="template">
+                      <DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
+                        <Button 
+                          variant="ghost" 
+                          className="w-full justify-start"
+                          onClick={() => {
+                            const dialogTrigger = document.querySelector('button[data-state="closed"]');
+                            if (dialogTrigger) {
+                              (dialogTrigger as HTMLElement).click();
+                              // Set to template mode
+                              setTimeout(() => {
+                                const templateButton = document.querySelector('button[value="template"]');
+                                if (templateButton) {
+                                  (templateButton as HTMLElement).click();
+                                }
+                              }, 100);
+                            }
+                          }}
+                        >
+                          <LayoutTemplate className="mr-2 h-4 w-4" />
+                          <span>From Template</span>
+                        </Button>
+                      </DropdownMenuItem>
+                    </NewPromptDialog>
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </TooltipTrigger>
             <TooltipContent>
               <p>New Prompt</p>
             </TooltipContent>
           </Tooltip>
+          <NewPromptDialog onPromptCreated={getPrompts} promptType="blank">
+            <Button variant="ghost" className="hidden" />
+          </NewPromptDialog>
         </div>
       </div>
       <div className="flex gap-2 p-2">
