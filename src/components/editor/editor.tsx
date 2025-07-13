@@ -56,7 +56,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
   }
 
   return (
-    <section className="relative flex flex-col gap-2 w-[calc(100vw-320px-288px-48px)] h-screen p-2">
+    <div className="relative bg-neutral-200/60 p-2 w-[calc(100vw-320px-288px-48px)] h-screen">
       {/* Header */}
       <EditorHeader
         selectedPrompt={selectedPrompt}
@@ -68,6 +68,16 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
         handleCopyToClipboard={handleCopyToClipboard}
         handleDeletePrompt={handleDeletePrompt}
       />
+    <section className="relative flex flex-col gap-2 w-full bg-neutral-50 p-2 rounded-xl mt-2 overflow-hidden">
+      <h1
+        className="font-semibold text-xl cursor-text text-neutral-800 hover:text-neutral-600 px-2 py-1 rounded-md"
+        onClick={() => {
+          setNewName(selectedPrompt.name);
+          setIsRenameDialogOpen(true);
+        }}
+      >
+        {selectedPrompt.name}
+      </h1>
 
       {/* Tags */}
       <div className="flex items-center gap-2">
@@ -116,7 +126,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
           </div>
         ) : (
           <MonacoEditor
-            height="calc(100vh - 200px)"
+            height="calc(100vh - 250px)"
             defaultLanguage="markdown"
             value={content}
             onChange={handleEditorChange}
@@ -131,11 +141,6 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
           />
         )}
       </div>
-
-      {/* Footer */}
-      <EditorFooter selectedPrompt={selectedPrompt} content={content} />
-
-
 
       {/* Rename Prompt Dialog */}
       <Dialog open={isRenameDialogOpen} onOpenChange={setIsRenameDialogOpen}>
@@ -189,6 +194,9 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
         </DialogContent>
       </Dialog>
     </section>
+    {/* Footer */}
+    <EditorFooter selectedPrompt={selectedPrompt} content={content} />
+    </div>
   );
 }
 

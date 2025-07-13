@@ -81,15 +81,6 @@ export default function EditorHeader({
       <div className="flex justify-between items-start">
         <div className="flex flex-col gap-2 flex-1">
           <div className="flex items-center gap-2">
-            <h1
-              className="font-semibold text-xl cursor-text text-neutral-800 hover:text-neutral-600 px-2 py-1 rounded-md"
-              onClick={() => {
-                setNewName(selectedPrompt.name);
-                setIsRenameDialogOpen(true);
-              }}
-            >
-              {selectedPrompt.name}
-            </h1>
             {isSaving && <Badge>Saving...</Badge>}
           </div>
         </div>
@@ -99,7 +90,7 @@ export default function EditorHeader({
                     <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="rounded-full bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg flex items-center gap-1"
+                        className="rounded-xl bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg flex items-center gap-1"
                         disabled={isLoading}
                     >
                         <Folder className="h-4 w-4" />
@@ -153,7 +144,7 @@ export default function EditorHeader({
             <Button
                 variant="ghost"
                 size="icon"
-                className={`rounded-full bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg ${selectedPrompt.isFavorite ? "text-red-300" : ""}`}
+                className={`rounded-xl bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg ${selectedPrompt.isFavorite ? "text-red-300" : ""}`}
                 onClick={() => {
                     handleUpdatePrompt({
                         isFavorite: !selectedPrompt.isFavorite,
@@ -168,7 +159,7 @@ export default function EditorHeader({
             </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <Button variant="ghost" size="icon" className="rounded-full bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg">
+                  <Button variant="ghost" size="icon" className="rounded-xl bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg">
                     <EllipsisVerticalIcon className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>

@@ -139,7 +139,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
   ];
 
   return (
-    <section className="flex flex-col gap-2 min-w-72 w-72 h-screen border-r border-r-neutral-200">
+    <section className="flex flex-col gap-2 min-w-72 w-72 h-screen bg-neutral-200/60">
       <div className="flex justify-between items-center p-2">
         <div className="flex items-center gap-2">
           <p className="font-semibold text-sm">{title}</p>
@@ -149,7 +149,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
             <DropdownMenuTrigger>
               <Button
                 variant="secondary"
-                className="flex items-center gap-2 rounded-full bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg"
+                className="flex items-center gap-2 rounded-xl bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg"
               >
                 <FilterIcon className="h-4 w-4" />
                 <ChevronDown className="h-4 w-4" />
@@ -184,7 +184,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                   <Button
                     variant="secondary"
                     size="icon"
-                    className="rounded-full bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg"
+                    className="rounded-xl bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg"
                   >
                     <FolderPlus className="h-4 w-4" />
                   </Button>
@@ -226,7 +226,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                   <Button
                     variant="secondary"
                     size="icon"
-                    className="rounded-full bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg"
+                    className="rounded-xl bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg"
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
@@ -300,10 +300,10 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
           placeholder="Search your prompts..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 rounded-full bg-neutral-50 text-neutral-600"
+          className="flex-1 rounded-xl bg-neutral-50 text-neutral-600"
         />
       </div>
-      <div className="flex-1 overflow-y-auto w-full">
+      <div className="flex-1 overflow-y-auto w-full p-2">
         {isLoading && prompts.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <p className="text-muted-foreground">Loading prompts...</p>
@@ -313,7 +313,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
             <Accordion type="multiple" className="w-full">
               {/* Ungrouped Prompts */}
               <AccordionItem value="ungrouped" defaultChecked>
-                <AccordionTrigger className="px-4 py-2 hover:no-underline">
+                <AccordionTrigger className="p-2 hover:no-underline">
                   <div className="flex items-center gap-2">
                     <span>All</span>
                     <span className="text-xs text-muted-foreground">
@@ -327,7 +327,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                       {search ? "No matching prompts found" : "No prompts available"}
                     </div>
                   ) : (
-                    <ul className="divide-y">
+                    <ul className="flex flex-col gap-2">
                       {filteredAndSortedPrompts.map((prompt) => {
                         const isSelected = selectedPrompt?.id === prompt.id;
                         return (
@@ -347,7 +347,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
               {/* Groups */}
               {groups.length > 0 && (
                 <AccordionItem value="groups">
-                  <AccordionTrigger className="px-4 py-2 hover:no-underline">
+                  <AccordionTrigger className="p-2 hover:no-underline">
                     <div className="flex items-center gap-2">
                       <span>Groups</span>
                       <span className="text-xs text-muted-foreground">
@@ -368,7 +368,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                               <ContextMenuTrigger asChild>
                                 <button
                                   onClick={() => toggleGroup(group.id)}
-                                  className="flex items-center w-full px-3 py-1.5 text-sm font-medium text-left rounded-md hover:bg-accent"
+                                  className="flex items-center w-full px-2 py-1.5 text-sm font-medium text-left rounded-md hover:bg-accent"
                                 >
                                   {expandedGroups[group.id] ? (
                                     <ChevronDownIcon className="w-4 h-4 mr-2 flex-shrink-0" />

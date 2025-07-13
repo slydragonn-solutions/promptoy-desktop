@@ -45,24 +45,10 @@ export function DiffEditor({
             <span className="sr-only">Close</span>
           </Button>
         </div>
-        <div className="flex justify-between mt-1 text-xs text-muted-foreground">
-          <div className="flex-1 truncate max-w-[45%] pr-2" title={originalTitle}>
-            <div className="font-medium text-foreground/90">{originalTitle?.split(' (')[0]}</div>
-            <div className="text-xs opacity-80">{originalTitle?.match(/\(([^)]+)\)/)?.[1] || ''}</div>
-          </div>
-          <div className="flex items-center px-2">
-            <span className="text-muted-foreground/60">→</span>
-          </div>
-          <div className="flex-1 truncate max-w-[45%] pl-2 text-right" title={modifiedTitle}>
-            <div className="font-medium text-foreground/90">{modifiedTitle?.split(' (')[0]}</div>
-            <div className="text-xs opacity-80">{modifiedTitle?.match(/\(([^)]+)\)/)?.[1] || ''}</div>
-          </div>
-        </div>
-
       </div>
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden pt-2">
         <MonacoDiffEditor
-          height="100%"
+          height="calc(100vh - 320px)"
           language="markdown"
           original={original}
           modified={modified}

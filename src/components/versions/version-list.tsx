@@ -52,7 +52,7 @@ export default function VersionList({ onCompareVersion, isComparing = false }: V
                     <Input
                         type="text"
                         placeholder="Search your versions..."
-                        className="flex-1 rounded-full bg-neutral-50 text-neutral-600"
+                        className="flex-1 rounded-xl bg-neutral-50 text-neutral-600"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
@@ -60,7 +60,7 @@ export default function VersionList({ onCompareVersion, isComparing = false }: V
                         variant="secondary"
                         size="icon"
                         title="Create new version"
-                        className="rounded-full text-neutral-600 bg-neutral-50 hover:bg-neutral-200 shadow-lg"
+                        className="rounded-xl text-neutral-600 bg-neutral-50 hover:bg-neutral-200 shadow-lg"
                         onClick={handleOpenVersionDialog}
                         disabled={selectedPrompt.versions.length >= MAX_VERSIONS}
                     >

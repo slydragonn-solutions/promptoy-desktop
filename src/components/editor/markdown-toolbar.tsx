@@ -142,7 +142,7 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
   };
 
   return (
-    <div className="flex flex-wrap gap-1 py-1 px-6 bg-neutral-100 rounded-full mb-2">
+    <div className="flex flex-wrap gap-1 py-1 px-6 bg-neutral-100 rounded-xl mb-2">
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Button 
