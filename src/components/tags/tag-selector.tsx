@@ -93,13 +93,7 @@ export function TagSelector({
     })) as (TagWithHandlers & { isSelected: boolean })[];
   
   const handleCreateTag = async () => {
-    const tagPrompt = {
-      id: selectedPrompt.id,
-      name: selectedPrompt.name,
-      createdAt: selectedPrompt.createdAt,
-      updatedAt: selectedPrompt.updatedAt
-    };
-    createTag(tagPrompt);
+    createTag(selectedPrompt.id);
     setSearchQuery('');
   };
 
@@ -171,9 +165,9 @@ export function TagSelector({
                       key={tag.id}
                       onSelect={() => {
                         if(tag.isSelected) {
-                          updateTag(tag.id, { prompts: tag.prompts?.filter(prompt => prompt.id !== selectedPrompt.id) || [] });
+                          updateTag(tag.id, { prompts: tag.prompts?.filter(promptId => promptId !== selectedPrompt.id) || [] });
                         } else {
-                          updateTag(tag.id, { prompts: [...(tag.prompts || []), { id: selectedPrompt.id, name: selectedPrompt.name, createdAt: selectedPrompt.createdAt, updatedAt: selectedPrompt.updatedAt }] });
+                          updateTag(tag.id, { prompts: [...(tag.prompts || []), selectedPrompt.id] });
                         }
 
                         const newValue = tag.isSelected

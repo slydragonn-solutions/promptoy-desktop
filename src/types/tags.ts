@@ -21,5 +21,5 @@ export interface Tag {
   color: TagColorScheme;
   createdAt: string;
   updatedAt: string;
-  prompts?: TagPrompt[];
+  prompts?: string[];
 }

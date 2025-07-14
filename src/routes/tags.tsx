@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,7 +20,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import useTagsManagement from '@/hooks/use-tags-management';
 import { useTagsStore } from '@/store/tags-store';
 import TagEditForm from '@/components/tags/tag-edit-form';
-import { useGroupsStore } from '@/store/groups-store';
 import Alert from '@/components/common/alert';
 import {
   Tabs,
@@ -41,11 +40,14 @@ export const Route = createFileRoute("/tags")({
 
 function Tags() {
   const navigate = useNavigate({from: "/tags"})
-  const { setSelectedPrompt, selectedPrompt, updatePrompt } = promptsStore();
-  const { groups, updateGroup } = useGroupsStore();
+  const { prompts, setSelectedPrompt, selectedPrompt, updatePrompt, getPrompts, isLoading } = promptsStore();
   const { tags } = useTagsStore();
   const [searchQuery, setSearchQuery] = useState("");
   const [isCommandOpen, setIsCommandOpen] = useState(false);
+
+  useEffect(() => {
+    getPrompts();
+  }, [getPrompts]);
   
   // Filter tags based on search query
   const filteredTags = tags.filter(tag => 
@@ -76,24 +78,21 @@ function Tags() {
     if(selectedPrompt?.id){
       updatePrompt(selectedPrompt.id, updatedPrompt);
     }
-
-    if(selectedPrompt?.group){
-      const group = groups.find(g => g.id === selectedPrompt.group)
-      if(group){
-        updateGroup(group.id, { prompts: group.prompts?.map(p => 
-          p.id === selectedPrompt.id 
-            ? { ...p, tags } 
-            : p
-        )});
-      }
-    }
   })
 
 
   if (tags.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-[200px]">
+      <div className="flex items-center justify-center min-h-[200px] w-full">
         <p className="text-center text-muted-foreground">No tags found</p>
+      </div>
+    );
+  }
+
+  if(isLoading){
+    return (
+      <div className="flex items-center justify-center min-h-[200px] w-full">
+        <p className="text-center text-muted-foreground">Loading tags...</p>
       </div>
     );
   }
@@ -215,17 +214,17 @@ function Tags() {
                         <h3 className="text-xs mb-2">Associated Prompts ({tag.prompts?.length})</h3>
                         {tag.prompts && tag.prompts.length > 0 ? (
                           <ScrollArea className="overflow-y-auto h-[100px]">
-                            {tag.prompts.map((prompt) => (
+                            {tag.prompts.map((promptId) => (
                               <div
-                                key={prompt.id}
+                                key={promptId}
                                 className="flex flex-row items-center justify-between text-xs hover:bg-neutral-200 cursor-pointer bg-neutral-50 p-2 rounded-md mb-2"
                                 onClick={() => {
-                                  setSelectedPrompt(prompt.id);
+                                  setSelectedPrompt(promptId);
                                   navigate({to: "/all"});
                                 }}
                               >
-                                <span className="text-neutral-700">{prompt.name}</span>
-                                <span className="text-neutral-400">{new Date(prompt.createdAt).toLocaleDateString()}</span>
+                                <span className="text-neutral-700">{prompts.find(p => p.id === promptId)?.name}</span>
+                                <span className="text-neutral-400">{new Date(prompts.find(p => p.id === promptId)?.createdAt || '').toLocaleDateString()}</span>
                               </div>
                             ))}
                           </ScrollArea>
@@ -286,17 +285,17 @@ function Tags() {
                       <p className="text-xs mb-2">Associated Prompts ({tag.prompts?.length})</p>
                       {tag.prompts && tag.prompts.length > 0 ? (
                         <div>
-                          {tag.prompts.map((prompt) => (
+                          {tag.prompts.map((promptId) => (
                             <div
-                              key={prompt.id}
+                              key={promptId}
                               className="flex flex-row items-center justify-between text-xs hover:bg-neutral-200 cursor-pointer bg-neutral-50 p-2 rounded-md mb-2"
                               onClick={() => {
-                                setSelectedPrompt(prompt.id);
+                                setSelectedPrompt(promptId);
                                 navigate({to: "/all"});
                               }}
                             >
-                              <span className="text-neutral-700">{prompt.name}</span>
-                              <span className="text-neutral-400">{new Date(prompt.createdAt).toLocaleDateString()}</span>
+                              <span className="text-neutral-700">{prompts.find(p => p.id === promptId)?.name}</span>
+                              <span className="text-neutral-400">{new Date(prompts.find(p => p.id === promptId)?.createdAt || '').toLocaleDateString()}</span>
                             </div>
                           ))}
                         </div>

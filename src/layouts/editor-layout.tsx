@@ -4,7 +4,7 @@ import EditorSidebar from "@/components/editor/editor-sidebar";
 import PromptList from "@/components/prompts/prompt-list";
 
 interface EditorLayoutProps {
-    listBy: "all" | "favorites" | "local" | "backup";
+    listBy: "all" | "local" | "backup";
     title: string;
 }
 

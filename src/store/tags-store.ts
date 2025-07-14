@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { Prompt } from "@/types/prompts";
 import { getRandomTagColor } from "@/constants/tags";
 import { promptsStore } from "./prompts-store";
-import { Tag, TagPrompt } from "@/types/tags";
+import { Tag } from "@/types/tags";
 
 
 interface TagsStore {
@@ -11,7 +11,7 @@ interface TagsStore {
   isLoading: boolean;
   error: string | null;
   loadTags: () => void;
-  addTag: (name: string, prompt?: TagPrompt) => Tag | null;
+  addTag: (name: string, promptId?: string) => Tag | null;
   updateTag: (id: string, updates: Partial<Omit<Tag, 'id' | 'createdAt'>>) => boolean;
   removeTag: (id: string) => boolean;
   toggleTag: (id: string) => void;
@@ -55,7 +55,7 @@ export const useTagsStore = create<TagsStore>((set, get) => ({
     }
   },
 
-  addTag: (name, prompt) => {
+  addTag: (name, promptId) => {
     try {
       const trimmedName = name.trim();
       console.log('Adding tag:', trimmedName);
@@ -74,7 +74,7 @@ export const useTagsStore = create<TagsStore>((set, get) => ({
         color: colorScheme,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        prompts: prompt ? [prompt] : []
+        prompts: promptId ? [promptId] : []
       };
 
       set((state) => {

@@ -1,4 +1,4 @@
-import { TagColorScheme, TagPrompt } from "@/types/tags";
+import { TagColorScheme } from "@/types/tags";
 import { useEffect, useState } from "react";
 import { useTagsStore } from "@/store/tags-store";
 import { toast } from "sonner";
@@ -16,7 +16,7 @@ export default function useTagsManagement(tagsId: string[], onChange: (tagsId: s
         loadTags();
     }, []);
 
-    const createTag = async ( tagPrompt: TagPrompt | undefined = undefined ) => {
+    const createTag = async ( tagPromptId: string | undefined = undefined ) => {
         const tagName = newTagName.trim();
         if (!tagName) return;
         
@@ -34,8 +34,8 @@ export default function useTagsManagement(tagsId: string[], onChange: (tagsId: s
           if (existingTag) {
             // If tag exists, add it if not already in the value array
             if (!tagsId.includes(existingTag.id)) {
-              if (tagPrompt) {
-                updateTag(existingTag.id, { prompts: [...(existingTag.prompts || []), tagPrompt] });
+              if (tagPromptId) {
+                updateTag(existingTag.id, { prompts: [...(existingTag.prompts || []), tagPromptId] });
               } else {
                 updateTag(existingTag.id, { prompts: [...(existingTag.prompts || [])] });
               }
@@ -44,7 +44,7 @@ export default function useTagsManagement(tagsId: string[], onChange: (tagsId: s
           } else {
             
             // Add the tag to the store
-            const newTag = addTag(tagName, tagPrompt || undefined);
+            const newTag = addTag(tagName, tagPromptId || undefined);
               
             if (newTag) {
               onChange([...tagsId, newTag.id]);
@@ -107,7 +107,7 @@ export default function useTagsManagement(tagsId: string[], onChange: (tagsId: s
         e.stopPropagation();
         const tag = getTagById(tagId);
         const newTags = (tagsId || []).filter(id => id !== tagId);
-        updateTag(tagId, { prompts: tag?.prompts?.filter(prompt => prompt.id !== promptId) || [] });
+        updateTag(tagId, { prompts: tag?.prompts?.filter(p => p !== promptId) || [] });
         onChange(newTags);  
       };
     
