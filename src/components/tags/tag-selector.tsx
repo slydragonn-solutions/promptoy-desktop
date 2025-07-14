@@ -226,7 +226,7 @@ export function TagSelector({
       </Popover>
       
       {selectedTags.length > 0 && (
-        <div className="flex justify-start items-center flex-wrap gap-2">
+        <div className="flex justify-start items-center  gap-2">
           {selectedTags.map(tag => (
             <TagComponent
               key={tag.id}

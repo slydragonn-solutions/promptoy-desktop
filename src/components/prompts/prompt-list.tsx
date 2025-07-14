@@ -139,7 +139,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
   ];
 
   return (
-    <section className="flex flex-col gap-2 min-w-72 w-72 h-screen bg-neutral-200/60">
+    <section className="flex flex-col gap-2 min-w-72 w-72 h-screen bg-neutral-100">
       <div className="flex justify-between items-center p-2">
         <div className="flex items-center gap-2">
           <p className="font-semibold text-sm">{title}</p>
@@ -368,7 +368,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                               <ContextMenuTrigger asChild>
                                 <button
                                   onClick={() => toggleGroup(group.id)}
-                                  className="flex items-center w-full px-2 py-1.5 text-sm font-medium text-left rounded-md hover:bg-accent"
+                                  className="flex items-center w-full px-2 py-1.5 text-sm font-medium text-left rounded-md bg-neutral-50 hover:bg-neutral-200"
                                 >
                                   {expandedGroups[group.id] ? (
                                     <ChevronDownIcon className="w-4 h-4 mr-2 flex-shrink-0" />

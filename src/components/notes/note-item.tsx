@@ -22,7 +22,7 @@ export default function NoteItem({
                         {new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                 </div>
-                <div className="relative group p-3 rounded-lg bg-neutral-100 max-w-[100%]">
+                <div className="relative group p-3 rounded-lg bg-neutral-50 max-w-[100%]">
                     <p className="text-sm break-all text-neutral-700">{content}</p>
                     <button 
                         onClick={() => handleDeleteNote(selectedPrompt, date)}

@@ -57,7 +57,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
   }
 
   return (
-    <div className="relative bg-neutral-200/60 p-2 w-[calc(100vw-320px-288px-44px)] h-screen">
+    <div className="relative bg-neutral-100 p-2 w-[calc(100vw-320px-288px-44px)] h-screen">
       {/* Header */}
       <EditorHeader
         selectedPrompt={selectedPrompt}
@@ -68,7 +68,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
         handleCopyToClipboard={handleCopyToClipboard}
         handleDeletePrompt={handleDeletePrompt}
       />
-    <section className="relative flex flex-col gap-2 w-full bg-neutral-50 p-2 rounded-xl mt-2 overflow-hidden">
+    <section className="relative flex flex-col gap-1 w-full bg-neutral-50 border border-neutral-200 p-2 rounded-xl mt-2 overflow-hidden">
     <div className="flex items-center justify-between">
       <h1
         className="font-semibold text-xl cursor-text text-neutral-800 hover:text-neutral-600 px-2 py-1 rounded-md"
@@ -86,34 +86,32 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
           ? <Badge variant="secondary" className="text-neutral-500"><SaveOff /> Saving...</Badge>
           : <Badge variant="secondary" className="text-neutral-500"><Save /> Saved</Badge>
         }
-      </div>
+    </div>
 
       {/* Tags */}
-      <div className="flex items-center gap-2">
-        <TagSelector
-          value={selectedPrompt.tags || []}
-          onChange={(tags) => {
-            // Create a new object to trigger the update
-            const updatedPrompt = { ...selectedPrompt, tags };
-            handleUpdatePrompt(updatedPrompt);
-          }}
-          className="flex flex-wrap gap-1"
-          trigger={
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="h-8 text-muted-foreground hover:text-foreground rounded-full"
-            >
-              <Tags className="h-4 w-4 mr-1" />
-              {selectedPrompt.tags?.length
-                ? `${selectedPrompt.tags.length} tags`
-                : "Add tags"}
-            </Button>
-          }
-          selectedPrompt={selectedPrompt}
-        />
-      </div>
+      <TagSelector
+        value={selectedPrompt.tags || []}
+        onChange={(tags) => {
+          // Create a new object to trigger the update
+          const updatedPrompt = { ...selectedPrompt, tags };
+          handleUpdatePrompt(updatedPrompt);
+        }}
+        className="flex flex-nowrap gap-1 overflow-x-scroll h-12"
+        trigger={
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-8 text-muted-foreground hover:text-foreground rounded-full"
+          >
+            <Tags className="h-4 w-4 mr-1" />
+            {selectedPrompt.tags?.length
+              ? `${selectedPrompt.tags.length} tags`
+              : "Add tags"}
+          </Button>
+        }
+        selectedPrompt={selectedPrompt}
+      />
 
       {/* Editor */}
       <div className="relative h-full">
@@ -135,7 +133,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
           </div>
         ) : (
           <MonacoEditor
-            height="calc(100vh - 250px)"
+            height="calc(100vh - 280px)"
             defaultLanguage="markdown"
             value={content}
             onChange={handleEditorChange}

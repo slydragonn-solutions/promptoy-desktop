@@ -3,17 +3,8 @@ import { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
 import { Badge } from "@/components/ui/badge";
-import { LayoutGrid, List, Pen, TagsIcon, Trash2 } from "lucide-react";
+import { LayoutGrid, List, Pen, Plus, Tag, TagsIcon, Trash2 } from "lucide-react";
 import { getTagColorClasses } from '@/constants/tags';
 import { promptsStore } from '@/store/prompts-store';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -33,6 +24,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogContent } from '@/components/ui/alert-dialog';
+
 
 export const Route = createFileRoute("/tags")({
   component: Tags,
@@ -43,7 +38,6 @@ function Tags() {
   const { prompts, setSelectedPrompt, selectedPrompt, updatePrompt, getPrompts, isLoading } = promptsStore();
   const { tags } = useTagsStore();
   const [searchQuery, setSearchQuery] = useState("");
-  const [isCommandOpen, setIsCommandOpen] = useState(false);
 
   useEffect(() => {
     getPrompts();
@@ -98,66 +92,49 @@ function Tags() {
   }
 
   return (
-    <div className="flex flex-col gap-4 w-full h-screen p-4">
+    <div className="flex flex-col gap-4 w-full h-screen p-8 bg-neutral-100">
       <div className="flex flex-col gap-4">
         <div className="flex gap-2">
           <Input
             placeholder="Search tags..."
-            className="rounded-full"
+            className="rounded-xl bg-neutral-50"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <Button 
-            onClick={() => setIsCommandOpen(true)} 
-            className="rounded-full"
-            variant="outline"
-          >
-            <TagsIcon className="mr-2 h-4 w-4" />
-            New Tag
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Button size="icon" variant="ghost" className="rounded-xl bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg">
+                <Plus />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-64 p-4">
+              <div className="space-y-4">
+                <Input placeholder="Type a new tag name..." value={newTagName} onChange={(e) => setNewTagName(e.target.value)} />
+                <Button onClick={() => createTag()} className="w-full" disabled={newTagName.trim() === ""}>
+                  Create
+                </Button>
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-
-        <CommandDialog open={isCommandOpen} onOpenChange={setIsCommandOpen}>
-          <Command>
-            <CommandInput 
-              placeholder="Type a new tag name..."
-              value={newTagName}
-              onValueChange={setNewTagName}
-            />
-            <CommandList>
-              <CommandEmpty>No tags found.</CommandEmpty>
-              <CommandGroup>
-                <CommandItem
-                  onSelect={() => {
-                    if (newTagName.trim()) {
-                      createTag();
-                      setIsCommandOpen(false);
-                    }
-                  }}
-                  className="cursor-pointer"
-                >
-                  {newTagName}
-                </CommandItem>
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </CommandDialog>
       </div>
 
-      {
-        editingTagId && (
-          <TagEditForm
-            editedTagName={editedTagName}
-            setEditedTagName={setEditedTagName}
-            saveEdit={saveEdit}
-            cancelEdit={cancelEdit}
-            selectedColor={selectedColor}
-            setSelectedColor={setSelectedColor}
-            setDeletingTagId={setDeletingTagId}
-            editingTagId={editingTagId}
+      <AlertDialog open={!!editingTagId} onOpenChange={cancelEdit}>
+        <AlertDialogContent className="w-[350px]">
+        {
+          !!editingTagId && <TagEditForm
+          editedTagName={editedTagName}
+          setEditedTagName={setEditedTagName}
+          saveEdit={saveEdit}
+          cancelEdit={cancelEdit}
+          selectedColor={selectedColor}
+          setSelectedColor={setSelectedColor}
+          setDeletingTagId={setDeletingTagId}
+          editingTagId={editingTagId}
           />
-        )
-      }
+        }
+        </AlertDialogContent>
+      </AlertDialog>
 
       <div className="h-full">
         <ScrollArea className="h-[calc(100vh-100px)]">
@@ -177,14 +154,13 @@ function Tags() {
                   const colorClasses = getTagColorClasses(tag.color);
 
                   return (
-                    <Card key={tag.id} className={`${colorClasses}`}>
+                    <Card key={tag.id} className={`bg-neutral-50`}>
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
                           <Badge
-                            variant="outline"
-                            className={`${colorClasses} rounded-full text-sm`}
+                            className={`${colorClasses} rounded-full`}
                           >
-                            {tag.name}
+                            <Tag /> {tag.name}
                           </Badge>
                         </CardTitle>
                         <div>
@@ -217,7 +193,7 @@ function Tags() {
                             {tag.prompts.map((promptId) => (
                               <div
                                 key={promptId}
-                                className="flex flex-row items-center justify-between text-xs hover:bg-neutral-200 cursor-pointer bg-neutral-50 p-2 rounded-md mb-2"
+                                className="flex flex-row items-center justify-between text-xs hover:bg-neutral-200 cursor-pointer bg-neutral-100 p-2 rounded-md mb-2"
                                 onClick={() => {
                                   setSelectedPrompt(promptId);
                                   navigate({to: "/all"});
@@ -244,15 +220,14 @@ function Tags() {
               <Accordion type="single" collapsible className="w-full">
                 {filteredTags.map((tag) => (
                   <AccordionItem value={tag.id} key={tag.id}>
-                    <AccordionTrigger className={`flex items-center justify-between w-full ${getTagColorClasses(tag.color)} my-2 p-2`}>
+                    <AccordionTrigger className={`flex items-center justify-between w-full my-2 p-2`}>
                       <Badge
-                        variant="outline"
-                        className={`${getTagColorClasses(tag.color)} rounded-full text-sm`}
+                        className={`${getTagColorClasses(tag.color)} rounded-full`}
                       >
-                        {tag.name}
+                        <Tag /> {tag.name}
                       </Badge>
                     </AccordionTrigger>
-                    <AccordionContent className={`flex flex-col ${getTagColorClasses(tag.color)} mb-2 p-2 rounded-md`}>
+                    <AccordionContent className={`flex flex-col mb-2 p-2 rounded-md`}>
                       <div className="flex items-center mb-2 justify-between">
                         <div className="text-xs text-muted-foreground">
                           Created: {new Date(tag.createdAt).toLocaleDateString()}

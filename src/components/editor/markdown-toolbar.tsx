@@ -148,7 +148,6 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
           <Button 
             variant="ghost" 
             size="icon" 
-            className="h-8 w-8"
             title="Headings"
           >
             <div className="flex items-center">
@@ -184,7 +183,6 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
       <Button 
         variant="ghost" 
         size="icon" 
-        className="h-8 w-8"
         onClick={() => executeAction('bold')}
         title="Bold"
       >
@@ -193,7 +191,6 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
       <Button 
         variant="ghost" 
         size="icon" 
-        className="h-8 w-8"
         onClick={() => executeAction('italic')}
         title="Italic"
       >
@@ -202,7 +199,6 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
       <Button 
         variant="ghost" 
         size="icon" 
-        className="h-8 w-8"
         onClick={() => executeAction('strikethrough')}
         title="Strikethrough"
       >
@@ -212,7 +208,6 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
       <Button 
         variant="ghost" 
         size="icon" 
-        className="h-8 w-8"
         onClick={() => executeAction('link')}
         title="Link"
       >
@@ -224,7 +219,7 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
       
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Button variant="ghost" size="icon">
             <div className="flex items-center">
               <List className="h-4 w-4" />
               <ChevronDown className="h-3 w-3 ml-0.5 opacity-50" />
@@ -249,8 +244,7 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
       <div className="h-8 w-px bg-border mx-1" />
       <Button 
         variant="ghost" 
-        size="icon" 
-        className="h-8 w-8"
+        size="icon"
         onClick={() => executeAction('code')}
         title="Inline Code"
       >
@@ -259,7 +253,6 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
       <Button 
         variant="ghost" 
         size="icon" 
-        className="h-8 w-8"
         onClick={() => executeAction('codeblock')}
         title="Code Block"
       >
@@ -268,7 +261,6 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
       <Button 
         variant="ghost" 
         size="icon" 
-        className="h-8 w-8"
         onClick={() => executeAction('quote')}
         title="Blockquote"
       >
@@ -278,7 +270,7 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
       <Button 
         variant="ghost" 
         size="icon" 
-        className="h-8 w-8 ml-auto"
+        className="ml-auto"
         onClick={() => executeAction('copy')}
         title="Copy to Clipboard"
       >

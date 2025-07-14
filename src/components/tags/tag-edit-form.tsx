@@ -29,62 +29,60 @@ export default function TagEditForm({
     return (
         <div className="p-3 space-y-4">
             <div className="space-y-2">
-            <div className="flex gap-2">
-                <Input
-                value={editedTagName}
-                onChange={(e) => setEditedTagName(e.target.value)}
-                maxLength={25}
-                className="flex-1"
-                autoFocus
-                onKeyDown={(e) => {
-                    if (e.key === 'Enter') saveEdit();
-                    else if (e.key === 'Escape') cancelEdit();
-                }}
-                />
-                <div className="flex gap-1">
-                <Button 
-                    size="icon" 
-                    variant="ghost" 
-                    onClick={saveEdit}
-                    disabled={!editedTagName.trim()}
-                >
-                    <Check className="h-4 w-4" />
-                </Button>
-                <Button 
-                    size="icon" 
-                    variant="ghost" 
-                    onClick={cancelEdit}
-                >
-                    <X className="h-4 w-4" />
-                </Button>
-                <Button 
-                    size="icon" 
-                    variant="ghost" 
-                    className="text-destructive hover:text-destructive/90"
-                    onClick={(e) => {
-                    e.stopPropagation();
-                    setDeletingTagId(editingTagId);
+                <div className="flex gap-2">
+                    <Input
+                    value={editedTagName}
+                    onChange={(e) => setEditedTagName(e.target.value)}
+                    maxLength={25}
+                    className="flex-1"
+                    autoFocus
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') saveEdit();
+                        else if (e.key === 'Escape') cancelEdit();
                     }}
-                >
-                    <Trash2 className="h-4 w-4" />
-                </Button>
+                    />
+                    <div className="flex gap-1">
+                    <Button 
+                        size="icon" 
+                        variant="ghost" 
+                        onClick={saveEdit}
+                        disabled={!editedTagName.trim()}
+                    >
+                        <Check className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                        size="icon" 
+                        variant="ghost" 
+                        onClick={cancelEdit}
+                    >
+                        <X className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                        size="icon" 
+                        variant="ghost" 
+                        className="text-destructive hover:text-destructive/90"
+                        onClick={(e) => {
+                        e.stopPropagation();
+                        setDeletingTagId(editingTagId);
+                        }}
+                    >
+                        <Trash2 className="h-4 w-4" />
+                    </Button>
                 </div>
             </div>
             <p className="text-xs text-muted-foreground text-right">
                 {editedTagName.length}/25 characters
             </p>
             </div>
-            <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Color</label>
-            <ScrollArea className="h-48">
+            <ScrollArea className="h-20">
                 <div className="grid grid-cols-5 gap-2 p-1">
                 {TAG_COLORS.map((color) => (
                     <button
-                    key={color.name}
-                    type="button"
-                    className={`w-8 h-8 rounded-full flex items-center justify-center ${color.bg} ${color.border} ${selectedColor?.name === color.name ? 'ring-2 ring-offset-2 ring-primary' : ''}`}
-                    onClick={() => setSelectedColor(color)}
-                    title={color.name}
+                        key={color.name}
+                        type="button"
+                        className={`w-8 h-8 rounded-full flex items-center justify-center ${color.bg} ${color.border} ${selectedColor?.name === color.name ? 'ring-2 ring-offset-2 ring-primary' : ''}`}
+                        onClick={() => setSelectedColor(color)}
+                        title={color.name}
                     >
                     {selectedColor?.name === color.name && (
                         <Check className="h-4 w-4 text-white" />
@@ -93,7 +91,6 @@ export default function TagEditForm({
                 ))}
                 </div>
             </ScrollArea>
-            </div>
         </div>
     )
 }

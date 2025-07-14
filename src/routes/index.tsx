@@ -116,7 +116,7 @@ function Index() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Bar */}
-        <header className="h-16 border-b flex items-center justify-between px-6">
+        <header className="h-16 border-b flex items-center justify-between px-8">
           <div className="relative w-full max-w-md">
             <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
@@ -143,7 +143,7 @@ function Index() {
         </header>
 
         {/* Dashboard Content */}
-        <main className="flex-1 overflow-y-auto p-4">
+        <main className="flex-1 overflow-y-auto p-8">
           <div className="mb-4">
             <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
             <p className="text-neutral-500">Welcome back! Here's what's happening with your prompts.</p>
