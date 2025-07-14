@@ -1,6 +1,6 @@
 import { Editor as MonacoEditor } from "@monaco-editor/react";
 import { Button } from "../ui/button";
-import { Tags } from "lucide-react";
+import { Save, SaveOff, Tags } from "lucide-react";
 import { TagSelector } from "../tags/tag-selector";
 import { useEditor } from "@/hooks/use-editor";
 import { promptsStore } from "@/store/prompts-store";
@@ -17,6 +17,7 @@ import EditorFooter from "./editor-footer";
 import EditorNotFound from "./editor-not-found";
 import EditorHeader from "./editor-header";
 import { DiffEditor } from "./diff-editor";
+import { Badge } from "../ui/badge";
 interface EditorProps {
   isComparing: boolean;
   compareVersion: {
@@ -56,7 +57,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
   }
 
   return (
-    <div className="relative bg-neutral-200/60 p-2 w-[calc(100vw-320px-288px-48px)] h-screen">
+    <div className="relative bg-neutral-200/60 p-2 w-[calc(100vw-320px-288px-44px)] h-screen">
       {/* Header */}
       <EditorHeader
         selectedPrompt={selectedPrompt}
@@ -69,6 +70,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
         handleDeletePrompt={handleDeletePrompt}
       />
     <section className="relative flex flex-col gap-2 w-full bg-neutral-50 p-2 rounded-xl mt-2 overflow-hidden">
+    <div className="flex items-center justify-between">
       <h1
         className="font-semibold text-xl cursor-text text-neutral-800 hover:text-neutral-600 px-2 py-1 rounded-md"
         onClick={() => {
@@ -78,6 +80,14 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
       >
         {selectedPrompt.name}
       </h1>
+
+      
+        {
+          isSaving
+          ? <Badge variant="secondary" className="text-neutral-500"><SaveOff /> Saving...</Badge>
+          : <Badge variant="secondary" className="text-neutral-500"><Save /> Saved</Badge>
+        }
+      </div>
 
       {/* Tags */}
       <div className="flex items-center gap-2">

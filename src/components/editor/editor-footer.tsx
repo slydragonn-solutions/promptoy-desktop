@@ -17,13 +17,13 @@ export default function EditorFooter({ selectedPrompt, content }: EditorFooterPr
     return (
         <div className="absolute bottom-2 left-0 right-0 flex justify-between items-center gap-2 p-2 rounded-xl text-xs text-muted-foreground bg-neutral-50">
         <div className="flex items-center gap-4">
-          <span>
+          <span className="hidden xl:block">
             Created:{" "}
             {selectedPrompt
               ? getFormattedDate(selectedPrompt.createdAt)
               : "N/A"}
           </span>
-          <span>
+          <span className="hidden md:block">
             Updated:{" "}
             {selectedPrompt
               ? getFormattedDate(selectedPrompt.updatedAt)
@@ -31,8 +31,7 @@ export default function EditorFooter({ selectedPrompt, content }: EditorFooterPr
           </span>
         </div>
         <span>
-          Characters: {content?.length.toLocaleString()}/
-          {MAX_CONTENT_LENGTH.toLocaleString()}
+          {content?.length}/{MAX_CONTENT_LENGTH}
         </span>
       </div>
     )

@@ -1,7 +1,7 @@
 import { createRootRoute, Link, Outlet, useRouterState } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { Button } from "@/components/ui/button"
-import { HouseIcon, TagIcon, PcCaseIcon, CloudUploadIcon, InfoIcon, SettingsIcon, LockKeyhole, FileText } from "lucide-react"
+import { HouseIcon, TagIcon, PcCaseIcon, CloudUploadIcon, InfoIcon, SettingsIcon, LockKeyhole, FileText, BookText, Cloud } from "lucide-react"
 import { useEffect } from 'react';
 import { promptsStore } from '@/store/prompts-store';
 import { Toaster } from '@/components/ui/sonner';
@@ -21,7 +21,7 @@ export const Route = createRootRoute({
 
         return (
         <main className="flex h-screen items-center justify-center">
-            <nav className="flex flex-col h-screen items-center justify-between gap-2 pl-4 bg-neutral-900 text-neutral-400">
+            <nav className="flex flex-col h-screen items-center justify-between gap-2 pl-2 bg-neutral-900 text-neutral-400">
                 <ul className="flex flex-col gap-2">
                     <li>
                         <Link to="/" className="[&.active]:text-neutral-50">
@@ -30,7 +30,7 @@ export const Route = createRootRoute({
                     </li>
                     <li>
                         <Link to="/all" className="[&.active]:text-neutral-50">
-                            <Button variant="ghost" size="icon" className={`rounded-l-xl rounded-r-none ${currentPath === "/all" ? "bg-neutral-200 text-neutral-900" : ""}`} title='All Prompts'><FileText /></Button>
+                            <Button variant="ghost" size="icon" className={`rounded-l-xl rounded-r-none ${currentPath === "/all" ? "bg-neutral-200 text-neutral-900" : ""}`} title='All Prompts'><BookText /></Button>
                         </Link>
                     </li>
                     <li>
@@ -40,7 +40,7 @@ export const Route = createRootRoute({
                     </li>
                     <li>
                         <Link to="/backup" className="[&.active]:text-neutral-50">
-                            <Button variant="ghost" size="icon" className={`rounded-l-xl rounded-r-none ${currentPath === "/backup" ? "bg-neutral-200 text-neutral-900" : ""}`} title='Backup Prompts'><CloudUploadIcon /></Button>
+                            <Button variant="ghost" size="icon" className={`rounded-l-xl rounded-r-none ${currentPath === "/backup" ? "bg-neutral-200 text-neutral-900" : ""}`} title='Backup Prompts'><Cloud /></Button>
                         </Link>
                     </li>
                     <li>

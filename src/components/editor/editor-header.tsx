@@ -78,13 +78,7 @@ export default function EditorHeader({
         }
     };
     return (
-      <div className="flex justify-between items-start">
-        <div className="flex flex-col gap-2 flex-1">
-          <div className="flex items-center gap-2">
-            {isSaving && <Badge>Saving...</Badge>}
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
+      <div className="flex justify-end items-center gap-2">
             <DropdownMenu>
                 <DropdownMenuTrigger>
                     <Button 
@@ -140,7 +134,6 @@ export default function EditorHeader({
                     )}
                 </DropdownMenuContent>
             </DropdownMenu>
-            
             <Button
                 variant="ghost"
                 size="icon"
@@ -200,7 +193,6 @@ export default function EditorHeader({
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-        </div>
       </div>
     );
 }

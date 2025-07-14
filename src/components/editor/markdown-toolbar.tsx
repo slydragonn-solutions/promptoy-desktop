@@ -219,33 +219,33 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
         <Link2 className="h-4 w-4" />
       </Button>
       <div className="h-8 w-px bg-border mx-1" />
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        className="h-8 w-8"
-        onClick={() => executeAction('ul')}
-        title="Bullet List"
-      >
-        <List className="h-4 w-4" />
-      </Button>
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        className="h-8 w-8"
-        onClick={() => executeAction('ol')}
-        title="Numbered List"
-      >
-        <ListOrdered className="h-4 w-4" />
-      </Button>
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        className="h-8 w-8"
-        onClick={() => executeAction('checkbox')}
-        title="Task List"
-      >
-        <SquareCheck className="h-4 w-4" />
-      </Button>
+
+      {/* List */}
+      
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <div className="flex items-center">
+              <List className="h-4 w-4" />
+              <ChevronDown className="h-3 w-3 ml-0.5 opacity-50" />
+            </div>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem onClick={() => executeAction('ul')}>
+            <List className="h-4 w-4" />
+            <span>Unordered List</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => executeAction('ol')}>
+            <ListOrdered className="h-4 w-4" />
+            <span>Ordered List</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => executeAction('checkbox')}>
+            <SquareCheck className="h-4 w-4" />
+            <span>Task List</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       <div className="h-8 w-px bg-border mx-1" />
       <Button 
         variant="ghost" 
