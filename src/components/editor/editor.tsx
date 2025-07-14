@@ -61,7 +61,6 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
       {/* Header */}
       <EditorHeader
         selectedPrompt={selectedPrompt}
-        isSaving={isSaving}
         currentGroupId={selectedPrompt.group || null}
         setIsRenameDialogOpen={setIsRenameDialogOpen}
         setNewName={setNewName}

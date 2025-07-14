@@ -1,7 +1,7 @@
 import { createRootRoute, Link, Outlet, useRouterState } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { Button } from "@/components/ui/button"
-import { HouseIcon, TagIcon, PcCaseIcon, CloudUploadIcon, InfoIcon, SettingsIcon, LockKeyhole, FileText, BookText, Cloud } from "lucide-react"
+import { HouseIcon, TagIcon, PcCaseIcon, InfoIcon, SettingsIcon, LockKeyhole, BookText, Cloud } from "lucide-react"
 import { useEffect } from 'react';
 import { promptsStore } from '@/store/prompts-store';
 import { Toaster } from '@/components/ui/sonner';

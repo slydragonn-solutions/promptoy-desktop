@@ -1,5 +1,4 @@
 import { Prompt } from "@/types/prompts";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
     EllipsisVerticalIcon,
@@ -23,7 +22,6 @@ import { toast } from "sonner";
 
 interface EditorHeaderProps {
     selectedPrompt: Prompt;
-    isSaving: boolean;
     currentGroupId?: string | null;
     setIsRenameDialogOpen: (open: boolean) => void;
     setNewName: (name: string) => void;
@@ -34,7 +32,6 @@ interface EditorHeaderProps {
 
 export default function EditorHeader({
     selectedPrompt,
-    isSaving,
     currentGroupId,
     setIsRenameDialogOpen,
     setNewName,
