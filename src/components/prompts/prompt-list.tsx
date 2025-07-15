@@ -139,7 +139,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
   ];
 
   return (
-    <section className="flex flex-col gap-2 min-w-72 w-72 h-screen bg-neutral-100">
+    <section className="flex flex-col gap-2 min-w-72 w-72 h-[calc(100vh-37px)] bg-neutral-100">
       <div className="flex justify-between items-center p-2">
         <div className="flex items-center gap-2">
           <p className="font-semibold text-sm">{title}</p>

@@ -1,0 +1,4 @@
+#title-bar {
+    cursor: move;
+    -webkit-app-region: drag;
+}

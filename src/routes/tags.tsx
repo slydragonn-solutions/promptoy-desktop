@@ -91,7 +91,7 @@ function Tags() {
   }
 
   return (
-    <div className="flex flex-col gap-4 w-full h-screen p-8 bg-neutral-100">
+    <div className="flex flex-col gap-4 w-full h-[calc(100vh-37px)] p-8 bg-neutral-100">
       <div className="flex flex-col gap-4">
         <div className="flex gap-2">
           <Input
@@ -136,7 +136,7 @@ function Tags() {
       </AlertDialog>
 
       <div className="h-full">
-        <ScrollArea className="h-[calc(100vh-100px)]">
+        <ScrollArea className="h-[calc(100vh-137px)]">
           <Tabs defaultValue="grid">
             <TabsList>
               <TabsTrigger value="grid"><LayoutGrid /></TabsTrigger>

@@ -57,7 +57,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
   }
 
   return (
-    <div className="relative bg-neutral-100 p-2 w-[calc(100vw-320px-288px-44px)] h-screen">
+    <div className="relative bg-neutral-100 p-2 w-[calc(100vw-320px-288px-48px)] h-[calc(100vh-37px)]">
       {/* Header */}
       <EditorHeader
         selectedPrompt={selectedPrompt}
@@ -133,7 +133,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
           </div>
         ) : (
           <MonacoEditor
-            height="calc(100vh - 280px)"
+            height="calc(100vh - 317px)"
             defaultLanguage="markdown"
             value={content}
             onChange={handleEditorChange}

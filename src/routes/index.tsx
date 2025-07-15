@@ -111,7 +111,7 @@ function Index() {
   }
 
   return (
-    <div className="flex w-full h-screen bg-neutral-100">
+    <div className="flex w-full h-[calc(100vh-37px)] bg-neutral-100">
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
@@ -143,7 +143,7 @@ function Index() {
         </header>
 
         {/* Dashboard Content */}
-        <main className="flex-1 overflow-y-auto p-8">
+        <main className="flex-1 overflow-y-auto px-8 py-4">
           <div className="mb-4">
             <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
             <p className="text-neutral-500">Welcome back! Here's what's happening with your prompts.</p>
@@ -193,7 +193,7 @@ function Index() {
                   ) : (
                     [...prompts]
                       .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-                      .slice(0, 5)
+                      .slice(0, 3)
                       .map((prompt) => {
                         const updatedAt = new Date(prompt.updatedAt);
                         const now = new Date();

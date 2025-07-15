@@ -18,7 +18,7 @@ export default function NoteList() {
 
     return (
         <div className="flex flex-col">
-            <ScrollArea className="h-[calc(100vh-100px)]">
+            <ScrollArea className="h-[calc(100vh-137px)]">
                 <div className="p-4 space-y-4">
                     {selectedPrompt.notes?.length ? (
                         [...selectedPrompt.notes]
