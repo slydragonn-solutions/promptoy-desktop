@@ -162,14 +162,17 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
                     <li 
                         className={cn(
                             'flex flex-col p-3 cursor-pointer transition-colors rounded-lg border border-transparent',
-                            'hover:bg-neutral-200/60 bg-neutral-50 border-neutral-200',
-                            isSelected && 'bg-neutral-50 hover:bg-neutral-100 border-neutral-400',
+                            'hover:bg-neutral-200/60 bg-neutral-100 border-neutral-100',
+                            isSelected && 'bg-neutral-200 hover:bg-neutral-200 border-neutral-200',
                         )}
                         onClick={() => onSelect(prompt.id)}
                     >
                         <div className="flex flex-col gap-1.5 w-full">
                             <div className="flex justify-between items-start gap-2">
-                                <h2 className="font-medium text-sm truncate max-w-[160px]">
+                                <h2 className={cn(
+                                    'font-medium text-sm truncate max-w-[160px] text-neutral-600',
+                                    isSelected && 'text-neutral-800'
+                                )}>
                                     {name || 'Untitled Prompt'}
                                 </h2>
                                 <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { LayoutGrid, List, Pen, Plus, Tag, TagsIcon, Trash2 } from "lucide-react";
+import { LayoutGrid, List, Pen, Plus, Tag, Trash2 } from "lucide-react";
 import { getTagColorClasses } from '@/constants/tags';
 import { promptsStore } from '@/store/prompts-store';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -24,8 +24,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AlertDialog, AlertDialogContent } from '@/components/ui/alert-dialog';
 
 
