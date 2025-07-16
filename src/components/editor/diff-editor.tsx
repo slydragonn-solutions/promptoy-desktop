@@ -32,7 +32,7 @@ export function DiffEditor({
       <div className="flex flex-col p-2 border-b">
         <div className="flex justify-between items-center">
           <div className="flex-1 flex items-center gap-2">
-            <span className="text-sm font-medium">Comparing Versions</span>
+            <span className="text-sm text-neutral-600">Comparing Versions</span>
             {isRefreshing && <RefreshCw className="h-3 w-3 animate-spin text-muted-foreground" />}
           </div>
           <Button
@@ -48,7 +48,7 @@ export function DiffEditor({
       </div>
       <div className="flex-1 overflow-hidden pt-2">
         <MonacoDiffEditor
-          height="calc(100vh - 320px)"
+          height="calc(100vh - 357px)"
           language="markdown"
           original={original}
           modified={modified}

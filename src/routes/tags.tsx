@@ -102,7 +102,7 @@ function Tags() {
           />
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <Button size="icon" variant="ghost" className="rounded-xl bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg">
+              <Button size="icon" variant="ghost" className="rounded-xl bg-neutral-200 hover:bg-neutral-50 text-neutral-600">
                 <Plus />
               </Button>
             </DropdownMenuTrigger>
@@ -262,7 +262,7 @@ function Tags() {
                           {tag.prompts.map((promptId) => (
                             <div
                               key={promptId}
-                              className="flex flex-row items-center justify-between text-xs hover:bg-neutral-200 cursor-pointer bg-neutral-50 p-2 rounded-md mb-2"
+                              className="flex flex-row items-center justify-between text-xs hover:bg-neutral-50 cursor-pointer bg-neutral-200 p-2 rounded-md mb-2"
                               onClick={() => {
                                 setSelectedPrompt(promptId);
                                 navigate({to: "/all"});

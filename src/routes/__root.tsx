@@ -1,7 +1,7 @@
 import { createRootRoute, Link, Outlet, useRouterState } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { Button } from "@/components/ui/button"
-import { HouseIcon, PcCaseIcon, InfoIcon, SettingsIcon, LockKeyhole, BookText, Cloud, Tags } from "lucide-react"
+import { HouseIcon, InfoIcon, SettingsIcon, LockKeyhole, BookText, Cloud, Tags } from "lucide-react"
 import { useEffect } from 'react';
 import { promptsStore } from '@/store/prompts-store';
 import { Toaster } from '@/components/ui/sonner';
@@ -34,11 +34,6 @@ export const Route = createRootRoute({
                     <li>
                         <Link to="/all">
                             <Button variant="ghost" size="icon" className={`rounded-xl hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/all" ? "bg-neutral-200 text-neutral-900" : ""}`} title='All Prompts'><BookText /></Button>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/local">
-                            <Button variant="ghost" size="icon" className={`rounded-xl hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/local" ? "bg-neutral-200 text-neutral-900" : ""}`} title='Local Prompts'><PcCaseIcon /></Button>
                         </Link>
                     </li>
                     <li>

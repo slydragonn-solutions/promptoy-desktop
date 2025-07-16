@@ -60,7 +60,7 @@ export default function VersionList({ onCompareVersion, isComparing = false }: V
                         variant="secondary"
                         size="icon"
                         title="Create new version"
-                        className="rounded-xl text-neutral-600 bg-neutral-50 hover:bg-neutral-200 shadow-lg"
+                        className="rounded-xl text-neutral-600 bg-neutral-200 hover:bg-neutral-50"
                         onClick={handleOpenVersionDialog}
                         disabled={selectedPrompt.versions.length >= MAX_VERSIONS}
                     >

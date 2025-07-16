@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TagsRouteImport } from './routes/tags'
 import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as LocalRouteImport } from './routes/local'
 import { Route as InfoRouteImport } from './routes/info'
 import { Route as BackupRouteImport } from './routes/backup'
 import { Route as AllRouteImport } from './routes/all'
@@ -25,11 +24,6 @@ const TagsRoute = TagsRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LocalRoute = LocalRouteImport.update({
-  id: '/local',
-  path: '/local',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InfoRoute = InfoRouteImport.update({
@@ -58,7 +52,6 @@ export interface FileRoutesByFullPath {
   '/all': typeof AllRoute
   '/backup': typeof BackupRoute
   '/info': typeof InfoRoute
-  '/local': typeof LocalRoute
   '/settings': typeof SettingsRoute
   '/tags': typeof TagsRoute
 }
@@ -67,7 +60,6 @@ export interface FileRoutesByTo {
   '/all': typeof AllRoute
   '/backup': typeof BackupRoute
   '/info': typeof InfoRoute
-  '/local': typeof LocalRoute
   '/settings': typeof SettingsRoute
   '/tags': typeof TagsRoute
 }
@@ -77,31 +69,15 @@ export interface FileRoutesById {
   '/all': typeof AllRoute
   '/backup': typeof BackupRoute
   '/info': typeof InfoRoute
-  '/local': typeof LocalRoute
   '/settings': typeof SettingsRoute
   '/tags': typeof TagsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/all'
-    | '/backup'
-    | '/info'
-    | '/local'
-    | '/settings'
-    | '/tags'
+  fullPaths: '/' | '/all' | '/backup' | '/info' | '/settings' | '/tags'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/all' | '/backup' | '/info' | '/local' | '/settings' | '/tags'
-  id:
-    | '__root__'
-    | '/'
-    | '/all'
-    | '/backup'
-    | '/info'
-    | '/local'
-    | '/settings'
-    | '/tags'
+  to: '/' | '/all' | '/backup' | '/info' | '/settings' | '/tags'
+  id: '__root__' | '/' | '/all' | '/backup' | '/info' | '/settings' | '/tags'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -109,7 +85,6 @@ export interface RootRouteChildren {
   AllRoute: typeof AllRoute
   BackupRoute: typeof BackupRoute
   InfoRoute: typeof InfoRoute
-  LocalRoute: typeof LocalRoute
   SettingsRoute: typeof SettingsRoute
   TagsRoute: typeof TagsRoute
 }
@@ -128,13 +103,6 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/local': {
-      id: '/local'
-      path: '/local'
-      fullPath: '/local'
-      preLoaderRoute: typeof LocalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/info': {
@@ -173,7 +141,6 @@ const rootRouteChildren: RootRouteChildren = {
   AllRoute: AllRoute,
   BackupRoute: BackupRoute,
   InfoRoute: InfoRoute,
-  LocalRoute: LocalRoute,
   SettingsRoute: SettingsRoute,
   TagsRoute: TagsRoute,
 }

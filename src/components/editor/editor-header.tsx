@@ -81,7 +81,7 @@ export default function EditorHeader({
                     <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="rounded-xl bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg flex items-center gap-1"
+                        className="rounded-xl bg-neutral-200 hover:bg-neutral-50 text-neutral-600 flex items-center gap-1"
                         disabled={isLoading}
                     >
                         <Folder className="h-4 w-4" />
@@ -134,7 +134,7 @@ export default function EditorHeader({
             <Button
                 variant="ghost"
                 size="icon"
-                className={`rounded-xl bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg ${selectedPrompt.isFavorite ? "text-red-300" : ""}`}
+                className={`rounded-xl bg-neutral-200 hover:bg-neutral-50 text-neutral-600 ${selectedPrompt.isFavorite ? "text-red-300" : ""}`}
                 onClick={() => {
                     handleUpdatePrompt({
                         isFavorite: !selectedPrompt.isFavorite,
@@ -149,7 +149,7 @@ export default function EditorHeader({
             </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <Button variant="ghost" size="icon" className="rounded-xl bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg">
+                  <Button variant="ghost" size="icon" className="rounded-xl bg-neutral-200 hover:bg-neutral-50 text-neutral-600">
                     <EllipsisVerticalIcon className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>

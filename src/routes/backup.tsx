@@ -6,5 +6,5 @@ export const Route = createFileRoute("/backup")({
 })
 
 function Backup() {
-  return <EditorLayout listBy="backup" title="Backup Prompts"/>
+  return <EditorLayout listBy="backup" title="Synced Prompts"/>
 }

@@ -171,7 +171,7 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
                             <div className="flex justify-between items-start gap-2">
                                 <h2 className={cn(
                                     'font-medium text-sm truncate max-w-[160px] text-neutral-600',
-                                    isSelected && 'text-neutral-800'
+                                    isSelected && 'text-neutral-800 font-semibold'
                                 )}>
                                     {name || 'Untitled Prompt'}
                                 </h2>

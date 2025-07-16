@@ -34,7 +34,7 @@ import { NewPromptDialog } from "./new-prompt-dialog";
 import { Label } from "@/components/ui/label";
 
 type SortOption = "a-z" | "z-a" | "newest" | "oldest";
-type ListByOption = "all" | "local" | "backup";
+type ListByOption = "all" | "backup";
 
 interface PromptListProps {
   listBy?: ListByOption;
@@ -86,14 +86,8 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
     let filtered = [...prompts];
 
     // Apply listBy filter
-    switch (listBy) {
-      case 'local':
-        filtered = filtered.filter(prompt => prompt.isSynced === false);
-        break;
-      case 'backup':
+    if(listBy === 'backup'){
         filtered = filtered.filter(prompt => prompt.isSynced === true);
-        break;
-      // 'all' case - no additional filtering needed
     }
 
     // Apply favorites filter
@@ -142,14 +136,14 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
     <section className="flex flex-col gap-2 min-w-72 w-72 h-[calc(100vh-37px)] bg-neutral-100">
       <div className="flex justify-between items-center p-2">
         <div className="flex items-center gap-2">
-          <p className="font-semibold text-sm">{title}</p>
+          <p className="font-semibold text-xs">{title}</p>
         </div>
         <div className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Button
                 variant="secondary"
-                className="flex items-center gap-2 rounded-xl bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg"
+                className="flex items-center gap-2 rounded-xl bg-neutral-200 hover:bg-neutral-50 text-neutral-600"
               >
                 <FilterIcon className="h-4 w-4" />
                 <ChevronDown className="h-4 w-4" />
@@ -184,7 +178,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                   <Button
                     variant="secondary"
                     size="icon"
-                    className="rounded-xl bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg"
+                    className="rounded-xl bg-neutral-200 hover:bg-neutral-50 text-neutral-600"
                   >
                     <FolderPlus className="h-4 w-4" />
                   </Button>
@@ -226,7 +220,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                   <Button
                     variant="secondary"
                     size="icon"
-                    className="rounded-xl bg-neutral-50 hover:bg-neutral-200 text-neutral-600 shadow-lg"
+                    className="rounded-xl bg-neutral-200 hover:bg-neutral-50 text-neutral-600"
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
