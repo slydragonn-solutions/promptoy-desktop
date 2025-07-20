@@ -18,6 +18,8 @@ import EditorNotFound from "./editor-not-found";
 import EditorHeader from "./editor-header";
 import { DiffEditor } from "./diff-editor";
 import { Badge } from "../ui/badge";
+import { useState } from "react";
+import Alert from "../common/alert";
 interface EditorProps {
   isComparing: boolean;
   compareVersion: {
@@ -30,6 +32,7 @@ interface EditorProps {
 
 export default function Editor({ isComparing, compareVersion, onCloseCompare }: EditorProps) {
   const { selectedPrompt } = promptsStore();
+  const [isDeleting, setIsDeleting] = useState(false);
   
   // Get the current version (most recent one)
   const currentVersion = selectedPrompt?.versions?.[0];
@@ -66,12 +69,12 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
         setNewName={setNewName}
         handleUpdatePrompt={handleUpdatePrompt}
         handleCopyToClipboard={handleCopyToClipboard}
-        handleDeletePrompt={handleDeletePrompt}
+        handleDeletePrompt={() => setIsDeleting(true)}
       />
     <section className="relative flex flex-col gap-1 w-full bg-neutral-50 border border-neutral-200 p-2 rounded-xl mt-2 overflow-hidden">
     <div className="flex items-center justify-between">
       <h1
-        className="font-semibold text-xl cursor-text text-neutral-800 hover:text-neutral-600 px-2 py-1 rounded-md"
+        className="font-semibold text-lg cursor-text text-neutral-800 hover:text-neutral-600 px-2 py-1 rounded-md"
         onClick={() => {
           setNewName(selectedPrompt.name);
           setIsRenameDialogOpen(true);
@@ -140,7 +143,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
             onMount={handleEditorDidMount}
             options={{
               minimap: { enabled: true },
-              fontSize: 14,
+              fontSize: 13,
               wordWrap: "on",
               automaticLayout: true,
               padding: { top: 16 },
@@ -184,6 +187,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
           <div className="flex justify-end gap-2">
             <Button
               variant="outline"
+              className="rounded-xl"
               onClick={() => {
                 setIsRenameDialogOpen(false);
                 setNewName("");
@@ -193,6 +197,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
             </Button>
             <Button
               onClick={handleRename}
+              className="rounded-xl bg-indigo-400 hover:bg-indigo-500"
               disabled={!newName.trim() || newName.trim().length > 50}
             >
               Save
@@ -203,6 +208,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
     </section>
     {/* Footer */}
     <EditorFooter selectedPrompt={selectedPrompt} content={content} />
+    <Alert open={isDeleting} onOpenChange={setIsDeleting} title="Delete Prompt" description="Are you sure you want to delete this prompt?" onAction={() => handleDeletePrompt()} actionText="Delete" />
     </div>
   );
 }

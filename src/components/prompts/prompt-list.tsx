@@ -1,4 +1,4 @@
-import { FilterIcon, ChevronDown, Check, FolderPlus, ChevronRight, ChevronDown as ChevronDownIcon, Pencil, Trash2, Plus, FileText, LayoutTemplate } from "lucide-react";
+import { FilterIcon, ChevronDown, Check, FolderPlus, ChevronRight, ChevronDown as ChevronDownIcon, Pencil, Trash2, Plus, FileText, LayoutTemplate, Star } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
@@ -166,7 +166,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                 onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
                 className="flex items-center justify-between cursor-pointer"
               >
-                <span>Favorites Only</span>
+                <span className="flex items-center gap-2"><Star className={showFavoritesOnly ? "fill-current" : "text-neutral-600"} />Favorites Only</span>
                 {showFavoritesOnly && <Check className="h-4 w-4" />}
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -195,12 +195,12 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                         onChange={(e) => setNewGroupName(e.target.value)}
                         placeholder="Enter group name"
                         onKeyDown={(e) => e.key === 'Enter' && handleCreateGroup()}
-                        className="w-full"
+                        className="w-full rounded-xl"
                       />
                     </div>
                     <Button 
                       onClick={handleCreateGroup}
-                      className="w-full"
+                      className="w-full rounded-xl bg-indigo-400 hover:bg-indigo-500"
                       disabled={newGroupName.trim() === ""}
                     >
                       Create Group

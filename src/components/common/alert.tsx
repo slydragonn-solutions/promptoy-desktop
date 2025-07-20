@@ -23,10 +23,10 @@ export default function Alert({ open, onOpenChange, onAction, title, description
                 </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel className="rounded-xl">Cancel</AlertDialogCancel>
                 <AlertDialogAction 
                     onClick={onAction}
-                    className="bg-destructive hover:bg-destructive/90"
+                    className="bg-red-400 hover:bg-red-500 rounded-xl"
                 >
                     {actionText}
                 </AlertDialogAction>

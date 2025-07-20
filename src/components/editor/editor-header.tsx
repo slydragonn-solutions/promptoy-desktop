@@ -4,11 +4,12 @@ import {
     EllipsisVerticalIcon,
     FileTextIcon,
     Trash2,
-    Heart,
     Folder,
     ChevronDown,
     Check,
     X,
+    Star,
+    PenIcon,
 } from "lucide-react";
 import { 
     DropdownMenu, 
@@ -103,38 +104,26 @@ export default function EditorHeader({
                                     handleMoveToGroup(group.id);
                                 }
                             }}
-                            className="flex items-center justify-between"
+                            className="flex items-center justify-between group"
                         >
                             <div className="flex items-center">
                                 <Folder className="mr-2 h-4 w-4 flex-shrink-0" />
                                 <span className="truncate">{group.name}</span>
                             </div>
                             {currentGroupId === group.id && (
-                                <Check className="h-4 w-4 text-primary" />
+                                <>
+                                <Check className="h-4 w-4 text-primary group-hover:hidden block" />
+                                <X className="h-4 w-4 text-primary group-hover:block hidden" />
+                                </>
                             )}
                         </DropdownMenuItem>
                     ))}
-                    {currentGroupId && (
-                        <>
-                            <div className="h-px bg-border my-1" />
-                            <DropdownMenuItem 
-                                onSelect={(e) => {
-                                    e.preventDefault();
-                                    handleMoveToGroup(null);
-                                }}
-                                className="text-destructive focus:text-destructive"
-                            >
-                                <X className="mr-2 h-4 w-4" />
-                                <span>Remove from group</span>
-                            </DropdownMenuItem>
-                        </>
-                    )}
                 </DropdownMenuContent>
             </DropdownMenu>
             <Button
                 variant="ghost"
                 size="icon"
-                className={`rounded-xl bg-neutral-200 hover:bg-neutral-50 text-neutral-600 ${selectedPrompt.isFavorite ? "text-red-300" : ""}`}
+                className={`rounded-xl bg-neutral-200 hover:bg-neutral-50 text-neutral-600 ${selectedPrompt.isFavorite ? "text-indigo-400" : ""}`}
                 onClick={() => {
                     handleUpdatePrompt({
                         isFavorite: !selectedPrompt.isFavorite,
@@ -143,7 +132,7 @@ export default function EditorHeader({
                 }}
                 disabled={isLoading}
             >
-                <Heart
+                <Star
                     className={`h-4 w-4 ${selectedPrompt.isFavorite ? "fill-current" : ""}`}
                 />
             </Button>
@@ -160,7 +149,7 @@ export default function EditorHeader({
                       setIsRenameDialogOpen(true);
                     }}
                   >
-                    <FileTextIcon className="mr-2 h-4 w-4" />
+                    <PenIcon className="mr-2 h-4 w-4" />
                     <span>Rename</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleCopyToClipboard}>
@@ -179,14 +168,14 @@ export default function EditorHeader({
                       <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
                       <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
                     </svg>
-                    <span>Copy Content</span>
+                    <span>Copy</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     className="text-red-400 focus:bg-destructive/10 focus:text-destructive"
                     onClick={handleDeletePrompt}
                   >
                     <Trash2 className="mr-2 h-4 w-4" />
-                    <span>Delete Prompt</span>
+                    <span>Delete</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

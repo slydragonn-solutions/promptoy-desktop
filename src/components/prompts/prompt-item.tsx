@@ -14,7 +14,7 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from '@/components/ui/context-menu';
-import { Edit, Star, Trash2, MoveRight } from 'lucide-react';
+import { Edit, Star, Trash2, MoveRight, Folder } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -28,6 +28,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import Alert from '../common/alert';
 
 interface PromptItemProps {
     prompt: Prompt;
@@ -272,13 +273,14 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
                     {groups.map((group) => (
                         <div 
                             key={group.id}
-                            className={`p-2 rounded-md cursor-pointer hover:bg-accent ${selectedGroup === group.id ? 'bg-accent' : ''}`}
+                            className={`flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-neutral-200 ${selectedGroup === group.id ? 'bg-neutral-200' : ''}`}
                             onClick={() => {
                                 setSelectedGroup(group.id);
                                 handleMoveToGroup(group.id);
                             }}
                         >
-                            {group.name}
+                            <Folder className="h-4 w-4" />
+                            <span>{group.name}</span>
                         </div>
                     ))}
                     {groups.length === 0 && (
@@ -292,33 +294,24 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
                             setSelectedGroup('');
                             handleMoveToGroup('');
                         }}
+                        disabled={!selectedGroup}
+                        className='rounded-xl'
                     >
                         Remove from Group
                     </Button>
-                    <Button onClick={() => setIsMoving(false)}>Done</Button>
+                    <Button onClick={() => setIsMoving(false)} className='rounded-xl bg-indigo-400 hover:bg-indigo-500'>Done</Button>
                 </DialogFooter>
             </DialogContent>
             </Dialog>
             {/* Delete Confirmation Dialog */}
-            <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            This will permanently delete the prompt "{name}" and cannot be undone.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction 
-                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                            onClick={handleDeleteConfirm}
-                        >
-                            Delete
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            <Alert
+                open={showDeleteDialog}
+                onOpenChange={setShowDeleteDialog}
+                onAction={handleDeleteConfirm}
+                title="Are you sure?"
+                description={`This will permanently delete the prompt "${name}" and cannot be undone.`}
+                actionText="Delete"
+            />
         </>
     );
 }

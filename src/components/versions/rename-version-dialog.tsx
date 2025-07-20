@@ -1,6 +1,5 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 
 interface RenameVersionDialogProps {
@@ -31,10 +30,7 @@ export default function RenameVersionDialog({
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="renameVersion" className="text-right">
-                            Name
-                        </Label>
-                        <div className="col-span-3 space-y-2">
+                        <div className="col-span-4 space-y-2">
                             <Input
                                 id="renameVersion"
                                 value={newVersionName}
@@ -59,7 +55,8 @@ export default function RenameVersionDialog({
                 </div>
                 <div className="flex justify-end gap-2">
                     <Button 
-                        variant="outline" 
+                        variant="outline"
+                        className="rounded-xl"
                         onClick={() => {
                             setIsRenameDialogOpen(false);
                         }}
@@ -68,6 +65,7 @@ export default function RenameVersionDialog({
                     </Button>
                     <Button 
                         onClick={handleConfirmRename}
+                        className="rounded-xl bg-indigo-400 hover:bg-indigo-500"
                         disabled={!newVersionName.trim()}
                     >
                         Save Changes

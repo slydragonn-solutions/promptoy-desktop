@@ -1,6 +1,5 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Prompt} from "@/types/prompts"
 import { Button } from "@/components/ui/button";
 import { MAX_VERSIONS } from "@/constants/prompt";
@@ -30,7 +29,7 @@ export default function NewVersionDialog({
         <Dialog open={isVersionDialogOpen} onOpenChange={setIsVersionDialogOpen}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Create New Version</DialogTitle>
+                    <DialogTitle>Versions</DialogTitle>
                     <DialogDescription>
                         Create a new version of your prompt
                         <div className="text-xs text-muted-foreground mt-1">
@@ -40,10 +39,7 @@ export default function NewVersionDialog({
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="versionName" className="text-right">
-                            Name
-                        </Label>
-                        <div className="col-span-3 space-y-2">
+                        <div className="col-span-4 space-y-2">
                             <Input
                                 id="versionName"
                                 value={newVersionName}
@@ -69,13 +65,15 @@ export default function NewVersionDialog({
                 </div>
                 <div className="flex justify-end gap-2">
                     <Button 
-                        variant="outline" 
+                        variant="outline"
+                        className="rounded-xl"
                         onClick={() => setIsVersionDialogOpen(false)}
                     >
                         Cancel
                     </Button>
                     <Button 
                         onClick={handleCreateNewVersion}
+                        className="rounded-xl bg-indigo-400 hover:bg-indigo-500"
                         disabled={!newVersionName.trim()}
                     >
                         Create Version

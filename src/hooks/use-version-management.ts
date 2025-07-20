@@ -51,13 +51,6 @@ export const useVersionManagement = () => {
             return false;
         }
 
-        const versionName = version.name || 'Untitled';
-        const confirmMessage = `Are you sure you want to delete version "${versionName}"?\nThis action cannot be undone.`;
-        
-        if (!window.confirm(confirmMessage)) {
-            return false;
-        }
-
         const updatedVersions = selectedPrompt.versions.filter(
             (v: PromptContent) => v.date !== version.date
         );

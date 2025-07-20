@@ -108,8 +108,8 @@ function Tags() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-64 p-4">
               <div className="space-y-4">
-                <Input placeholder="Type a new tag name..." value={newTagName} onChange={(e) => setNewTagName(e.target.value)} />
-                <Button onClick={() => createTag()} className="w-full" disabled={newTagName.trim() === ""}>
+                <Input className='rounded-xl' placeholder="Type a new tag name..." value={newTagName} onChange={(e) => setNewTagName(e.target.value)} />
+                <Button onClick={() => createTag()} className="w-full rounded-xl bg-indigo-400 hover:bg-indigo-500" disabled={newTagName.trim() === ""}>
                   Create
                 </Button>
               </div>

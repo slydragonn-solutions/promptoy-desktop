@@ -252,14 +252,15 @@ export function TemplatePromptForm({ onSuccess, onBack, isSubmitting, setIsSubmi
           />
           
           <div className="space-y-4">
-            <h4 className="text-sm font-medium">Template Variables</h4>
+            <h4 className="text-sm font-medium">Template Variables ({selectedTemplate.variables.length})</h4>
+            <ScrollArea className="h-[200px]">
             {selectedTemplate.variables.map((variable) => (
               <FormField
                 key={variable}
                 control={form.control}
                 name={variable}
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="mb-4">
                     <FormLabel>{variable}</FormLabel>
                     <FormControl>
                       <Input 
@@ -273,6 +274,7 @@ export function TemplatePromptForm({ onSuccess, onBack, isSubmitting, setIsSubmi
                 )}
               />
             ))}
+            </ScrollArea>
           </div>
           
           <div className="flex justify-end space-x-2">
@@ -281,14 +283,17 @@ export function TemplatePromptForm({ onSuccess, onBack, isSubmitting, setIsSubmi
               variant="outline" 
               onClick={() => setSelectedTemplate(null)}
               disabled={isSubmitting}
+              className="rounded-xl"
             >
               Back
             </Button>
             <Button 
               type="submit"
               disabled={isSubmitting}
+              variant="default"
+              className="bg-indigo-400 hover:bg-indigo-500 rounded-xl"
             >
-              {isSubmitting ? 'Creating...' : 'Create Prompt'}
+              {isSubmitting ? 'Creating...' : 'Create'}
             </Button>
           </div>
         </form>

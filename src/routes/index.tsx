@@ -36,7 +36,7 @@ function StatCard({ title, value, icon, lastUpdate }: { title: string; value?: s
           value === undefined ? (
             <div className="text-neutral-600">Loading...</div>
           ) : (
-            <div className="text-3xl font-bold text-neutral-800">{value}<span className="text-sm text-neutral-600 font-light ml-2">{lastUpdate}</span></div>
+            <div className="text-3xl font-bold text-neutral-800">{value}<span className="text-sm text-neutral-600 font-light ml-2">Changed {lastUpdate}</span></div>
           )
         }
       </CardContent>
@@ -154,6 +154,20 @@ function Index() {
     return "Good Evening";
   }
 
+  const getTimeAgo = (date: string) => {
+    const now = new Date();
+    const then = new Date(date);
+    const diff = now.getTime() - then.getTime();
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    if (days > 0) return `${days} days ago`;
+    if (hours > 0) return `${hours} hours ago`;
+    if (minutes > 0) return `${minutes} minutes ago`;
+    return `${seconds} seconds ago`;
+  }
+
   return (
     <div className="flex w-full h-[calc(100vh-37px)] bg-neutral-100">
 
@@ -188,25 +202,25 @@ function Index() {
               title="Total Prompts" 
               value={stats.totalPrompts?.toLocaleString()}
               icon={<FileText className="w-8 h-8 text-neutral-600" />}
-              lastUpdate={new Date(lastUpdates.totalPrompts).toLocaleString()}
+              lastUpdate={getTimeAgo(lastUpdates.totalPrompts)}
             />
             <StatCard 
               title="Active Tags" 
               value={stats.uniqueTags?.toLocaleString()}
               icon={<Tags className="w-8 h-8 text-neutral-600" />}
-              lastUpdate={new Date(lastUpdates.uniqueTags).toLocaleString()}
+              lastUpdate={getTimeAgo(lastUpdates.uniqueTags)}
             />
             <StatCard 
               title="Groups" 
               value={stats.totalGroups?.toLocaleString()} 
               icon={<Folder className="w-8 h-8 text-neutral-600" />}
-              lastUpdate={new Date(lastUpdates.totalGroups).toLocaleString()}
+              lastUpdate={getTimeAgo(lastUpdates.totalGroups)}
             />  
             <StatCard 
               title="Favorites" 
               value={stats.favoritePrompts?.toLocaleString()} 
               icon={<Heart className="w-8 h-8 text-neutral-600" />}
-              lastUpdate={new Date(lastUpdates.favoritePrompts).toLocaleString()}
+              lastUpdate={getTimeAgo(lastUpdates.favoritePrompts)}
             />
           </div>
 

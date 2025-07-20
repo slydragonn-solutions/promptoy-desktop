@@ -51,7 +51,6 @@ export const useEditor = (initialPrompt: Prompt | null) => {
     async (value: string) => {
       if (!initialPrompt) return;
 
-      setIsSaving(true);
       try {
         const now = new Date().toISOString();
         const currentVersion = initialPrompt.versions[0];
@@ -123,6 +122,7 @@ export const useEditor = (initialPrompt: Prompt | null) => {
     (value: string | undefined) => {
       if (value !== undefined) {
         if (value.length <= MAX_CONTENT_LENGTH) {
+          setIsSaving(true);
           setContent(value);
           if (saveTimeoutRef.current) {
             clearTimeout(saveTimeoutRef.current);
@@ -149,14 +149,12 @@ export const useEditor = (initialPrompt: Prompt | null) => {
   const handleDeletePrompt = useCallback(async () => {
     if (!initialPrompt) return;
 
-    if (confirm('Are you sure you want to delete this prompt?')) {
-      try {
-        await removePrompt(initialPrompt.id);
-        toast.success('Prompt deleted successfully');
-      } catch (error) {
-        console.error('Error deleting prompt:', error);
-        toast.error('Failed to delete prompt');
-      }
+    try {
+      await removePrompt(initialPrompt.id);
+      toast.success('Prompt deleted successfully');
+    } catch (error) {
+      console.error('Error deleting prompt:', error);
+      toast.error('Failed to delete prompt');
     }
   }, [initialPrompt, removePrompt]);
 

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
 import { promptsStore } from "@/store/prompts-store";
+import { Label } from "@/components/ui/label";
 
 const nameFormSchema = z.object({
   name: z.string().min(1, "Name is required").max(50, "Name is too long"),
@@ -65,6 +66,7 @@ export function BlankPromptForm({ onSuccess, onBack, isSubmitting, setIsSubmitti
   return (
     <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="p-4 space-y-4">
+          <h3 className="text-lg font-medium">New Blank Prompt</h3>
           <FormField
             control={form.control}
             name="name"
@@ -93,8 +95,10 @@ export function BlankPromptForm({ onSuccess, onBack, isSubmitting, setIsSubmitti
             <Button 
               type="submit"
               disabled={isSubmitting}
+              variant="default"
+              className="bg-indigo-400 hover:bg-indigo-500"
             >
-              {isSubmitting ? 'Creating...' : 'Create Prompt'}
+              {isSubmitting ? 'Creating...' : 'Create'}
             </Button>
           </div>
         </form>

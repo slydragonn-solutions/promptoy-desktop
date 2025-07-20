@@ -1,6 +1,7 @@
 import { PromptContent } from "@/types/prompts";
 import { CheckIcon, Edit2, TrashIcon, GitCompare } from "lucide-react";
-
+import { useState } from "react";
+import Alert from "../common/alert";
 interface VersionItemProps {
   version: PromptContent;
   isActive: boolean;
@@ -23,8 +24,14 @@ export default function VersionItem({
   onCompare,
 }: VersionItemProps) {
   const displayText = version.name || new Date(version.date).toLocaleString();
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  const handleDelete = () => {
+    onDelete(version);
+  }
 
   return (
+    <>
     <div
       className={`group flex items-center justify-between p-2 rounded-lg cursor-pointer border ${
         isActive ? 'bg-neutral-200 border-neutral-200 hover:bg-neutral-200' : 'bg-neutral-100 border-neutral-100 hover:bg-neutral-200/60'
@@ -68,7 +75,7 @@ export default function VersionItem({
                 className="p-1 rounded-full hover:bg-neutral-200 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-50 disabled:pointer-events-none"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onDelete(version);
+                  setIsDeleting(true);
                 }}
                 title="Delete version"
                 disabled={isComparing}
@@ -84,5 +91,14 @@ export default function VersionItem({
       </div>
       {isActive && <CheckIcon className="w-4 h-4 text-neutral-500" />}
     </div>
+    <Alert
+        title="Version deleted"
+        description="The version has been deleted successfully."
+        open={isDeleting}
+        onOpenChange={setIsDeleting}
+        onAction={handleDelete}
+        actionText="Delete"
+    />
+    </>
   );
 }
