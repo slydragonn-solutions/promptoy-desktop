@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
 import { promptsStore } from "@/store/prompts-store";
-import { Label } from "@/components/ui/label";
 
 const nameFormSchema = z.object({
   name: z.string().min(1, "Name is required").max(50, "Name is too long"),

@@ -2,7 +2,6 @@ import { Prompt } from "@/types/prompts";
 import { Button } from "@/components/ui/button";
 import { 
     EllipsisVerticalIcon,
-    FileTextIcon,
     Trash2,
     Folder,
     ChevronDown,
