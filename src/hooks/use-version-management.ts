@@ -22,6 +22,10 @@ export const useVersionManagement = () => {
             setVersionError('Version name is required');
             return;
         }
+        if (newVersionName.length > 50) {
+            setVersionError('Version name is too long. Maximum 50 characters allowed.');
+            return;
+        }
 
         const newVersion: PromptContent = {
             name: newVersionName.trim(),
@@ -100,6 +104,10 @@ export const useVersionManagement = () => {
     const handleConfirmRename = useCallback((selectedPrompt: any) => {
         if (!selectedPrompt || !versionToRename || !newVersionName.trim()) {
             setRenameError('Version name is required');
+            return false;
+        }
+        if (newVersionName.length > 50) {
+            setRenameError('Version name is too long. Maximum 50 characters allowed.');
             return false;
         }
 

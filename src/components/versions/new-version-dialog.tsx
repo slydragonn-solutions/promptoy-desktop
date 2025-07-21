@@ -43,6 +43,7 @@ export default function NewVersionDialog({
                             <Input
                                 id="versionName"
                                 value={newVersionName}
+                                maxLength={50}
                                 onChange={(e) => {
                                     setNewVersionName(e.target.value);
                                     if (versionError) setVersionError('');
@@ -57,6 +58,9 @@ export default function NewVersionDialog({
                                     }
                                 }}
                             />
+                            <div className="text-xs text-muted-foreground text-right">
+                                {newVersionName.length}/50 characters
+                            </div>
                             {versionError && (
                                 <p className="text-sm text-red-500">{versionError}</p>
                             )}
