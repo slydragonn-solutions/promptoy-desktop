@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { FilterIcon, ChevronDown, Check, FolderPlus, ChevronRight, ChevronDown as ChevronDownIcon, Pencil, Trash2, Star } from "lucide-react";
+import { useSettingsStore } from "@/store/settings-store";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
@@ -45,8 +46,10 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
   const { prompts, isLoading, updatePrompt, getPrompts, selectedPrompt, setSelectedPrompt } = promptsStore();
   const { loadGroups } = useGroupsStore();
   const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState<SortOption>("newest");
+  const { list: { listOpenOnStart }, filter: { sortBy: settingsSortBy } } = useSettingsStore();
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [localSortBy, setLocalSortBy] = useState<SortOption>(settingsSortBy);
 
   const [newGroupName, setNewGroupName] = useState("");
   
@@ -73,7 +76,15 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
   useEffect(() => {
     getPrompts();
     loadGroups();
-  }, [getPrompts, loadGroups]);
+    
+    // Apply open on start behavior
+    if (isInitialLoad && listOpenOnStart === 'all') {
+      // This will expand all groups if needed
+      // You might need to implement group expansion logic here
+      // based on your group implementation
+      setIsInitialLoad(false);
+    }
+  }, [getPrompts, loadGroups, listOpenOnStart, isInitialLoad]);
   
   // Handle creating a new group from the dialog
   const handleCreateGroup = () => {
@@ -107,32 +118,47 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
           )),
     );
 
-    return [...filtered].sort((a, b) => {
-      switch (sortBy) {
-        case "a-z":
-          return a.name.localeCompare(b.name);
-        case "z-a":
-          return b.name.localeCompare(a.name);
-        case "newest":
-          return (
-            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-          );
-        case "oldest":
-          return (
-            new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
-          );
-        default:
-          return 0;
-      }
-    });
-  }, [prompts, search, sortBy, listBy, showFavoritesOnly]);
+    // Apply sorting
+    switch (localSortBy) {
+      case "a-z":
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "z-a":
+        filtered.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      case "newest":
+        filtered.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+        break;
+      case "oldest":
+        filtered.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime());
+        break;
+    }
 
-  const sortOptions: { value: SortOption; label: string }[] = [
-    { value: "a-z", label: "A to Z" },
-    { value: "z-a", label: "Z to A" },
-    { value: "newest", label: "Newest First" },
-    { value: "oldest", label: "Oldest First" },
-  ];
+    return filtered;
+  }, [prompts, search, localSortBy, listBy, showFavoritesOnly]);
+
+  // Update local sort when settings change
+  useEffect(() => {
+    setLocalSortBy(settingsSortBy);
+  }, [settingsSortBy]);
+
+  // Determine which accordion items should be open by default based on settings
+  const getDefaultExpandedItems = () => {
+    switch (listOpenOnStart) {
+      case 'all':
+        return ['ungrouped', 'groups'];
+      case 'none':
+        return [];
+      case 'groups':
+        return ['groups'];
+      case 'ungrouped':
+        return ['ungrouped'];
+      default:
+        return ['ungrouped'];
+    }
+  };
+
+  const [expandedItems, setExpandedItems] = useState<string[]>(getDefaultExpandedItems());
 
   return (
     <section className="flex flex-col gap-2 min-w-72 w-72 h-[calc(100vh-37px)] bg-neutral-100">
@@ -160,16 +186,22 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48 text-neutral-600">
               <div className="px-2 py-1.5 text-xs font-medium text-neutral-500">Sort By</div>
-              {sortOptions.map((option) => (
-                <DropdownMenuItem
-                  key={option.value}
-                  onClick={() => setSortBy(option.value)}
-                  className="flex items-center justify-between cursor-pointer"
-                >
-                  <span>{option.label}</span>
-                  {sortBy === option.value && <Check className="h-4 w-4" />}
-                </DropdownMenuItem>
-              ))}
+              <DropdownMenuItem onClick={() => setLocalSortBy("a-z")}>
+                A-Z
+                {localSortBy === "a-z" && <Check className="ml-auto h-4 w-4" />}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLocalSortBy("z-a")}>
+                Z-A
+                {localSortBy === "z-a" && <Check className="ml-auto h-4 w-4" />}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLocalSortBy("newest")}>
+                Newest
+                {localSortBy === "newest" && <Check className="ml-auto h-4 w-4" />}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLocalSortBy("oldest")}>
+                Oldest
+                {localSortBy === "oldest" && <Check className="ml-auto h-4 w-4" />}
+              </DropdownMenuItem>
               <div className="h-px bg-neutral-200 my-1" />
               <DropdownMenuItem
                 onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
@@ -250,9 +282,14 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
           </div>
         ) : (
           <ScrollArea className="h-full">
-            <Accordion type="multiple" className="w-full">
+            <Accordion 
+              type="multiple" 
+              className="w-full"
+              value={expandedItems}
+              onValueChange={setExpandedItems}
+            >
               {/* Ungrouped Prompts */}
-              <AccordionItem value="ungrouped" defaultChecked>
+              <AccordionItem value="ungrouped">
                 <AccordionTrigger className="p-2 hover:no-underline">
                   <div className="flex items-center gap-2">
                     <span>All</span>

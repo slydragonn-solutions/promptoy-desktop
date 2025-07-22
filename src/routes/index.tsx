@@ -17,6 +17,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
+import { useSettingsStore } from '@/store/settings-store';
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -46,6 +47,7 @@ function StatCard({ title, value, icon, lastUpdate }: { title: string; value?: s
 
 function Index() {
   const navigate = useNavigate({from: "/"})
+  const { list: { numberOfRecentPrompts } } = useSettingsStore()
   const { groups, loadGroups } = useGroupsStore();
   const { prompts, getPrompts, setSelectedPrompt } = promptsStore();
   const { getTagById, loadTags, tags: tagsObject } = useTagsStore();
@@ -239,7 +241,7 @@ function Index() {
                   ) : (
                     [...prompts]
                       .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-                      .slice(0, 3)
+                      .slice(0, numberOfRecentPrompts)
                       .map((prompt) => {
                         const updatedAt = new Date(prompt.updatedAt);
                         const now = new Date();

@@ -20,6 +20,7 @@ import { DiffEditor } from "./diff-editor";
 import { Badge } from "../ui/badge";
 import { useState } from "react";
 import Alert from "../common/alert";
+import { useSettingsStore } from "@/store/settings-store";
 interface EditorProps {
   isComparing: boolean;
   compareVersion: {
@@ -33,6 +34,7 @@ interface EditorProps {
 export default function Editor({ isComparing, compareVersion, onCloseCompare }: EditorProps) {
   const { selectedPrompt, setSelectedPrompt } = promptsStore();
   const [isDeleting, setIsDeleting] = useState(false);
+  const { editor: editorSettings } = useSettingsStore();
   
   // Get the current version (most recent one)
   const currentVersion = selectedPrompt?.versions?.[0];
@@ -119,7 +121,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
 
       {/* Editor */}
       <div className="relative h-full">
-        {!isComparing && (
+        {!isComparing && editorSettings.showToolbar && (
           <MarkdownToolbar 
             editorRef={editorRef} 
             onCopy={handleCopyToClipboard} 
@@ -144,7 +146,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
             onMount={handleEditorDidMount}
             options={{
               minimap: { enabled: true },
-              fontSize: 13,
+              fontSize: editorSettings.fontSize,
               wordWrap: "on",
               automaticLayout: true,
               padding: { top: 16 },

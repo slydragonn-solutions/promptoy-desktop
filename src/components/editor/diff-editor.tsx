@@ -2,6 +2,7 @@ import { DiffEditor as MonacoDiffEditor } from "@monaco-editor/react";
 import { Button } from "../ui/button";
 import { X, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useSettingsStore } from "@/store/settings-store";
 
 interface DiffEditorProps {
   original: string;
@@ -19,6 +20,7 @@ export function DiffEditor({
   onClose,
 }: DiffEditorProps) {
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const { editor: editorSettings } = useSettingsStore();
 
   // Show a loading state when versions change
   useEffect(() => {
@@ -57,7 +59,7 @@ export function DiffEditor({
             minimap: { enabled: false },
             originalEditable: false,
             scrollBeyondLastLine: false,
-            fontSize: 13,
+            fontSize: editorSettings.fontSize,
             renderOverviewRuler: false,
             scrollbar: {
               vertical: "hidden",
