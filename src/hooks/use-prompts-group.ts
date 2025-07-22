@@ -86,8 +86,13 @@ export const usePromptsGroup = (prompts: Prompt[]) => {
   }, [prompts, removeGroup, contextMenu.groupId]);
 
   const handleSaveRename = useCallback((groupId: string) => {
-    if (editingGroupName.trim()) {
-      updateGroup(groupId, { name: editingGroupName.trim() });
+    const trimmedName = editingGroupName.trim();
+    if (trimmedName) {
+      if (trimmedName.length > 50) {
+        toast.error('Group name cannot exceed 50 characters');
+        return false;
+      }
+      updateGroup(groupId, { name: trimmedName });
       setEditingGroupId(null);
       setEditingGroupName('');
       toast.success('Group renamed successfully');

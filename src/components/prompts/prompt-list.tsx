@@ -204,14 +204,20 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                       <Label htmlFor="group-name" className="sr-only">
                         Group Name
                       </Label>
-                      <Input
-                        id="group-name"
-                        value={newGroupName}
-                        onChange={(e) => setNewGroupName(e.target.value)}
-                        placeholder="Enter group name"
-                        onKeyDown={(e) => e.key === 'Enter' && handleCreateGroup()}
-                        className="w-full rounded-xl"
-                      />
+                      <div className="space-y-1 relative">
+                        <Input
+                          id="group-name"
+                          value={newGroupName}
+                          onChange={(e) => setNewGroupName(e.target.value.slice(0, 50))}
+                          placeholder="Enter group name"
+                          onKeyDown={(e) => e.key === 'Enter' && handleCreateGroup()}
+                          className="w-full rounded-xl pr-16"
+                          maxLength={50}
+                        />
+                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-muted-foreground">
+                          {newGroupName.length}/50
+                        </span>
+                      </div>
                     </div>
                     <DropdownMenuItem>
                       <Button 
@@ -302,7 +308,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                               <ContextMenuTrigger asChild>
                                 <button
                                   onClick={() => toggleGroup(group.id)}
-                                  className="flex items-center w-full px-2 py-1.5 text-sm font-medium text-left rounded-md bg-neutral-50 hover:bg-neutral-200"
+                                  className="flex items-center w-full px-2 py-1.5 text-sm font-medium text-left rounded-md bg-neutral-50 hover:bg-neutral-200 truncate"
                                 >
                                   {expandedGroups[group.id] ? (
                                     <ChevronDownIcon className="w-4 h-4 mr-2 flex-shrink-0" />
@@ -311,30 +317,36 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                                   )}
                                   
                                   {editingGroupId === group.id ? (
-                                    <div className="flex-1 flex items-center">
-                                      <Input
-                                        value={editingGroupName}
-                                        onChange={(e) => setEditingGroupName(e.target.value)}
-                                        onKeyDown={(e) => handleKeyDown(e, group.id)}
-                                        onClick={(e) => e.stopPropagation()}
-                                        className="h-6 text-sm px-2 py-1"
-                                        data-group-input={group.id}
-                                      />
-                                      <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="h-6 w-6 ml-1"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleSaveRename(group.id);
-                                        }}
-                                      >
-                                        <Check className="h-3.5 w-3.5" />
-                                      </Button>
+                                    <div className="flex-1">
+                                      <div className="flex items-center">
+                                        <Input
+                                          value={editingGroupName}
+                                          onChange={(e) => setEditingGroupName(e.target.value.slice(0, 50))}
+                                          onKeyDown={(e) => handleKeyDown(e, group.id)}
+                                          onClick={(e) => e.stopPropagation()}
+                                          className="h-6 text-sm px-2 py-1 flex-1"
+                                          data-group-input={group.id}
+                                          maxLength={50}
+                                        />
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-6 w-6 ml-1"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleSaveRename(group.id);
+                                          }}
+                                        >
+                                          <Check className="h-3.5 w-3.5" />
+                                        </Button>
+                                      </div>
+                                      <p className="text-xs text-muted-foreground text-right mt-1">
+                                        {editingGroupName.length}/50 characters
+                                      </p>
                                     </div>
                                   ) : (
                                     <>
-                                      <span className="truncate">{group.name}</span>
+                                      <span className="truncate max-w-[200px]">{group.name}</span>
                                       <span className="ml-auto text-xs text-muted-foreground">
                                         {groupPrompts.length}
                                       </span>
