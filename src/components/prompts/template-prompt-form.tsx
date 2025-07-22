@@ -283,19 +283,32 @@ export function TemplatePromptForm({ onSuccess, onBack, isSubmitting, setIsSubmi
             <FormField
               control={form.control}
               name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Prompt Name</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="My Awesome Prompt"
-                      {...field}
-                      disabled={isSubmitting}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              render={({ field }) => {
+                const currentLength = field.value?.length || 0;
+                const maxLength = 50;
+                const isOverLimit = currentLength > maxLength;
+                
+                return (
+                  <FormItem>
+                    <div className="flex justify-between items-center">
+                      <FormLabel>Prompt Name</FormLabel>
+                      <span className={`text-xs ${isOverLimit ? 'text-destructive' : 'text-muted-foreground'}`}>
+                        {currentLength}/{maxLength}
+                      </span>
+                    </div>
+                    <FormControl>
+                      <Input 
+                        placeholder="My Awesome Prompt"
+                        {...field}
+                        disabled={isSubmitting}
+                        maxLength={maxLength}
+                        className={isOverLimit ? 'border-destructive' : ''}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
             
             <div className="space-y-4">
