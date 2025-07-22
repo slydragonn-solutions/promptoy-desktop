@@ -22,6 +22,7 @@ import { toast } from "sonner";
 
 interface EditorHeaderProps {
     selectedPrompt: Prompt;
+    setSelectedPrompt: (promptId: string | null) => void;
     currentGroupId?: string | null;
     setIsRenameDialogOpen: (open: boolean) => void;
     setNewName: (name: string) => void;
@@ -32,6 +33,7 @@ interface EditorHeaderProps {
 
 export default function EditorHeader({
     selectedPrompt,
+    setSelectedPrompt,
     currentGroupId,
     setIsRenameDialogOpen,
     setNewName,
@@ -168,6 +170,10 @@ export default function EditorHeader({
                       <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
                     </svg>
                     <span>Copy</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSelectedPrompt(null)}>
+                    <X className="mr-2 h-4 w-4" />
+                    <span>Close</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     className="text-red-400 focus:bg-destructive/10 focus:text-destructive"

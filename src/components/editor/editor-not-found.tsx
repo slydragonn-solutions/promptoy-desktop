@@ -6,9 +6,12 @@ export default function EditorNotFound() {
           <div className="flex flex-col items-center gap-4 text-muted-foreground">
             <FileTextIcon className="h-12 w-12 opacity-50" />
             <h2 className="text-xl font-medium">No Prompt Selected</h2>
-            <p className="text-sm mb-4">
-              Select a prompt from the list or create a new one
-            </p>
+            <div>
+              <p className="text-sm mb-4">
+                Select a prompt from the list or create a new one
+              </p>
+              <p className="text-sm text-indigo-500">Create a new prompt (⌘N)</p>
+            </div>
           </div>
         </section>
       );

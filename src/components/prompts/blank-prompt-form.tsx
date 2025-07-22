@@ -76,7 +76,7 @@ export function BlankPromptForm({ onSuccess, onBack, isSubmitting, setIsSubmitti
               <FormItem>
                 <FormControl>
                   <Input
-                    className="w-96"
+                    className="w-96 rounded-xl"
                     placeholder="Example: 'Write a poem about the moon'"
                     {...field}
                   />
@@ -92,6 +92,7 @@ export function BlankPromptForm({ onSuccess, onBack, isSubmitting, setIsSubmitti
               variant="outline" 
               onClick={onBack}
               disabled={isSubmitting}
+              className="rounded-xl"
             >
               Back
             </Button>
@@ -99,7 +100,7 @@ export function BlankPromptForm({ onSuccess, onBack, isSubmitting, setIsSubmitti
               type="submit"
               disabled={isSubmitting}
               variant="default"
-              className="bg-indigo-400 hover:bg-indigo-500"
+              className="bg-indigo-400 hover:bg-indigo-500 rounded-xl"
             >
               {isSubmitting ? 'Creating...' : 'Create'}
             </Button>

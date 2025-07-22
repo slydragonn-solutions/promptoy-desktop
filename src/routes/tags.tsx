@@ -24,8 +24,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AlertDialog, AlertDialogContent } from '@/components/ui/alert-dialog';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 
 export const Route = createFileRoute("/tags")({
@@ -102,16 +103,25 @@ function Tags() {
           />
           <DropdownMenu>
             <DropdownMenuTrigger>
+              <Tooltip>
+                <TooltipTrigger>
               <Button size="icon" variant="ghost" className="rounded-xl bg-neutral-200 hover:bg-neutral-50 text-neutral-600">
                 <Plus />
               </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>New Tag</p>
+              </TooltipContent>
+              </Tooltip>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-64 p-4">
               <div className="space-y-4">
                 <Input className='rounded-xl' placeholder="Type a new tag name..." value={newTagName} onChange={(e) => setNewTagName(e.target.value)} />
-                <Button onClick={() => createTag()} className="w-full rounded-xl bg-indigo-400 hover:bg-indigo-500" disabled={newTagName.trim() === ""}>
-                  Create
-                </Button>
+                <DropdownMenuItem>
+                  <Button onClick={() => createTag()} className="w-full rounded-xl bg-indigo-400 hover:bg-indigo-500" disabled={newTagName.trim() === ""}>
+                    Create
+                  </Button>
+                </DropdownMenuItem>
               </div>
             </DropdownMenuContent>
           </DropdownMenu>

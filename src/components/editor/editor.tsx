@@ -31,7 +31,7 @@ interface EditorProps {
 }
 
 export default function Editor({ isComparing, compareVersion, onCloseCompare }: EditorProps) {
-  const { selectedPrompt } = promptsStore();
+  const { selectedPrompt, setSelectedPrompt } = promptsStore();
   const [isDeleting, setIsDeleting] = useState(false);
   
   // Get the current version (most recent one)
@@ -64,6 +64,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
       {/* Header */}
       <EditorHeader
         selectedPrompt={selectedPrompt}
+        setSelectedPrompt={setSelectedPrompt}
         currentGroupId={selectedPrompt.group || null}
         setIsRenameDialogOpen={setIsRenameDialogOpen}
         setNewName={setNewName}

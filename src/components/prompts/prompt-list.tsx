@@ -143,6 +143,8 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
         <div className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger>
+              <Tooltip>
+                <TooltipTrigger>
               <Button
                 variant="secondary"
                 className="flex items-center gap-2 rounded-xl bg-neutral-200 hover:bg-neutral-50 text-neutral-600"
@@ -150,6 +152,11 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                 <FilterIcon className="h-4 w-4" />
                 <ChevronDown className="h-4 w-4" />
               </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Filter</p>
+              </TooltipContent>
+            </Tooltip>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48 text-neutral-600">
               <div className="px-2 py-1.5 text-xs font-medium text-neutral-500">Sort By</div>
@@ -173,17 +180,23 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Button
-                    variant="secondary"
-                    size="icon"
-                    className="rounded-xl bg-neutral-200 hover:bg-neutral-50 text-neutral-600"
-                  >
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+                <Tooltip>
+                    <TooltipTrigger>
+                    <Button
+                      variant="secondary"
+                      size="icon"
+                      className="rounded-xl bg-neutral-200 hover:bg-neutral-50 text-neutral-600"
+                    >
                     <FolderPlus className="h-4 w-4" />
                   </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>New Group</p>
+                  </TooltipContent>
+                </Tooltip>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-64 p-4">
                   <div className="space-y-4">
@@ -200,21 +213,18 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                         className="w-full rounded-xl"
                       />
                     </div>
-                    <Button 
-                      onClick={handleCreateGroup}
-                      className="w-full rounded-xl bg-indigo-400 hover:bg-indigo-500"
-                      disabled={newGroupName.trim() === ""}
-                    >
-                      Create Group
-                    </Button>
+                    <DropdownMenuItem>
+                      <Button 
+                        onClick={handleCreateGroup}
+                        className="w-full rounded-xl bg-indigo-400 hover:bg-indigo-500"
+                        disabled={newGroupName.trim() === ""}
+                      >
+                        Create Group
+                      </Button>
+                    </DropdownMenuItem>
                   </div>
                 </DropdownMenuContent>
               </DropdownMenu>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>New Group</p>
-            </TooltipContent>
-          </Tooltip>
           <CommandPrompt onPromptCreated={getPrompts} />
         </div>
       </div>

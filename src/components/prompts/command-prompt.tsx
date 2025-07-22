@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../ui/command";
+import { useEffect, useState } from "react";
+import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../ui/command";
 import { FileText, LayoutTemplate, Plus } from "lucide-react";
 import { Button } from "../ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
@@ -21,10 +21,24 @@ export function CommandPrompt({ onPromptCreated }: CommandPromptProps) {
     setOpen(false);
   };
 
+  useEffect(() => {
+    const handleDown = (e: KeyboardEvent) => {
+      if (e.key === 'n' && (e.metaKey || e.ctrlKey)) {
+        setOpen(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleDown);
+    };
+  }, []);
+
   return (
     <>
       <Tooltip>
-        <TooltipTrigger asChild>
+        <TooltipTrigger>
           <Button
             variant="secondary"
             size="icon"
@@ -35,7 +49,7 @@ export function CommandPrompt({ onPromptCreated }: CommandPromptProps) {
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <p>New Prompt (⌘K)</p>
+          <p>New Prompt (⌘N)</p>
         </TooltipContent>
       </Tooltip>
 
