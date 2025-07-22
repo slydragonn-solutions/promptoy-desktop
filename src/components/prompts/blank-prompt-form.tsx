@@ -64,16 +64,20 @@ export function BlankPromptForm({ onSuccess, onBack, isSubmitting, setIsSubmitti
 
   return (
     <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="p-4 space-y-4">
-          <h3 className="text-lg font-medium">New Blank Prompt</h3>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col items-center justify-center p-4 space-y-4 text-center">
+          <h3 className="text-lg font-bold">New Blank Prompt</h3>
+          <p className="text-sm text-muted-foreground">
+            Enter a name for your blank prompt.
+          </p>
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input 
-                    placeholder="Enter a name for your prompt"
+                  <Input
+                    className="w-96"
+                    placeholder="Example: 'Write a poem about the moon'"
                     {...field}
                   />
                 </FormControl>
@@ -82,7 +86,7 @@ export function BlankPromptForm({ onSuccess, onBack, isSubmitting, setIsSubmitti
             )}
           />
           
-          <div className="flex justify-end space-x-2">
+          <div className="flex justify-center space-x-2 mt-5">
             <Button 
               type="button" 
               variant="outline" 

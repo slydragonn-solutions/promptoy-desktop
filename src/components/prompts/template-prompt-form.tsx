@@ -109,9 +109,9 @@ export function TemplatePromptForm({ onSuccess, onBack, isSubmitting, setIsSubmi
 
   if (!selectedTemplate) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 flex flex-col items-center justify-center text-center">
         <div className="space-y-2">
-          <h3 className="text-lg font-medium">Select a Template</h3>
+          <h3 className="text-lg font-bold">Select a Template</h3>
           <p className="text-sm text-muted-foreground">
             Choose a template to use as a starting point for your prompt.
           </p>
@@ -129,12 +129,12 @@ export function TemplatePromptForm({ onSuccess, onBack, isSubmitting, setIsSubmi
             </Button>
           </div>
         ) : (
-          <ScrollArea className="h-[300px] pr-4">
-            <div className="space-y-2">
+          <ScrollArea className="h-[450px] pr-4">
+            <div className="space-y-2 text-start">
               {templates.map((template) => (
                 <Card 
                   key={template.id}
-                  className="cursor-pointer transition-colors hover:bg-accent"
+                  className="cursor-pointer transition-colors hover:bg-accent w-full max-w-[600px]"
                   onClick={() => handleTemplateSelect(template)}
                 >
                   <CardHeader>
@@ -160,6 +160,25 @@ export function TemplatePromptForm({ onSuccess, onBack, isSubmitting, setIsSubmi
       </div>
     );
   }
+
+  // Generate preview content with current form values
+  const getPreviewContent = () => {
+    if (!selectedTemplate) return '';
+    
+    let content = selectedTemplate.content;
+    const formValues = form.getValues();
+    
+    Object.entries(formValues).forEach(([key, value]) => {
+      if (key !== 'name' && value) {
+        content = content.replace(new RegExp(`\\{\\{${key}\\}}`, 'g'), String(value));
+      } else if (key !== 'name') {
+        // If the variable is empty, show it as [variable_name]
+        content = content.replace(new RegExp(`\\{\\{${key}\\}}`, 'g'), `[${key}]`);
+      }
+    });
+    
+    return content;
+  };
 
   const handleSubmit = async (data: any) => {
     if (!selectedTemplate) return;
@@ -207,97 +226,131 @@ export function TemplatePromptForm({ onSuccess, onBack, isSubmitting, setIsSubmi
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="mb-4 -ml-2"
-          onClick={() => setSelectedTemplate(null)}
-          disabled={isSubmitting}
-          type="button"
-        >
-          ← Back to templates
-        </Button>
-        
-        <div className="space-y-2">
-          <h3 className="text-lg font-medium">Configure Template</h3>
-          <p className="text-sm text-muted-foreground">
-            Fill in the variables for the "{selectedTemplate.name}" template.
-          </p>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Left Column - Form */}
+      <div className="space-y-4">
+        <div className="rounded-lg border bg-card p-4">
+          <ScrollArea className="h-[500px] pr-4">            
+            {selectedTemplate.variables.length > 0 && (
+              <div className="mb-4 pb-4">
+                <span className="text-sm">Preview</span>
+                <div className="flex flex-wrap gap-2 mt-4 mb-2 border-b pb-2 w-full max-w-[500px]">
+                  {selectedTemplate.variables.map((variable) => {
+                    const value = form.watch(variable);
+                    return (
+                      <div 
+                        key={variable} 
+                        className={`text-xs px-2 py-1 rounded max-w-[100px] truncate ${
+                          value ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' 
+                                : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'
+                        }`}
+                      >
+                        {variable}: {value || 'Not set'}
+                      </div>
+                    );
+                  })}
+                  
+                </div>
+                <div className="prose dark:prose-invert max-w-none">
+                  <pre className="whitespace-pre-wrap font-mono text-sm p-4 bg-neutral-100 rounded">
+                    {getPreviewContent() || "Fill in the variables to see the preview..."}
+                  </pre>
+                </div>
+              </div>
+            )}
+          </ScrollArea>
         </div>
       </div>
-      
-      <Form {...form}>
-        <form 
-          onSubmit={form.handleSubmit(handleSubmit as any)} 
-          className="space-y-6"
-        >
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Prompt Name</FormLabel>
-                <FormControl>
-                  <Input 
-                    placeholder="My Awesome Prompt"
-                    {...field}
-                    disabled={isSubmitting}
+
+      <div className="space-y-6">
+        <div>
+          
+          
+          <div className="space-y-2">
+            <h3 className="text-lg font-bold">Configure Template</h3>
+            <p className="text-sm text-muted-foreground">
+              Fill in the variables for the "{selectedTemplate.name}" template.
+            </p>
+          </div>
+        </div>
+
+        {/* Right Column - Preview */}
+        <Form {...form}>
+          <form 
+            onSubmit={form.handleSubmit(handleSubmit as any)} 
+            className="space-y-6"
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Prompt Name</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="My Awesome Prompt"
+                      {...field}
+                      disabled={isSubmitting}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <div className="space-y-4">
+              <h4 className="text-sm font-medium">Template Variables ({selectedTemplate.variables.length})</h4>
+              <ScrollArea className="h-[280px]">
+                {selectedTemplate.variables.map((variable) => (
+                  <FormField
+                    key={variable}
+                    control={form.control}
+                    name={variable}
+                    render={({ field }) => (
+                      <FormItem className="mb-4">
+                        <FormLabel>{variable}</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder={`Enter ${variable}`}
+                            {...field}
+                            disabled={isSubmitting}
+                            onChange={(e) => {
+                              field.onChange(e);
+                              // Trigger preview update on input change
+                              form.trigger(variable);
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <div className="space-y-4">
-            <h4 className="text-sm font-medium">Template Variables ({selectedTemplate.variables.length})</h4>
-            <ScrollArea className="h-[200px]">
-            {selectedTemplate.variables.map((variable) => (
-              <FormField
-                key={variable}
-                control={form.control}
-                name={variable}
-                render={({ field }) => (
-                  <FormItem className="mb-4">
-                    <FormLabel>{variable}</FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder={`Enter ${variable}`}
-                        {...field}
-                        disabled={isSubmitting}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            ))}
-            </ScrollArea>
-          </div>
-          
-          <div className="flex justify-end space-x-2">
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={() => setSelectedTemplate(null)}
-              disabled={isSubmitting}
-              className="rounded-xl"
-            >
-              Back
-            </Button>
-            <Button 
-              type="submit"
-              disabled={isSubmitting}
-              variant="default"
-              className="bg-indigo-400 hover:bg-indigo-500 rounded-xl"
-            >
-              {isSubmitting ? 'Creating...' : 'Create'}
-            </Button>
-          </div>
-        </form>
-      </Form>
+                ))}
+              </ScrollArea>
+            </div>
+            
+            <div className="flex justify-end space-x-2">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setSelectedTemplate(null)}
+                disabled={isSubmitting}
+                className="rounded-xl"
+              >
+                ← Back to templates
+              </Button>
+              <Button 
+                type="submit"
+                disabled={isSubmitting}
+                variant="default"
+                className="bg-indigo-400 hover:bg-indigo-500 rounded-xl"
+              >
+                {isSubmitting ? 'Creating...' : 'Create'}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </div>
     </div>
   );
 }

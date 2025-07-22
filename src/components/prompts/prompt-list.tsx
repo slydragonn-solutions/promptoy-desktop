@@ -1,4 +1,5 @@
-import { FilterIcon, ChevronDown, Check, FolderPlus, ChevronRight, ChevronDown as ChevronDownIcon, Pencil, Trash2, Plus, FileText, LayoutTemplate, Star } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { FilterIcon, ChevronDown, Check, FolderPlus, ChevronRight, ChevronDown as ChevronDownIcon, Pencil, Trash2, Star } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
@@ -8,7 +9,6 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "../ui/context-menu";
-import { useMemo, useEffect, useState } from "react";
 import { promptsStore } from "@/store/prompts-store";
 import { useGroupsStore } from "@/store/groups-store";
 import usePromptsGroup from "@/hooks/use-prompts-group";
@@ -30,7 +30,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import PromptItem from "./prompt-item";
-import { NewPromptDialog } from "./new-prompt-dialog";
+import { CommandPrompt } from "./command-prompt";
 import { Label } from "@/components/ui/label";
 
 type SortOption = "a-z" | "z-a" | "newest" | "oldest";
@@ -50,6 +50,8 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
 
   const [newGroupName, setNewGroupName] = useState("");
   
+
+
   // Use the new usePromptsGroup hook
   const {
     groups,
@@ -213,79 +215,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
               <p>New Group</p>
             </TooltipContent>
           </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Button
-                    variant="secondary"
-                    size="icon"
-                    className="rounded-xl bg-neutral-200 hover:bg-neutral-50 text-neutral-600"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-48 p-2">
-                  <div className="space-y-1">
-                    <NewPromptDialog onPromptCreated={getPrompts} promptType="blank">
-                      <DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
-                        <Button 
-                          variant="ghost" 
-                          className="w-full justify-start"
-                          onClick={() => {
-                            const dialogTrigger = document.querySelector('button[data-state="closed"]');
-                            if (dialogTrigger) {
-                              (dialogTrigger as HTMLElement).click();
-                              // Set to blank prompt mode
-                              setTimeout(() => {
-                                const blankButton = document.querySelector('button[value="blank"]');
-                                if (blankButton) {
-                                  (blankButton as HTMLElement).click();
-                                }
-                              }, 100);
-                            }
-                          }}
-                        >
-                          <FileText className="mr-2 h-4 w-4" />
-                          <span>Blank Prompt</span>
-                        </Button>
-                      </DropdownMenuItem>
-                    </NewPromptDialog>
-                    <NewPromptDialog onPromptCreated={getPrompts} promptType="template">
-                      <DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
-                        <Button 
-                          variant="ghost" 
-                          className="w-full justify-start"
-                          onClick={() => {
-                            const dialogTrigger = document.querySelector('button[data-state="closed"]');
-                            if (dialogTrigger) {
-                              (dialogTrigger as HTMLElement).click();
-                              // Set to template mode
-                              setTimeout(() => {
-                                const templateButton = document.querySelector('button[value="template"]');
-                                if (templateButton) {
-                                  (templateButton as HTMLElement).click();
-                                }
-                              }, 100);
-                            }
-                          }}
-                        >
-                          <LayoutTemplate className="mr-2 h-4 w-4" />
-                          <span>From Template</span>
-                        </Button>
-                      </DropdownMenuItem>
-                    </NewPromptDialog>
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>New Prompt</p>
-            </TooltipContent>
-          </Tooltip>
-          <NewPromptDialog onPromptCreated={getPrompts} promptType="blank">
-            <Button variant="ghost" className="hidden" />
-          </NewPromptDialog>
+          <CommandPrompt onPromptCreated={getPrompts} />
         </div>
       </div>
       <div className="flex gap-2 p-2">
