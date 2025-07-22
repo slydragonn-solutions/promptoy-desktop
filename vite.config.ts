@@ -1,8 +1,9 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import path from "path"
-import tailwindcss from "@tailwindcss/vite"
-import { tanstackRouter } from '@tanstack/router-plugin/vite'
+import path from "path";
+import tailwindcss from "@tailwindcss/vite";
+import { tanstackRouter } from '@tanstack/router-plugin/vite';
+import { version } from './package.json';
 
 const host = process.env.TAURI_DEV_HOST;
 
@@ -20,6 +21,11 @@ export default defineConfig(async () => ({
     alias: {
       "@": path.resolve(__dirname, "src"),
     },
+  },
+
+  // Define global constants
+  define: {
+    __APP_VERSION__: JSON.stringify(version),
   },
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
