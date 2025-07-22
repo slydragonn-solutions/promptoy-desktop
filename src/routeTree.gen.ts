@@ -9,13 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VaultRouteImport } from './routes/vault'
 import { Route as TagsRouteImport } from './routes/tags'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as InfoRouteImport } from './routes/info'
-import { Route as BackupRouteImport } from './routes/backup'
-import { Route as AllRouteImport } from './routes/all'
 import { Route as IndexRouteImport } from './routes/index'
 
+const VaultRoute = VaultRouteImport.update({
+  id: '/vault',
+  path: '/vault',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TagsRoute = TagsRouteImport.update({
   id: '/tags',
   path: '/tags',
@@ -31,16 +35,6 @@ const InfoRoute = InfoRouteImport.update({
   path: '/info',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BackupRoute = BackupRouteImport.update({
-  id: '/backup',
-  path: '/backup',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AllRoute = AllRouteImport.update({
-  id: '/all',
-  path: '/all',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -49,48 +43,51 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/all': typeof AllRoute
-  '/backup': typeof BackupRoute
   '/info': typeof InfoRoute
   '/settings': typeof SettingsRoute
   '/tags': typeof TagsRoute
+  '/vault': typeof VaultRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/all': typeof AllRoute
-  '/backup': typeof BackupRoute
   '/info': typeof InfoRoute
   '/settings': typeof SettingsRoute
   '/tags': typeof TagsRoute
+  '/vault': typeof VaultRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/all': typeof AllRoute
-  '/backup': typeof BackupRoute
   '/info': typeof InfoRoute
   '/settings': typeof SettingsRoute
   '/tags': typeof TagsRoute
+  '/vault': typeof VaultRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/all' | '/backup' | '/info' | '/settings' | '/tags'
+  fullPaths: '/' | '/info' | '/settings' | '/tags' | '/vault'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/all' | '/backup' | '/info' | '/settings' | '/tags'
-  id: '__root__' | '/' | '/all' | '/backup' | '/info' | '/settings' | '/tags'
+  to: '/' | '/info' | '/settings' | '/tags' | '/vault'
+  id: '__root__' | '/' | '/info' | '/settings' | '/tags' | '/vault'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AllRoute: typeof AllRoute
-  BackupRoute: typeof BackupRoute
   InfoRoute: typeof InfoRoute
   SettingsRoute: typeof SettingsRoute
   TagsRoute: typeof TagsRoute
+  VaultRoute: typeof VaultRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vault': {
+      id: '/vault'
+      path: '/vault'
+      fullPath: '/vault'
+      preLoaderRoute: typeof VaultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tags': {
       id: '/tags'
       path: '/tags'
@@ -112,20 +109,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InfoRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/backup': {
-      id: '/backup'
-      path: '/backup'
-      fullPath: '/backup'
-      preLoaderRoute: typeof BackupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/all': {
-      id: '/all'
-      path: '/all'
-      fullPath: '/all'
-      preLoaderRoute: typeof AllRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -138,11 +121,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AllRoute: AllRoute,
-  BackupRoute: BackupRoute,
   InfoRoute: InfoRoute,
   SettingsRoute: SettingsRoute,
   TagsRoute: TagsRoute,
+  VaultRoute: VaultRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
