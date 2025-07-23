@@ -141,11 +141,11 @@ function Index() {
     if (promptId === 'new') {
       // Clear any selected prompt when creating a new one
       setSelectedPrompt(null);
-      navigate({ to: '/all' });
+      navigate({ to: '/vault' });
     } else {
       // Navigate to existing prompt
       setSelectedPrompt(promptId);
-      navigate({ to: '/all' });
+      navigate({ to: '/vault' });
     }
   }
 
