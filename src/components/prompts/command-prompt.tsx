@@ -42,7 +42,7 @@ export function CommandPrompt({ onPromptCreated }: CommandPromptProps) {
           <Button
             variant="secondary"
             size="icon"
-            className="rounded-xl bg-neutral-200 hover:bg-neutral-50 text-neutral-600"
+            className="bg-neutral-50 hover:bg-indigo-50 text-neutral-600"
             onClick={() => setOpen(true)}
           >
             <Plus className="h-4 w-4" />

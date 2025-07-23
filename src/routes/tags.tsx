@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { LayoutGrid, List, Pen, Plus, Tag, Trash2 } from "lucide-react";
+import { LayoutGrid, List, Pen, Plus, Tag, TagsIcon, Trash2 } from "lucide-react";
 import { getTagColorClasses } from '@/constants/tags';
 import { promptsStore } from '@/store/prompts-store';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -27,6 +27,7 @@ import {
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AlertDialog, AlertDialogContent } from '@/components/ui/alert-dialog';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { ActionButton } from '@/components/common/buttons';
 
 
 export const Route = createFileRoute("/tags")({
@@ -97,7 +98,7 @@ function Tags() {
         <div className="flex gap-2">
           <Input
             placeholder="Search tags..."
-            className="rounded-xl bg-neutral-50"
+            className="bg-neutral-50"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -105,7 +106,7 @@ function Tags() {
             <DropdownMenuTrigger>
               <Tooltip>
                 <TooltipTrigger>
-              <Button size="icon" variant="ghost" className="rounded-xl bg-neutral-200 hover:bg-neutral-50 text-neutral-600">
+              <Button size="icon" variant="secondary" className="bg-neutral-50 hover:bg-indigo-50 text-neutral-600">
                 <Plus />
               </Button>
               </TooltipTrigger>
@@ -116,11 +117,12 @@ function Tags() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-64 p-4">
               <div className="space-y-4">
-                <Input className='rounded-xl' placeholder="Type a new tag name..." value={newTagName} onChange={(e) => setNewTagName(e.target.value)} />
+                <Input placeholder="Type a new tag name..." value={newTagName} onChange={(e) => setNewTagName(e.target.value)} />
                 <DropdownMenuItem>
-                  <Button onClick={() => createTag()} className="w-full rounded-xl bg-indigo-400 hover:bg-indigo-500" disabled={newTagName.trim() === ""}>
+                  <ActionButton onClick={() => createTag()} className="w-full" disabled={newTagName.trim() === ""}>
+                    <TagsIcon className='text-white'/>
                     Create
-                  </Button>
+                  </ActionButton>
                 </DropdownMenuItem>
               </div>
             </DropdownMenuContent>
@@ -148,7 +150,7 @@ function Tags() {
       <div className="h-full">
         <ScrollArea className="h-[calc(100vh-137px)]">
           <Tabs defaultValue="grid">
-            <TabsList>
+            <TabsList className="flex self-end bg-indigo-50 p-0 gap-1">
               <TabsTrigger value="grid"><LayoutGrid /></TabsTrigger>
               <TabsTrigger value="list"><List /></TabsTrigger>
             </TabsList>
@@ -163,7 +165,7 @@ function Tags() {
                   const colorClasses = getTagColorClasses(tag.color);
 
                   return (
-                    <Card key={tag.id} className={`bg-neutral-50`}>
+                    <Card key={tag.id} className={`bg-neutral-50 rounded-md`}>
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
                           <Badge
@@ -176,7 +178,7 @@ function Tags() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className='hover:bg-neutral-200 text-neutral-600'
+                            className='hover:bg-indigo-200 text-neutral-600'
                             onClick={() => {
                               startEdit(tag.id, tag.name, tag.color);
                             }}
@@ -202,10 +204,10 @@ function Tags() {
                             {tag.prompts.map((promptId) => (
                               <div
                                 key={promptId}
-                                className="flex flex-row items-center justify-between text-xs hover:bg-neutral-200 cursor-pointer bg-neutral-100 p-2 rounded-md mb-2"
+                                className="flex flex-row items-center justify-between text-xs hover:bg-indigo-200 cursor-pointer bg-indigo-50 p-2 rounded-md mb-2"
                                 onClick={() => {
                                   setSelectedPrompt(promptId);
-                                  navigate({to: "/all"});
+                                  navigate({to: "/vault"});
                                 }}
                               >
                                 <span className="text-neutral-700">{prompts.find(p => p.id === promptId)?.name}</span>
@@ -229,7 +231,7 @@ function Tags() {
               <Accordion type="single" collapsible className="w-full">
                 {filteredTags.map((tag) => (
                   <AccordionItem value={tag.id} key={tag.id}>
-                    <AccordionTrigger className={`flex items-center justify-between w-full my-2 p-2`}>
+                    <AccordionTrigger className={`flex items-center justify-between w-full my-2 p-2 hover:no-underline cursor-pointer`}>
                       <Badge
                         className={`${getTagColorClasses(tag.color)} rounded-full`}
                       >
@@ -272,10 +274,10 @@ function Tags() {
                           {tag.prompts.map((promptId) => (
                             <div
                               key={promptId}
-                              className="flex flex-row items-center justify-between text-xs hover:bg-neutral-50 cursor-pointer bg-neutral-200 p-2 rounded-md mb-2"
+                              className="flex flex-row items-center justify-between text-xs hover:bg-indigo-100 cursor-pointer bg-indigo-50 p-2 rounded-md mb-2"
                               onClick={() => {
                                 setSelectedPrompt(promptId);
-                                navigate({to: "/all"});
+                                navigate({to: "/vault"});
                               }}
                             >
                               <span className="text-neutral-700">{prompts.find(p => p.id === promptId)?.name}</span>

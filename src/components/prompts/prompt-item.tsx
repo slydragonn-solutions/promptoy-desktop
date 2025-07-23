@@ -152,16 +152,16 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
                 <ContextMenuTrigger asChild>
                     <li 
                         className={cn(
-                            'flex flex-col p-3 cursor-pointer transition-colors rounded-lg border border-transparent',
+                            'flex flex-col p-3 cursor-pointer transition-colors rounded-md border border-transparent text-neutral-800',
                             'hover:bg-neutral-200/60 bg-neutral-100 border-neutral-100',
-                            isSelected && 'bg-neutral-200 hover:bg-neutral-200 border-neutral-200',
+                            isSelected && 'bg-indigo-50 hover:bg-indigo-100 border-indigo-200',
                         )}
                         onClick={() => onSelect(prompt.id)}
                     >
                         <div className="flex flex-col gap-1.5 w-full">
                             <div className="flex justify-between items-start gap-2">
                                 <h2 className={cn(
-                                    'font-medium text-sm truncate max-w-[160px] text-neutral-600',
+                                    'font-medium text-sm truncate max-w-[140px] text-neutral-600',
                                     isSelected && 'text-neutral-800 font-semibold'
                                 )}>
                                     {name || 'Untitled Prompt'}
@@ -231,6 +231,7 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
                         onKeyDown={(e) => e.key === 'Enter' && handleRename()}
                         placeholder="Enter new name (max 50 characters)"
                         autoFocus
+                        maxLength={50}
                     />
                     <div className={cn(
                         "text-xs text-right",
@@ -245,7 +246,7 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
                     <Button variant="outline" onClick={() => setIsRenaming(false)}>
                         Cancel
                     </Button>
-                    <Button onClick={handleRename}>Save</Button>
+                    <Button onClick={handleRename} className="bg-indigo-500 hover:bg-indigo-600">Save</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -285,11 +286,10 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
                             handleMoveToGroup('');
                         }}
                         disabled={!selectedGroup}
-                        className='rounded-xl'
                     >
                         Remove from Group
                     </Button>
-                    <Button onClick={() => setIsMoving(false)} className='rounded-xl bg-indigo-400 hover:bg-indigo-500'>Done</Button>
+                    <Button onClick={() => setIsMoving(false)} className='bg-indigo-500 hover:bg-indigo-600'>Done</Button>
                 </DialogFooter>
             </DialogContent>
             </Dialog>

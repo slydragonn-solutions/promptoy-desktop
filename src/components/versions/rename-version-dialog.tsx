@@ -60,7 +60,6 @@ export default function RenameVersionDialog({
                 <div className="flex justify-end gap-2">
                     <Button 
                         variant="outline"
-                        className="rounded-xl"
                         onClick={() => {
                             setIsRenameDialogOpen(false);
                         }}
@@ -69,7 +68,7 @@ export default function RenameVersionDialog({
                     </Button>
                     <Button 
                         onClick={handleConfirmRename}
-                        className="rounded-xl bg-indigo-400 hover:bg-indigo-500"
+                        className="bg-indigo-500 hover:bg-indigo-600"
                         disabled={!newVersionName.trim()}
                     >
                         Save Changes

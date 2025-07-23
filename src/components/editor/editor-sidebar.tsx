@@ -31,9 +31,9 @@ export default function EditorSidebar({ onCompareVersion, isComparing = false }:
     return (
         <section className="flex flex-col gap-2 min-w-80 h-[calc(100vh-37px)] w-80 p-2 bg-neutral-100">
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-                <TabsList className="self-end rounded-xl bg-neutral-200 p-0 gap-1">
-                    <TabsTrigger value="versions" className="rounded-xl text-neutral-600 bg-neutral-200 hover:bg-neutral-50" title="Versions"><GitCompare className="w-4 h-4" /></TabsTrigger>
-                    <TabsTrigger value="notes" className="rounded-xl text-neutral-600 bg-neutral-200 hover:bg-neutral-50" title="Notes"><Notebook className="w-4 h-4" /></TabsTrigger>
+                <TabsList className="self-end bg-indigo-50 p-0 gap-1">
+                    <TabsTrigger value="versions" className=" text-neutral-600 bg-indigo-50 hover:bg-indigo-100" title="Versions"><GitCompare className="w-4 h-4" /></TabsTrigger>
+                    <TabsTrigger value="notes" className=" text-neutral-600 bg-indigo-50 hover:bg-indigo-100" title="Notes"><Notebook className="w-4 h-4" /></TabsTrigger>
                 </TabsList>
                 <TabsContent value="versions">
                     <VersionList 

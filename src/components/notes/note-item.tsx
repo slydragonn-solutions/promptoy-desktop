@@ -22,8 +22,8 @@ export default function NoteItem({
                         {new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                 </div>
-                <div className="relative group p-3 rounded-lg bg-neutral-50 max-w-[100%]">
-                    <p className="text-sm break-all text-neutral-700">{content}</p>
+                <div className="relative group p-3 rounded-lg bg-indigo-50 max-w-[100%]">
+                    <p className="max-w-[260px] text-sm break-words text-neutral-700">{content}</p>
                     <button 
                         onClick={() => handleDeleteNote(selectedPrompt, date)}
                         className="absolute top-2 right-2 p-1.5 rounded-sm text-neutral-600 bg-neutral-100 hover:bg-red-100 opacity-0 group-hover:opacity-100 transition-opacity"

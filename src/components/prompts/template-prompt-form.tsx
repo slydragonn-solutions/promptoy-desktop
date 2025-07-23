@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import { promptsStore } from "@/store/prompts-store";
+import { Plus } from "lucide-react";
 
 // Base schema for the form
 const baseFormSchema = z.object({
@@ -348,7 +349,6 @@ export function TemplatePromptForm({ onSuccess, onBack, isSubmitting, setIsSubmi
                 variant="outline" 
                 onClick={() => setSelectedTemplate(null)}
                 disabled={isSubmitting}
-                className="rounded-xl"
               >
                 ← Back to templates
               </Button>
@@ -356,8 +356,9 @@ export function TemplatePromptForm({ onSuccess, onBack, isSubmitting, setIsSubmi
                 type="submit"
                 disabled={isSubmitting}
                 variant="default"
-                className="bg-indigo-400 hover:bg-indigo-500 rounded-xl"
+                className="bg-indigo-500 hover:bg-indigo-600"
               >
+                <Plus className="h-4 w-4" />
                 {isSubmitting ? 'Creating...' : 'Create'}
               </Button>
             </div>

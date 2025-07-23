@@ -46,7 +46,7 @@ export default function NoteList() {
                     value={newNote}
                     onChange={(e) => setNewNote(e.target.value)}
                     placeholder="Type a note..."
-                    className="min-h-[40px] max-h-32 pr-24 resize-none bg-neutral-100 rounded-full"
+                    className="min-h-[40px] max-h-32 pr-24 resize-none bg-neutral-100 rounded-md"
                     onKeyDown={(e) => {
                         if (e.key === 'Enter' && !e.shiftKey) {
                             e.preventDefault();
@@ -61,8 +61,8 @@ export default function NoteList() {
                 <Button 
                     type="submit" 
                     size="icon"
-                    variant="secondary"
-                    className="absolute right-2 top-0 bottom-0 m-auto h-6 w-6 rounded-full bg-neutral-50 hover:bg-neutral-200"
+                    variant="outline"
+                    className="absolute right-2 top-0 bottom-0 m-auto h-6 w-6 rounded-full bg-neutral-50 hover:bg-indigo-50"
                     disabled={!newNote.trim()}
                 >
                     <Plus className="w-4 h-4" />

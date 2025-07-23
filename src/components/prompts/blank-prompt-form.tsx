@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
 import { promptsStore } from "@/store/prompts-store";
+import { Plus } from "lucide-react";
 
 const nameFormSchema = z.object({
   name: z.string().min(1, "Name is required").max(50, "Name is too long"),
@@ -76,7 +77,7 @@ export function BlankPromptForm({ onSuccess, onBack, isSubmitting, setIsSubmitti
               <FormItem>
                 <FormControl>
                   <Input
-                    className="w-96 rounded-xl"
+                    className="w-96"
                     placeholder="Example: 'Write a poem about the moon'"
                     {...field}
                   />
@@ -92,7 +93,6 @@ export function BlankPromptForm({ onSuccess, onBack, isSubmitting, setIsSubmitti
               variant="outline" 
               onClick={onBack}
               disabled={isSubmitting}
-              className="rounded-xl"
             >
               Back
             </Button>
@@ -100,8 +100,9 @@ export function BlankPromptForm({ onSuccess, onBack, isSubmitting, setIsSubmitti
               type="submit"
               disabled={isSubmitting}
               variant="default"
-              className="bg-indigo-400 hover:bg-indigo-500 rounded-xl"
+              className="bg-indigo-500 hover:bg-indigo-600"
             >
+              <Plus className="h-4 w-4" />
               {isSubmitting ? 'Creating...' : 'Create'}
             </Button>
           </div>

@@ -28,38 +28,38 @@ export const Route = createRootRoute({
                 <ul className="flex flex-col gap-2">
                     <li>
                         <Link to="/">
-                            <Button variant="ghost" size="icon" className={`rounded-xl hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/" ? "bg-neutral-200 text-neutral-900" : ""}`} title='Home'><HouseIcon /></Button>
+                            <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/" ? "bg-indigo-50 text-neutral-900" : ""}`} title='Home'><HouseIcon /></Button>
                         </Link>
                     </li>
                     <li>
                         <Link to="/vault">
-                            <Button variant="ghost" size="icon" className={`rounded-xl hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/vault" ? "bg-neutral-200 text-neutral-900" : ""}`} title='Vault'><BookText /></Button>
+                            <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/vault" ? "bg-indigo-50 text-neutral-900" : ""}`} title='Vault'><BookText /></Button>
                         </Link>
                     </li>
                     <li>
                         <Link to="/tags">
-                            <Button variant="ghost" size="icon" className={`rounded-xl hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/tags" ? "bg-neutral-200 text-neutral-900" : ""}`} title='Tags'><Tags /></Button>
+                            <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/tags" ? "bg-indigo-50 text-neutral-900" : ""}`} title='Tags'><Tags /></Button>
                         </Link>
                     </li>
                     <li>
-                        <Button variant="ghost" size="icon" className={`rounded-xl hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/private" ? "bg-neutral-200 text-neutral-900" : ""}`} title='Private prompts'><LockKeyhole /></Button>
+                        <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/private" ? "bg-indigo-50 text-neutral-900" : ""}`} title='Private prompts'><LockKeyhole /></Button>
                     </li>
                 </ul>
                 <ul className="flex flex-col gap-2">
                     <li>
                         <Link to="/settings">
-                            <Button variant="ghost" size="icon" className={`rounded-xl hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/settings" ? "bg-neutral-200 text-neutral-900" : ""}`} title='Settings'><SettingsIcon /></Button>
+                            <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/settings" ? "bg-indigo-50 text-neutral-900" : ""}`} title='Settings'><SettingsIcon /></Button>
                         </Link>
                     </li>
                     <li>
                         <Link to="/info">
-                            <Button variant="ghost" size="icon" className={`rounded-xl hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/info" ? "bg-neutral-200 text-neutral-900" : ""}`} title='Info'><InfoIcon /></Button>
+                            <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/info" ? "bg-indigo-50 text-neutral-900" : ""}`} title='Info'><InfoIcon /></Button>
                         </Link>
                     </li>
                 </ul>
             </nav>
             <Outlet />
-            <TanStackRouterDevtools position='bottom-right' />
+            <TanStackRouterDevtools position='top-left' />
             <Toaster />
         </main>
         </>

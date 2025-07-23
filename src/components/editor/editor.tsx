@@ -74,7 +74,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
         handleCopyToClipboard={handleCopyToClipboard}
         handleDeletePrompt={() => setIsDeleting(true)}
       />
-    <section className="relative flex flex-col gap-1 w-full bg-neutral-50 border border-neutral-200 p-2 rounded-xl mt-2 overflow-hidden">
+    <section className="relative flex flex-col gap-1 w-full bg-neutral-50 border border-neutral-200 p-2 rounded-md mt-2 overflow-hidden">
     <div className="flex items-center justify-between">
       <h1
         className="font-semibold text-lg cursor-text text-neutral-800 hover:text-neutral-600 px-2 py-1 rounded-md"
@@ -190,7 +190,6 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
           <div className="flex justify-end gap-2">
             <Button
               variant="outline"
-              className="rounded-xl"
               onClick={() => {
                 setIsRenameDialogOpen(false);
                 setNewName("");
@@ -200,7 +199,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
             </Button>
             <Button
               onClick={handleRename}
-              className="rounded-xl bg-indigo-400 hover:bg-indigo-500"
+              className="bg-indigo-400 hover:bg-indigo-500"
               disabled={!newName.trim() || newName.trim().length > 50}
             >
               Save

@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input"
 import { Prompt} from "@/types/prompts"
 import { Button } from "@/components/ui/button";
 import { MAX_VERSIONS } from "@/constants/prompt";
+import { GitCompare } from "lucide-react";
 
 interface NewVersionDialogProps {
     isVersionDialogOpen: boolean;
@@ -70,17 +71,17 @@ export default function NewVersionDialog({
                 <div className="flex justify-end gap-2">
                     <Button 
                         variant="outline"
-                        className="rounded-xl"
                         onClick={() => setIsVersionDialogOpen(false)}
                     >
                         Cancel
                     </Button>
                     <Button 
                         onClick={handleCreateNewVersion}
-                        className="rounded-xl bg-indigo-400 hover:bg-indigo-500"
+                        className="bg-indigo-500 hover:bg-indigo-600"
                         disabled={!newVersionName.trim()}
                     >
-                        Create Version
+                        <GitCompare className="h-4 w-4" />
+                        Create
                     </Button>
                 </div>
             </DialogContent>
