@@ -1,8 +1,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { FileText, Folder, Heart, Search as SearchIcon, Tags } from 'lucide-react';
+import { Clock, FileText, Search as SearchIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useGroupsStore } from '@/store/groups-store';
 import { promptsStore } from '@/store/prompts-store';
 import { useTagsStore } from '@/store/tags-store';
 import { Prompt } from '@/types/prompts';
@@ -18,66 +17,24 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { useSettingsStore } from '@/store/settings-store';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
-function StatCard({ title, value, icon, lastUpdate }: { title: string; value?: string; icon: React.ReactNode; lastUpdate: string }) {
-  return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="flex flex-col items-start">
-          {icon}
-          <span className="mt-2 text-md font-bold text-neutral-600 dark:text-neutral-400">{title}</span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {
-          value === undefined ? (
-            <div className="text-neutral-600">Loading...</div>
-          ) : (
-            <div className="text-3xl font-bold text-neutral-800 dark:text-neutral-400">
-              {value}
-              <span className="text-sm text-neutral-600 font-light ml-2 dark:text-neutral-400">Changed {lastUpdate}</span>
-            </div>
-          )
-        }
-      </CardContent>
-    </Card>
-  );
-}
 
 function Index() {
   const navigate = useNavigate({from: "/"})
   const { list: { numberOfRecentPrompts } } = useSettingsStore()
-  const { groups, loadGroups } = useGroupsStore();
   const { prompts, getPrompts, setSelectedPrompt } = promptsStore();
-  const { getTagById, loadTags, tags: tagsObject } = useTagsStore();
+  const { getTagById, loadTags } = useTagsStore();
   const [isCommandOpen, setIsCommandOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [tags, setTags] = useState<Record<string, Tag>>({});
-  const [stats, setStats] = useState<{
-    totalPrompts: string | undefined,
-    favoritePrompts: string | undefined,
-    uniqueTags: string | undefined,
-    totalGroups: string | undefined,
-  }>({
-    totalPrompts: undefined,
-    favoritePrompts: undefined,
-    uniqueTags: undefined,
-    totalGroups: undefined,
-  });
-  const [lastUpdates, setLastUpdates] = useState({
-    totalPrompts: '',
-    favoritePrompts: '',
-    uniqueTags: '',
-    totalGroups: '',
-  });
 
   // Load initial data
   useEffect(() => {
-    loadGroups();
     getPrompts();
     loadTags();
     
@@ -90,7 +47,7 @@ function Index() {
 
     document.addEventListener('keydown', down);
     return () => document.removeEventListener('keydown', down);
-  }, [loadGroups, getPrompts, loadTags]);
+  }, [ getPrompts, loadTags]);
   
 
   // Update tags when prompts change
@@ -111,25 +68,6 @@ function Index() {
     });
     setTags(loadedTags);
   }, [prompts, getTagById]);
-
-  // Calculate stats
-  useEffect(() => {
-    if (prompts.length === 0 || groups.length === 0 || Object.values(tagsObject).length === 0) return;
-    const stats = {
-      totalPrompts: prompts.length.toString(),
-      favoritePrompts: prompts.filter(p => p.isFavorite).length.toString(),
-      uniqueTags: new Set(prompts.flatMap(p => p.tags || [])).size.toString(),
-      totalGroups: groups.length.toString(),
-    };
-    const lastUpdates = {
-      totalPrompts: prompts.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())[0].updatedAt,
-      favoritePrompts: prompts.filter(p => p.isFavorite).sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())[0].updatedAt,
-      uniqueTags: Object.values(tagsObject).sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())[0].updatedAt,
-      totalGroups: groups.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())[0].updatedAt,
-    };
-    setStats(stats);
-    setLastUpdates(lastUpdates);
-  }, [prompts, groups, tagsObject]);
 
   const filteredPrompts = prompts.filter((prompt: Prompt) => {
     const latestVersion = prompt.versions?.[prompt.versions.length - 1];
@@ -159,28 +97,14 @@ function Index() {
     return "Good Evening";
   }
 
-  const getTimeAgo = (date: string) => {
-    const now = new Date();
-    const then = new Date(date);
-    const diff = now.getTime() - then.getTime();
-    const seconds = Math.floor(diff / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-    if (days > 0) return `${days} days ago`;
-    if (hours > 0) return `${hours} hours ago`;
-    if (minutes > 0) return `${minutes} minutes ago`;
-    return `${seconds} seconds ago`;
-  }
-
   return (
-    <div className="flex w-full h-[calc(100vh-37px)] bg-neutral-100 dark:bg-neutral-900">
+    <div className="flex w-full h-[calc(100vh-37px)] bg-neutral-100 dark:bg-neutral-900 p-2 justify-center items-center">
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden max-w-2xl mx-auto">
         {/* Top Bar */}
-        <header className="h-16 border-b flex items-center justify-between px-8">
-          <h1 className="text-xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200">👋 {getGreeting()}, Welcome back!</h1>
+        <header className="flex flex-col items-center justify-center gap-4 mb-4">
+          <h1 className="text-2xl font-bold text-neutral-800 dark:text-neutral-200 text-center">👋 {getGreeting()}, Welcome back!</h1>
           <div className="relative w-full max-w-md">
             <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
@@ -201,41 +125,14 @@ function Index() {
         {/* Dashboard Content */}
         <main className="flex-1 overflow-y-auto px-8 py-4">
 
-          {/* Stats Grid */}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-4">
-            <StatCard 
-              title="Total Prompts" 
-              value={stats.totalPrompts?.toLocaleString()}
-              icon={<FileText className="w-8 h-8 text-neutral-600 dark:text-neutral-400" />}
-              lastUpdate={getTimeAgo(lastUpdates.totalPrompts)}
-            />
-            <StatCard 
-              title="Active Tags" 
-              value={stats.uniqueTags?.toLocaleString()}
-              icon={<Tags className="w-8 h-8 text-neutral-600 dark:text-neutral-400" />}
-              lastUpdate={getTimeAgo(lastUpdates.uniqueTags)}
-            />
-            <StatCard 
-              title="Groups" 
-              value={stats.totalGroups?.toLocaleString()} 
-              icon={<Folder className="w-8 h-8 text-neutral-600 dark:text-neutral-400" />}
-              lastUpdate={getTimeAgo(lastUpdates.totalGroups)}
-            />  
-            <StatCard 
-              title="Favorites" 
-              value={stats.favoritePrompts?.toLocaleString()} 
-              icon={<Heart className="w-8 h-8 text-neutral-600 dark:text-neutral-400" />}
-              lastUpdate={getTimeAgo(lastUpdates.favoritePrompts)}
-            />
-          </div>
-
           {/* Recent Activity */}
           <div className="w-full">
-            <Card>
+            <Card className="border-transparent shadow-none">
               <CardHeader>
-                <CardTitle className="text-neutral-700 text-sm dark:text-neutral-400">Recent Activity</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-neutral-700 text-sm dark:text-neutral-400"><Clock className="w-4 h-4" /> Recent Activity</CardTitle>
               </CardHeader>
               <CardContent>
+                <ScrollArea className="h-[210px]">
                 <div className="space-y-4">
                   {prompts.length === 0 ? (
                     <p className="text-sm text-muted-foreground text-center py-4 dark:text-neutral-400">
@@ -264,23 +161,24 @@ function Index() {
                         return (
                           <div 
                             key={prompt.id} 
-                            className="flex items-center w-full p-2 rounded-lg hover:bg-accent/50 cursor-pointer"
+                            className="flex items-center w-full p-2 rounded-lg dark:bg-neutral-800 bg-neutral-200 dark:hover:bg-indigo-600 hover:bg-indigo-200 cursor-pointer"
                             onClick={() => {
                               redirectToPrompt(prompt.id);
                             }}
                           >
-                            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mr-3 flex-shrink-0">
+                            <div className="h-10 w-10 flex items-center justify-center mr-3 flex-shrink-0">
                               <FileText className="h-5 w-5 text-primary dark:text-primary/50" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium truncate dark:text-neutral-300">{prompt.name || 'Untitled Prompt'}</p>
-                              <p className="text-xs text-muted-foreground dark:text-neutral-600">Updated {timeAgo}</p>
+                              <p className="text-xs text-muted-foreground dark:text-neutral-400">Updated {timeAgo}</p>
                             </div>
                           </div>
                         );
                       })
                   )}
                 </div>
+                </ScrollArea>
               </CardContent>
             </Card>
           </div>
@@ -306,7 +204,7 @@ function Index() {
                   setIsCommandOpen(false);
                   redirectToPrompt(prompt.id);
                 }}
-                className="cursor-pointer"
+                className="cursor-pointer hover:bg-indigo-200 dark:hover:bg-indigo-600 "
               >
                 <FileText className="mr-2 h-4 w-4 text-primary dark:text-primary/50" />
                 <div className="flex-1">
