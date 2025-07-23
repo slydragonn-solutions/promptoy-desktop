@@ -162,7 +162,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
   const [expandedItems, setExpandedItems] = useState<string[]>(getDefaultExpandedItems());
 
   return (
-    <section className="flex flex-col gap-2 min-w-72 w-72 h-[calc(100vh-37px)] bg-neutral-100">
+    <section className="flex flex-col gap-2 min-w-72 w-72 h-[calc(100vh-37px)] bg-neutral-100 dark:bg-neutral-900">
       <div className="flex justify-between items-center p-2">
         <div className="flex items-center gap-2">
           <p className="font-semibold">{title}</p>
@@ -174,7 +174,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                 <TooltipTrigger>
               <Button
                 variant="secondary"
-                className="flex items-center gap-2 bg-neutral-50 hover:bg-indigo-50 text-neutral-600"
+                className="flex items-center gap-2 bg-neutral-50 hover:bg-indigo-50 text-neutral-600 dark:bg-neutral-800 dark:hover:bg-indigo-800 dark:text-neutral-400 dark:hover:text-neutral-200"
               >
                 <FilterIcon className="h-4 w-4" />
                 <ChevronDown className="h-4 w-4" />
@@ -185,7 +185,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
               </TooltipContent>
             </Tooltip>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48 text-neutral-600">
+            <DropdownMenuContent align="end" className="w-48 text-neutral-600 dark:text-neutral-200">
               <div className="px-2 py-1.5 text-xs font-medium text-neutral-500">Sort By</div>
               <DropdownMenuItem onClick={() => setLocalSortBy("a-z")}>
                 A-Z
@@ -221,7 +221,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                     <Button
                       variant="secondary"
                       size="icon"
-                      className=" bg-neutral-50 hover:bg-indigo-50 text-neutral-600"
+                      className=" bg-neutral-50 hover:bg-indigo-50 text-neutral-600 dark:bg-neutral-800 dark:hover:bg-indigo-800 dark:text-neutral-400 dark:hover:text-neutral-200"
                     >
                     <FolderPlus className="h-4 w-4" />
                   </Button>
@@ -274,7 +274,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
           placeholder="Search your prompts..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 bg-neutral-50 text-neutral-600"
+          className="flex-1 bg-neutral-50 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-200"
         />
       </div>
       <div className="flex-1 overflow-y-auto w-full p-2">
@@ -347,7 +347,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                               <ContextMenuTrigger asChild>
                                 <button
                                   onClick={() => toggleGroup(group.id)}
-                                  className="flex items-center w-full px-2 py-1.5 text-sm font-medium text-left rounded-md bg-indigo-100 text-indigo-600 truncate"
+                                  className="flex items-center w-full px-2 py-1.5 text-sm font-medium text-left rounded-md bg-indigo-100 text-indigo-600 truncate dark:bg-indigo-800 dark:text-indigo-200"
                                 >
                                   {expandedGroups[group.id] ? (
                                     <ChevronDownIcon className="w-4 h-4 mr-2 flex-shrink-0" />

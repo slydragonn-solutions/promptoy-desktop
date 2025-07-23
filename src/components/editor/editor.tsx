@@ -21,6 +21,7 @@ import { Badge } from "../ui/badge";
 import { useState } from "react";
 import Alert from "../common/alert";
 import { useSettingsStore } from "@/store/settings-store";
+import { useTheme } from "../theme/theme-provider";
 interface EditorProps {
   isComparing: boolean;
   compareVersion: {
@@ -35,6 +36,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
   const { selectedPrompt, setSelectedPrompt } = promptsStore();
   const [isDeleting, setIsDeleting] = useState(false);
   const { editor: editorSettings } = useSettingsStore();
+  const { theme } = useTheme();
   
   // Get the current version (most recent one)
   const currentVersion = selectedPrompt?.versions?.[0];
@@ -62,7 +64,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
   }
 
   return (
-    <div className="relative bg-neutral-100 p-2 w-[calc(100vw-320px-288px-48px)] h-[calc(100vh-37px)]">
+    <div className="relative bg-neutral-100 p-2 w-[calc(100vw-320px-288px-48px)] h-[calc(100vh-37px)] dark:bg-neutral-900">
       {/* Header */}
       <EditorHeader
         selectedPrompt={selectedPrompt}
@@ -74,10 +76,10 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
         handleCopyToClipboard={handleCopyToClipboard}
         handleDeletePrompt={() => setIsDeleting(true)}
       />
-    <section className="relative flex flex-col gap-1 w-full bg-neutral-50 border border-neutral-200 p-2 rounded-md mt-2 overflow-hidden">
+    <section className="relative flex flex-col gap-1 w-full bg-neutral-50 border border-neutral-200 p-2 rounded-md mt-2 overflow-hidden dark:bg-neutral-800 dark:border-neutral-700">
     <div className="flex items-center justify-between">
       <h1
-        className="font-semibold text-lg cursor-text text-neutral-800 hover:text-neutral-600 px-2 py-1 rounded-md"
+        className="font-semibold text-lg cursor-text text-neutral-800 hover:text-neutral-600 px-2 py-1 rounded-md dark:text-neutral-200"
         onClick={() => {
           setNewName(selectedPrompt.name);
           setIsRenameDialogOpen(true);
@@ -151,6 +153,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
               automaticLayout: true,
               padding: { top: 16 },
             }}
+            theme={theme === "system" ? "vs-dark" : theme === "dark" ? "vs-dark" : "light"}
           />
         )}
       </div>

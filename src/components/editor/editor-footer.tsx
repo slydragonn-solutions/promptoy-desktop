@@ -15,7 +15,7 @@ export default function EditorFooter({ selectedPrompt, content }: EditorFooterPr
     };
     
     return (
-        <div className="absolute bottom-2 left-0 right-0 flex justify-between items-center gap-2 p-2 rounded-xl text-xs text-muted-foreground bg-neutral-50">
+        <div className="absolute bottom-2 left-0 right-0 flex justify-between items-center gap-2 p-2 rounded-md text-xs text-muted-foreground bg-neutral-50 dark:bg-neutral-800">
         <div className="flex items-center gap-4">
           <span className="hidden xl:block">
             Created:{" "}

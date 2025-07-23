@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import { X, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSettingsStore } from "@/store/settings-store";
+import { useTheme } from "../theme/theme-provider";
 
 interface DiffEditorProps {
   original: string;
@@ -21,6 +22,7 @@ export function DiffEditor({
 }: DiffEditorProps) {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { editor: editorSettings } = useSettingsStore();
+  const { theme } = useTheme()
 
   // Show a loading state when versions change
   useEffect(() => {
@@ -71,6 +73,7 @@ export function DiffEditor({
           }}
           originalModelPath="original"
           modifiedModelPath="modified"
+          theme={theme === "system" ? "vs-dark" : theme === "dark" ? "vs-dark" : "light"}
         />
       </div>
       <div className="flex justify-between items-center p-2 border-t text-xs text-muted-foreground">

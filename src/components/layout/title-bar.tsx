@@ -21,7 +21,7 @@ export default function TitleBar() {
 
     return (
         <div 
-            className="flex justify-end items-center w-full border-b border-neutral-200 bg-neutral-100" 
+            className="flex justify-end items-center w-full border-b border-neutral-200 bg-neutral-100 dark:bg-neutral-900 dark:border-neutral-800" 
             data-tauri-drag-region
             id="title-bar"
         >

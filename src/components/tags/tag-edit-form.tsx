@@ -80,7 +80,7 @@ export default function TagEditForm({
                     <button
                         key={color.name}
                         type="button"
-                        className={`w-8 h-8 rounded-full flex items-center justify-center ${color.bg} ${color.border} ${selectedColor?.name === color.name ? 'ring-2 ring-offset-2 ring-primary' : ''}`}
+                        className={`w-8 h-8 rounded-full flex items-center justify-center ${color.bg} ${color.border} ${color.bgDark} ${color.borderDark} ${selectedColor?.name === color.name ? 'ring-2 ring-offset-2 ring-primary' : ''}`}
                         onClick={() => setSelectedColor(color)}
                         title={color.name}
                     >

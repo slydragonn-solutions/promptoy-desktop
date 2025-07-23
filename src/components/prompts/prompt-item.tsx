@@ -152,17 +152,17 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
                 <ContextMenuTrigger asChild>
                     <li 
                         className={cn(
-                            'flex flex-col p-3 cursor-pointer transition-colors rounded-md border border-transparent text-neutral-800',
-                            'hover:bg-neutral-200/60 bg-neutral-100 border-neutral-100',
-                            isSelected && 'bg-indigo-50 hover:bg-indigo-100 border-indigo-200',
+                            'flex flex-col p-3 cursor-pointer transition-colors rounded-md border border-transparent text-neutral-800 dark:text-neutral-200',
+                            'hover:bg-neutral-200/60 bg-neutral-100 border-neutral-100 dark:bg-neutral-800 dark:border-neutral-800 dark:hover:bg-neutral-700',
+                            isSelected && 'bg-indigo-50 hover:bg-indigo-100 border-indigo-200 dark:bg-indigo-700 dark:border-indigo-700 dark:hover:bg-indigo-600',
                         )}
                         onClick={() => onSelect(prompt.id)}
                     >
                         <div className="flex flex-col gap-1.5 w-full">
                             <div className="flex justify-between items-start gap-2">
                                 <h2 className={cn(
-                                    'font-medium text-sm truncate max-w-[140px] text-neutral-600',
-                                    isSelected && 'text-neutral-800 font-semibold'
+                                    'font-medium text-sm truncate max-w-[140px] text-neutral-600 dark:text-neutral-400',
+                                    isSelected && 'text-neutral-800 font-semibold dark:text-neutral-200'
                                 )}>
                                     {name || 'Untitled Prompt'}
                                 </h2>

@@ -29,7 +29,7 @@ function StatCard({ title, value, icon, lastUpdate }: { title: string; value?: s
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="flex flex-col items-start">
           {icon}
-          <span className="mt-2 text-md font-bold text-neutral-600">{title}</span>
+          <span className="mt-2 text-md font-bold text-neutral-600 dark:text-neutral-400">{title}</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -37,7 +37,10 @@ function StatCard({ title, value, icon, lastUpdate }: { title: string; value?: s
           value === undefined ? (
             <div className="text-neutral-600">Loading...</div>
           ) : (
-            <div className="text-3xl font-bold text-neutral-800">{value}<span className="text-sm text-neutral-600 font-light ml-2">Changed {lastUpdate}</span></div>
+            <div className="text-3xl font-bold text-neutral-800 dark:text-neutral-400">
+              {value}
+              <span className="text-sm text-neutral-600 font-light ml-2 dark:text-neutral-400">Changed {lastUpdate}</span>
+            </div>
           )
         }
       </CardContent>
@@ -171,13 +174,13 @@ function Index() {
   }
 
   return (
-    <div className="flex w-full h-[calc(100vh-37px)] bg-neutral-100">
+    <div className="flex w-full h-[calc(100vh-37px)] bg-neutral-100 dark:bg-neutral-900">
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Bar */}
         <header className="h-16 border-b flex items-center justify-between px-8">
-          <h1 className="text-xl font-bold tracking-tight text-neutral-800">👋 {getGreeting()}, Welcome back!</h1>
+          <h1 className="text-xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200">👋 {getGreeting()}, Welcome back!</h1>
           <div className="relative w-full max-w-md">
             <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
@@ -203,25 +206,25 @@ function Index() {
             <StatCard 
               title="Total Prompts" 
               value={stats.totalPrompts?.toLocaleString()}
-              icon={<FileText className="w-8 h-8 text-neutral-600" />}
+              icon={<FileText className="w-8 h-8 text-neutral-600 dark:text-neutral-400" />}
               lastUpdate={getTimeAgo(lastUpdates.totalPrompts)}
             />
             <StatCard 
               title="Active Tags" 
               value={stats.uniqueTags?.toLocaleString()}
-              icon={<Tags className="w-8 h-8 text-neutral-600" />}
+              icon={<Tags className="w-8 h-8 text-neutral-600 dark:text-neutral-400" />}
               lastUpdate={getTimeAgo(lastUpdates.uniqueTags)}
             />
             <StatCard 
               title="Groups" 
               value={stats.totalGroups?.toLocaleString()} 
-              icon={<Folder className="w-8 h-8 text-neutral-600" />}
+              icon={<Folder className="w-8 h-8 text-neutral-600 dark:text-neutral-400" />}
               lastUpdate={getTimeAgo(lastUpdates.totalGroups)}
             />  
             <StatCard 
               title="Favorites" 
               value={stats.favoritePrompts?.toLocaleString()} 
-              icon={<Heart className="w-8 h-8 text-neutral-600" />}
+              icon={<Heart className="w-8 h-8 text-neutral-600 dark:text-neutral-400" />}
               lastUpdate={getTimeAgo(lastUpdates.favoritePrompts)}
             />
           </div>
@@ -230,12 +233,12 @@ function Index() {
           <div className="w-full">
             <Card>
               <CardHeader>
-                <CardTitle className="text-neutral-700 text-sm">Recent Activity</CardTitle>
+                <CardTitle className="text-neutral-700 text-sm dark:text-neutral-400">Recent Activity</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {prompts.length === 0 ? (
-                    <p className="text-sm text-muted-foreground text-center py-4">
+                    <p className="text-sm text-muted-foreground text-center py-4 dark:text-neutral-400">
                       No recent activity
                     </p>
                   ) : (
@@ -267,11 +270,11 @@ function Index() {
                             }}
                           >
                             <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mr-3 flex-shrink-0">
-                              <FileText className="h-5 w-5 text-primary" />
+                              <FileText className="h-5 w-5 text-primary dark:text-primary/50" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium truncate">{prompt.name || 'Untitled Prompt'}</p>
-                              <p className="text-xs text-muted-foreground">Updated {timeAgo}</p>
+                              <p className="text-sm font-medium truncate dark:text-neutral-300">{prompt.name || 'Untitled Prompt'}</p>
+                              <p className="text-xs text-muted-foreground dark:text-neutral-600">Updated {timeAgo}</p>
                             </div>
                           </div>
                         );
@@ -305,7 +308,7 @@ function Index() {
                 }}
                 className="cursor-pointer"
               >
-                <FileText className="mr-2 h-4 w-4" />
+                <FileText className="mr-2 h-4 w-4 text-primary dark:text-primary/50" />
                 <div className="flex-1">
                   <p className="font-medium">{prompt.name}</p>
                   <p className="text-xs text-muted-foreground line-clamp-1">

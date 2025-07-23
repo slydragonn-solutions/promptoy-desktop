@@ -142,7 +142,7 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
   };
 
   return (
-    <div className="flex flex-wrap gap-1 py-1 px-6 bg-neutral-100 rounded-md mb-2">
+    <div className="flex flex-wrap gap-1 py-1 px-6 bg-neutral-100 dark:bg-neutral-800 rounded-md mb-2">
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Button 
@@ -150,7 +150,7 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
             size="icon" 
             title="Headings"
           >
-            <div className="flex items-center">
+            <div className="flex items-center hover:text-indigo-600 dark:hover:text-indigo-400">
               <Heading1 className="h-4 w-4" />
               <ChevronDown className="h-3 w-3 ml-0.5 opacity-50" />
             </div>
@@ -185,6 +185,7 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
         size="icon" 
         onClick={() => executeAction('bold')}
         title="Bold"
+        className="hover:text-indigo-600 dark:hover:text-indigo-400"
       >
         <Bold className="h-4 w-4" />
       </Button>
@@ -193,6 +194,7 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
         size="icon" 
         onClick={() => executeAction('italic')}
         title="Italic"
+        className="hover:text-indigo-600 dark:hover:text-indigo-400"
       >
         <Italic className="h-4 w-4" />
       </Button>
@@ -201,6 +203,7 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
         size="icon" 
         onClick={() => executeAction('strikethrough')}
         title="Strikethrough"
+        className="hover:text-indigo-600 dark:hover:text-indigo-400"
       >
         <Strikethrough className="h-4 w-4" />
       </Button>
@@ -210,6 +213,7 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
         size="icon" 
         onClick={() => executeAction('link')}
         title="Link"
+        className="hover:text-indigo-600 dark:hover:text-indigo-400"
       >
         <Link2 className="h-4 w-4" />
       </Button>
@@ -247,6 +251,7 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
         size="icon"
         onClick={() => executeAction('code')}
         title="Inline Code"
+        className="hover:text-indigo-600 dark:hover:text-indigo-400"
       >
         <Code className="h-4 w-4" />
       </Button>
@@ -255,6 +260,7 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
         size="icon" 
         onClick={() => executeAction('codeblock')}
         title="Code Block"
+        className="hover:text-indigo-600 dark:hover:text-indigo-400"
       >
         <SquareCode className="h-4 w-4" />
       </Button>
@@ -263,6 +269,7 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
         size="icon" 
         onClick={() => executeAction('quote')}
         title="Blockquote"
+        className="hover:text-indigo-600 dark:hover:text-indigo-400"
       >
         <Quote className="h-4 w-4" />
       </Button>
@@ -270,10 +277,10 @@ export function MarkdownToolbar({ editorRef, onCopy }: MarkdownToolbarProps) {
       <Button 
         variant="ghost" 
         size="icon" 
-        className="ml-auto"
+        className="ml-auto hover:text-indigo-600 dark:hover:text-indigo-400"
         onClick={() => executeAction('copy')}
         title="Copy to Clipboard"
-      >
+        >
         <Copy className="h-4 w-4" />
       </Button>
     </div>

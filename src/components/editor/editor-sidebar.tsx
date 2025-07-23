@@ -20,7 +20,7 @@ export default function EditorSidebar({ onCompareVersion, isComparing = false }:
     
     if (!selectedPrompt) {
         return (
-            <section className="flex flex-col gap-2 min-w-80 w-80 h-[calc(100vh-37px)] p-2 border-l border-l-neutral-200">
+            <section className="flex flex-col gap-2 min-w-80 w-80 h-[calc(100vh-37px)] p-2 border-l border-l-neutral-200 dark:bg-neutral-900 dark:border-neutral-800">
                 <div className="flex items-center justify-center h-full text-muted-foreground">
                     <p>Select a prompt to view versions</p>
                 </div>
@@ -29,11 +29,11 @@ export default function EditorSidebar({ onCompareVersion, isComparing = false }:
     }
     
     return (
-        <section className="flex flex-col gap-2 min-w-80 h-[calc(100vh-37px)] w-80 p-2 bg-neutral-100">
+        <section className="flex flex-col gap-2 min-w-80 h-[calc(100vh-37px)] w-80 p-2 bg-neutral-100 dark:bg-neutral-900">
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-                <TabsList className="self-end bg-indigo-50 p-0 gap-1">
-                    <TabsTrigger value="versions" className=" text-neutral-600 bg-indigo-50 hover:bg-indigo-100" title="Versions"><GitCompare className="w-4 h-4" /></TabsTrigger>
-                    <TabsTrigger value="notes" className=" text-neutral-600 bg-indigo-50 hover:bg-indigo-100" title="Notes"><Notebook className="w-4 h-4" /></TabsTrigger>
+                <TabsList className="self-end bg-indigo-50 p-0 gap-1 dark:bg-neutral-800">
+                    <TabsTrigger value="versions" className=" text-neutral-600 bg-indigo-50 hover:bg-indigo-100 dark:text-neutral-200 dark:bg-neutral-800" title="Versions"><GitCompare className="w-4 h-4" /></TabsTrigger>
+                    <TabsTrigger value="notes" className=" text-neutral-600 bg-indigo-50 hover:bg-indigo-100 dark:text-neutral-200 dark:bg-neutral-800" title="Notes"><Notebook className="w-4 h-4" /></TabsTrigger>
                 </TabsList>
                 <TabsContent value="versions">
                     <VersionList 

@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { ModeToggle } from '@/components/theme/mode-toggle';
 
 // Simple toggle switch component since we don't have access to the Switch component
 const ToggleSwitch = ({
@@ -48,7 +49,7 @@ function Settings() {
   } = useSettingsStore();
 
   return (
-    <ScrollArea className="w-full h-[calc(100vh-37px)] bg-neutral-100">
+    <ScrollArea className="w-full h-[calc(100vh-37px)] bg-neutral-100 dark:bg-neutral-900">
     <div className="container mx-auto py-8 px-4 max-w-4xl">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold">Settings</h1>
@@ -71,18 +72,10 @@ function Settings() {
                   Choose between light and dark theme
                 </p>
               </div>
-              <Select
-                value={theme}
-                onValueChange={(value: "light" | "dark") => setTheme(value)}
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select theme" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="dark">Dark</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="relative flex items-center gap-2">
+                <ModeToggle />
+              </div>
+             
             </div>
           </CardContent>
         </Card>

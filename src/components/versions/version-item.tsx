@@ -34,7 +34,7 @@ export default function VersionItem({
     <>
     <div
       className={`group flex items-center justify-between p-2 rounded-sm cursor-pointer border ${
-        isActive ? 'bg-indigo-50 border-indigo-200 hover:bg-indigo-50' : 'bg-neutral-100 border-neutral-100 hover:bg-neutral-200/60'
+        isActive ? 'bg-indigo-50 border-indigo-200 hover:bg-indigo-50 dark:bg-indigo-600 dark:border-indigo-600 dark:text-neutral-200 font-bold' : 'bg-neutral-100 border-neutral-100 hover:bg-neutral-200/60 dark:bg-neutral-800 dark:border-neutral-800 dark:text-neutral-400'
       }`}
       onClick={isComparing ? undefined : () => onSelect(version)}
     >

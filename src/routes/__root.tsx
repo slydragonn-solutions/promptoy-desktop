@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { promptsStore } from '@/store/prompts-store';
 import { Toaster } from '@/components/ui/sonner';
 import TitleBar from '@/components/layout/title-bar';
-
+import { ThemeProvider } from '@/components/theme/theme-provider';
 
 export const Route = createRootRoute({
     component: () => {
@@ -21,39 +21,39 @@ export const Route = createRootRoute({
         }, [currentPath])
 
         return (
-            <>
+            <ThemeProvider defaultTheme='light'>
             <TitleBar />
             <main className="flex h-[calc(100vh-37px)] items-center justify-center">
-            <nav className="flex flex-col h-full items-center justify-between gap-2 p-2 bg-neutral-100 text-neutral-500 border-r border-neutral-200">
+            <nav className="flex flex-col h-full items-center justify-between gap-2 p-2 bg-neutral-100 text-neutral-500 border-r border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800">
                 <ul className="flex flex-col gap-2">
                     <li>
                         <Link to="/">
-                            <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/" ? "bg-indigo-50 text-neutral-900" : ""}`} title='Home'><HouseIcon /></Button>
+                            <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 ${currentPath === "/" ? "bg-indigo-50 text-neutral-900 dark:bg-indigo-800 dark:text-neutral-200" : ""}`} title='Home'><HouseIcon /></Button>
                         </Link>
                     </li>
                     <li>
                         <Link to="/vault">
-                            <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/vault" ? "bg-indigo-50 text-neutral-900" : ""}`} title='Vault'><BookText /></Button>
+                            <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 ${currentPath === "/vault" ? "bg-indigo-50 text-neutral-900 dark:bg-indigo-800 dark:text-neutral-200" : ""}`} title='Vault'><BookText /></Button>
                         </Link>
                     </li>
                     <li>
                         <Link to="/tags">
-                            <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/tags" ? "bg-indigo-50 text-neutral-900" : ""}`} title='Tags'><Tags /></Button>
+                            <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 ${currentPath === "/tags" ? "bg-indigo-50 text-neutral-900 dark:bg-indigo-800 dark:text-neutral-200" : ""}`} title='Tags'><Tags /></Button>
                         </Link>
                     </li>
                     <li>
-                        <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/private" ? "bg-indigo-50 text-neutral-900" : ""}`} title='Private prompts'><LockKeyhole /></Button>
+                        <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 ${currentPath === "/private" ? "bg-indigo-50 text-neutral-900 dark:bg-indigo-800 dark:text-neutral-200" : ""}`} title='Private prompts'><LockKeyhole /></Button>
                     </li>
                 </ul>
                 <ul className="flex flex-col gap-2">
                     <li>
                         <Link to="/settings">
-                            <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/settings" ? "bg-indigo-50 text-neutral-900" : ""}`} title='Settings'><SettingsIcon /></Button>
+                            <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 ${currentPath === "/settings" ? "bg-indigo-50 text-neutral-900 dark:bg-indigo-800 dark:text-neutral-200" : ""}`} title='Settings'><SettingsIcon /></Button>
                         </Link>
                     </li>
                     <li>
                         <Link to="/info">
-                            <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 ${currentPath === "/info" ? "bg-indigo-50 text-neutral-900" : ""}`} title='Info'><InfoIcon /></Button>
+                            <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 ${currentPath === "/info" ? "bg-indigo-50 text-neutral-900 dark:bg-indigo-800 dark:text-neutral-200" : ""}`} title='Info'><InfoIcon /></Button>
                         </Link>
                     </li>
                 </ul>
@@ -62,6 +62,6 @@ export const Route = createRootRoute({
             <TanStackRouterDevtools position='top-left' />
             <Toaster />
         </main>
-        </>
+        </ThemeProvider>
     )}
 })

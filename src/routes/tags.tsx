@@ -93,12 +93,12 @@ function Tags() {
   }
 
   return (
-    <div className="flex flex-col gap-4 w-full h-[calc(100vh-37px)] p-8 bg-neutral-100">
+    <div className="flex flex-col gap-4 w-full h-[calc(100vh-37px)] p-8 bg-neutral-100 dark:bg-neutral-900">
       <div className="flex flex-col gap-4">
         <div className="flex gap-2">
           <Input
             placeholder="Search tags..."
-            className="bg-neutral-50"
+            className="bg-neutral-50 dark:bg-neutral-800"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -106,7 +106,7 @@ function Tags() {
             <DropdownMenuTrigger>
               <Tooltip>
                 <TooltipTrigger>
-              <Button size="icon" variant="secondary" className="bg-neutral-50 hover:bg-indigo-50 text-neutral-600">
+              <Button size="icon" variant="secondary" className="bg-neutral-50 dark:bg-neutral-800 hover:bg-indigo-50 dark:hover:bg-indigo-700 text-neutral-600 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-400">
                 <Plus />
               </Button>
               </TooltipTrigger>
@@ -120,7 +120,7 @@ function Tags() {
                 <Input placeholder="Type a new tag name..." value={newTagName} onChange={(e) => setNewTagName(e.target.value)} />
                 <DropdownMenuItem>
                   <ActionButton onClick={() => createTag()} className="w-full" disabled={newTagName.trim() === ""}>
-                    <TagsIcon className='text-white'/>
+                    <TagsIcon className='text-white dark:text-neutral-900'/>
                     Create
                   </ActionButton>
                 </DropdownMenuItem>
@@ -150,7 +150,7 @@ function Tags() {
       <div className="h-full">
         <ScrollArea className="h-[calc(100vh-137px)]">
           <Tabs defaultValue="grid">
-            <TabsList className="flex self-end bg-indigo-50 p-0 gap-1">
+            <TabsList className="flex self-end bg-indigo-50 dark:bg-neutral-800 p-0 gap-1">
               <TabsTrigger value="grid"><LayoutGrid /></TabsTrigger>
               <TabsTrigger value="list"><List /></TabsTrigger>
             </TabsList>
@@ -165,7 +165,7 @@ function Tags() {
                   const colorClasses = getTagColorClasses(tag.color);
 
                   return (
-                    <Card key={tag.id} className={`bg-neutral-50 rounded-md`}>
+                    <Card key={tag.id} className={`bg-neutral-50 dark:bg-neutral-800 rounded-md`}>
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
                           <Badge
@@ -204,14 +204,14 @@ function Tags() {
                             {tag.prompts.map((promptId) => (
                               <div
                                 key={promptId}
-                                className="flex flex-row items-center justify-between text-xs hover:bg-indigo-200 cursor-pointer bg-indigo-50 p-2 rounded-md mb-2"
+                                className="flex flex-row items-center justify-between text-xs hover:bg-indigo-200 dark:hover:bg-indigo-700 cursor-pointer bg-indigo-50 dark:bg-neutral-700 p-2 rounded-md mb-2 text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200"
                                 onClick={() => {
                                   setSelectedPrompt(promptId);
                                   navigate({to: "/vault"});
                                 }}
                               >
-                                <span className="text-neutral-700">{prompts.find(p => p.id === promptId)?.name}</span>
-                                <span className="text-neutral-400">{new Date(prompts.find(p => p.id === promptId)?.createdAt || '').toLocaleDateString()}</span>
+                                <span>{prompts.find(p => p.id === promptId)?.name}</span>
+                                <span className="text-neutral-400 dark:text-neutral-500">{new Date(prompts.find(p => p.id === promptId)?.createdAt || '').toLocaleDateString()}</span>
                               </div>
                             ))}
                           </ScrollArea>
@@ -274,13 +274,13 @@ function Tags() {
                           {tag.prompts.map((promptId) => (
                             <div
                               key={promptId}
-                              className="flex flex-row items-center justify-between text-xs hover:bg-indigo-100 cursor-pointer bg-indigo-50 p-2 rounded-md mb-2"
+                              className="flex flex-row items-center justify-between text-xs hover:bg-in cursor-pointer bg-indigo-50 dark:bg-neutral-700 dark:hover:bg-indigo-700 p-2 rounded-md mb-2 text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200"
                               onClick={() => {
                                 setSelectedPrompt(promptId);
                                 navigate({to: "/vault"});
                               }}
                             >
-                              <span className="text-neutral-700">{prompts.find(p => p.id === promptId)?.name}</span>
+                              <span>{prompts.find(p => p.id === promptId)?.name}</span>
                               <span className="text-neutral-400">{new Date(prompts.find(p => p.id === promptId)?.createdAt || '').toLocaleDateString()}</span>
                             </div>
                           ))}
