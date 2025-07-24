@@ -153,7 +153,7 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
                     <li 
                         className={cn(
                             'flex flex-col p-3 cursor-pointer transition-colors rounded-md border border-transparent text-neutral-800 dark:text-neutral-200',
-                            'hover:bg-neutral-200/60 bg-neutral-100 border-neutral-100 dark:bg-neutral-800 dark:border-neutral-800 dark:hover:bg-neutral-700',
+                            'hover:bg-neutral-200/60 bg-neutral-100 border-neutral-100 dark:bg-neutral-900 dark:border-neutral-900 dark:hover:bg-neutral-800',
                             isSelected && 'bg-indigo-50 hover:bg-indigo-100 border-indigo-200 dark:bg-indigo-700 dark:border-indigo-700 dark:hover:bg-indigo-600',
                         )}
                         onClick={() => onSelect(prompt.id)}
