@@ -58,20 +58,14 @@ function Info() {
 
             <section className="space-y-4">
               <h2 className="text-xl font-semibold text-gray-800 dark:text-neutral-200">Connect With Us</h2>
-              <div className="flex flex-wrap justify-center gap-4">
-                {links.map((link) => (
                   <a
-                    key={link.name}
-                    href={link.url}
+                    href="https://promptoy.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center space-x-2 rounded-xl bg-white px-5 py-3 text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:shadow dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
+                    className="text-orange-500 hover:underline dark:text-orange-400"
                   >
-                    {link.icon}
-                    <span>{link.name}</span>
+                    https://promptoy.com
                   </a>
-                ))}
-              </div>
             </section>
           </div>
         </div>

@@ -41,9 +41,6 @@ export const Route = createRootRoute({
                             <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 ${currentPath === "/tags" ? "bg-indigo-50 text-neutral-900 dark:bg-indigo-800 dark:text-neutral-200" : ""}`} title='Tags'><Tags /></Button>
                         </Link>
                     </li>
-                    <li>
-                        <Button variant="ghost" size="icon" className={`hover:bg-neutral-50 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 ${currentPath === "/private" ? "bg-indigo-50 text-neutral-900 dark:bg-indigo-800 dark:text-neutral-200" : ""}`} title='Private prompts'><LockKeyhole /></Button>
-                    </li>
                 </ul>
                 <ul className="flex flex-col gap-2">
                     <li>
