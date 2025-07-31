@@ -1,35 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { Github, Twitter, Mail, Globe } from 'lucide-react';
 
 export const Route = createFileRoute("/info")({
   component: Info,
 });
 
 function Info() {
-  const appVersion = __APP_VERSION__; // This will be replaced by Vite during build
-  
-  const links = [
-    {
-      name: 'GitHub',
-      url: 'https://github.com/yourusername/promptoy-desktop',
-      icon: <Github className="h-5 w-5" />,
-    },
-    {
-      name: 'Twitter',
-      url: 'https://twitter.com/yourhandle',
-      icon: <Twitter className="h-5 w-5" />,
-    },
-    {
-      name: 'Website',
-      url: 'https://yourwebsite.com',
-      icon: <Globe className="h-5 w-5" />,
-    },
-    {
-      name: 'Contact',
-      url: 'mailto:contact@yourdomain.com',
-      icon: <Mail className="h-5 w-5" />,
-    },
-  ];
+  const appVersion = __APP_VERSION__;
 
   return (
     <div className="flex h-[calc(100vh-37px)] w-full items-center justify-center bg-neutral-100 p-6 dark:bg-neutral-900">
