@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import { Prompt } from "@/types/prompts";
 import { createPrompt, updatePrompt as updatePromptFromFs, deletePrompt, loadPrompts as loadPromptsFromFs } from "@/lib/fs";
+import { useTagsStore } from "./tags-store";
+import { Tag } from "@/types/tags";
+import { useGroupsStore } from "./groups-store";
+import { Group } from "@/types/groups";
 
 interface PromptsStore {
     prompts: Prompt[];
@@ -78,9 +82,21 @@ export const promptsStore = create<PromptsStore>((set, get) => ({
     removePrompt: async (id: string) => {
         set({ isLoading: true, error: null });
         try {
+            const { tags, updateTag } = useTagsStore.getState();
+            const { groups, updateGroup } = useGroupsStore.getState();
             const { success, error } = await deletePrompt(id);
             
             if (success) {
+                tags.forEach((tag: Tag) => {
+                    if (tag.prompts && tag.prompts.includes(id)) {
+                        updateTag(tag.id, { prompts: tag.prompts.filter((promptId: string) => promptId !== id) });
+                    }
+                });
+                groups.forEach((group: Group) => {
+                    if (group.prompts && group.prompts.includes(id)) {
+                        updateGroup(group.id, { prompts: group.prompts.filter((promptId: string) => promptId !== id) });
+                    }
+                });
                 set((state) => ({
                     prompts: state.prompts.filter((prompt) => prompt.id !== id),
                     selectedPrompt: state.selectedPrompt?.id === id ? null : state.selectedPrompt,
