@@ -143,7 +143,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
           <MonacoEditor
             height="calc(100vh - 317px)"
             defaultLanguage="markdown"
-            value={content}
+            value={selectedPrompt?.versions[0]?.content || ''}
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
             options={{
@@ -152,8 +152,30 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
               wordWrap: "on",
               automaticLayout: true,
               padding: { top: 16 },
+              // Don't automatically reveal the cursor when content changes
+              revealHorizontalRightPadding: 0,
+              // Don't scroll to the end when content changes
+              scrollBeyondLastLine: false,
+              // Better cursor handling
+              cursorSurroundingLines: 1,
+              cursorSurroundingLinesStyle: 'all',
+              // Don't auto-insert closing brackets and quotes
+              autoClosingBrackets: 'never',
+              autoClosingQuotes: 'never',
+              autoSurround: 'never',
+              // Better performance
+              renderLineHighlight: 'none',
+              renderWhitespace: 'none',
+              scrollbar: {
+                vertical: 'hidden',
+                horizontal: 'hidden',
+                useShadows: false,
+                verticalScrollbarSize: 0,
+                horizontalScrollbarSize: 0,
+              },
             }}
             theme={theme === "system" ? "vs-dark" : theme === "dark" ? "vs-dark" : "light"}
+            key={selectedPrompt?.id} // Force re-mount when prompt changes
           />
         )}
       </div>

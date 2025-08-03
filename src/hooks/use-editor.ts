@@ -129,7 +129,7 @@ export const useEditor = (initialPrompt: Prompt | null) => {
           }
           saveTimeoutRef.current = setTimeout(() => {
             saveContent(value || '');
-          }, 1000);
+          }, 1500);
         } else {
           // Show warning if user is trying to exceed the limit
           toast.error(`Content cannot exceed the limit of ${MAX_CONTENT_LENGTH.toLocaleString()} characters. Content won't be saved.`);
