@@ -37,11 +37,9 @@ export const Route = createFileRoute("/settings")({
 
 function Settings() {
   const {
-    theme,
     editor,
     list,
     filter,
-    setTheme,
     updateEditor,
     updateList,
     updateFilter,
