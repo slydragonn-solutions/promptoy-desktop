@@ -147,7 +147,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
             options={{
-              minimap: { enabled: true },
+              minimap: { enabled: editorSettings.minimap },
               fontSize: editorSettings.fontSize,
               wordWrap: "on",
               automaticLayout: true,

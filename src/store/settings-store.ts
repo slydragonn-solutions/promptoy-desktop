@@ -8,6 +8,7 @@ interface FilterSettings {
 interface EditorSettings {
     fontSize: 12 | 13 | 14 | 15 | 16;
     showToolbar: boolean;
+    minimap: boolean;
 }
 
 interface ListSettings {
@@ -29,6 +30,7 @@ const defaultSettings: Settings = {
     editor: {
         fontSize: 14,
         showToolbar: true,
+        minimap: true,
     },
     list: {
         numberOfRecentPrompts: 3,

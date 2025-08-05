@@ -121,6 +121,19 @@ function Settings() {
                 onChange={(checked) => updateEditor({ showToolbar: checked })}
               />
             </div>
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="minimap">Show Minimap</Label>
+                <p className="text-sm text-muted-foreground">
+                  Toggle the editor minimap visibility
+                </p>
+              </div>
+              <ToggleSwitch
+                id="minimap"
+                checked={editor.minimap}
+                onChange={(checked) => updateEditor({ minimap: checked })}
+              />
+            </div>
           </CardContent>
         </Card>
 
