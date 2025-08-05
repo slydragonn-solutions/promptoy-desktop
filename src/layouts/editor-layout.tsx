@@ -22,6 +22,7 @@ export default function EditorLayout({ listBy, title }: EditorLayoutProps) {
             <EditorSidebar 
                 onCompareVersion={versionComparison.handleCompareVersion}
                 isComparing={versionComparison.isComparing}
+                compareVersion={versionComparison.compareVersion || undefined}
             />
         </>
     )

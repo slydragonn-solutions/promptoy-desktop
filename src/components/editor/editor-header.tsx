@@ -150,7 +150,7 @@ export default function EditorHeader({
                       setIsRenameDialogOpen(true);
                     }}
                   >
-                    <PenIcon className="mr-2 h-4 w-4" />
+                    <PenIcon className="mr-2 h-4 w-4 text-fill-current" />
                     <span>Rename</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleCopyToClipboard}>
@@ -164,7 +164,7 @@ export default function EditorHeader({
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className="mr-2 h-4 w-4"
+                      className="mr-2 h-4 w-4 text-fill-current"
                     >
                       <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
                       <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
@@ -172,14 +172,14 @@ export default function EditorHeader({
                     <span>Copy</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setSelectedPrompt(null)}>
-                    <X className="mr-2 h-4 w-4" />
+                    <X className="mr-2 h-4 w-4 text-fill-current" />
                     <span>Close</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    className="text-red-400 focus:bg-destructive/10 focus:text-destructive"
+                    className="focus:bg-destructive/10 focus:text-destructive"
                     onClick={handleDeletePrompt}
                   >
-                    <Trash2 className="mr-2 h-4 w-4" />
+                    <Trash2 className="mr-2 h-4 w-4 text-fill-current" />
                     <span>Delete</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>

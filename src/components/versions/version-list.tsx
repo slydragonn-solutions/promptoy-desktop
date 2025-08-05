@@ -15,9 +15,10 @@ import { useState } from "react";
 interface VersionListProps {
     onCompareVersion?: (version: PromptContent) => void;
     isComparing?: boolean;
+    compareVersion?: PromptContent;
 }
 
-export default function VersionList({ onCompareVersion, isComparing = false }: VersionListProps) {
+export default function VersionList({ onCompareVersion, isComparing = false, compareVersion }: VersionListProps) {
     const { selectedPrompt } = promptsStore();
     const currentVersion = selectedPrompt?.versions?.[0]; // Most recent version is the current one
     const [search, setSearch] = useState("");    
@@ -107,6 +108,7 @@ export default function VersionList({ onCompareVersion, isComparing = false }: V
                             onRename={handleRenameVersion}
                             onCompare={onCompareVersion}
                             isComparing={isComparing}
+                            compareVersion={compareVersion}
                         />
                     ))}
                     <RenameVersionDialog

@@ -9,9 +9,10 @@ import { GitCompare, Notebook } from "lucide-react"
 interface EditorSidebarProps {
   onCompareVersion?: (version: PromptContent) => void;
   isComparing?: boolean;
+  compareVersion?: PromptContent;
 }
 
-export default function EditorSidebar({ onCompareVersion, isComparing = false }: EditorSidebarProps) {
+export default function EditorSidebar({ onCompareVersion, isComparing = false, compareVersion }: EditorSidebarProps) {
     const { selectedPrompt } = promptsStore();
     
     // Tabs management
@@ -39,6 +40,7 @@ export default function EditorSidebar({ onCompareVersion, isComparing = false }:
                     <VersionList 
                       onCompareVersion={onCompareVersion}
                       isComparing={isComparing}
+                      compareVersion={compareVersion}
                     />
                 </TabsContent>
                 <TabsContent value="notes">

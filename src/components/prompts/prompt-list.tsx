@@ -203,7 +203,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                 Oldest
                 {localSortBy === "oldest" && <Check className="ml-auto h-4 w-4" />}
               </DropdownMenuItem>
-              <div className="h-px bg-neutral-200 my-1" />
+              <div className="h-px bg-neutral-200 dark:bg-neutral-800 my-1" />
               <DropdownMenuItem
                 onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
                 className="flex items-center justify-between cursor-pointer"
@@ -258,7 +258,7 @@ export default function PromptList({ listBy = "all", title = "All Prompts" }: Pr
                         disabled={newGroupName.trim() === ""}
                         className="w-full"
                       >
-                        <Folder className="mr-2 h-4 w-4 text-white" />
+                        <Folder className="mr-2 h-4 w-4 text-fill-current" />
                         Create Group
                       </ActionButton>
                     </DropdownMenuItem>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Alert from "../common/alert";
 interface VersionItemProps {
   version: PromptContent;
+  compareVersion?: PromptContent;
   isActive: boolean;
   isComparing?: boolean;
   isCurrentVersion?: boolean;
@@ -15,6 +16,7 @@ interface VersionItemProps {
 
 export default function VersionItem({
   version,
+  compareVersion,
   isActive,
   isComparing = false,
   isCurrentVersion = false,
@@ -34,7 +36,7 @@ export default function VersionItem({
     <>
     <div
       className={`group flex items-center justify-between p-2 rounded-sm cursor-pointer border ${
-        isActive ? 'bg-indigo-50 border-indigo-200 hover:bg-indigo-50 dark:bg-indigo-600 dark:border-indigo-600 dark:text-neutral-200 font-bold' : 'bg-neutral-100 border-neutral-100 hover:bg-neutral-200/60 dark:bg-neutral-800 dark:border-neutral-800 dark:text-neutral-400'
+        isActive || isCurrentVersion ? 'bg-indigo-50 border-indigo-200 hover:bg-indigo-50 dark:bg-indigo-950 dark:border-indigo-600 dark:text-neutral-200 font-bold' : 'bg-neutral-100 border-neutral-100 hover:bg-neutral-200/60 dark:bg-neutral-800 dark:border-neutral-800 dark:text-neutral-400'
       }`}
       onClick={isComparing ? undefined : () => onSelect(version)}
     >
@@ -44,7 +46,7 @@ export default function VersionItem({
           <div className="flex items-center gap-1">
             {!isComparing && (
               <button
-                className="p-1 rounded-full hover:bg-neutral-200 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-50 disabled:pointer-events-none"
+                className="p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-50 disabled:pointer-events-none"
                 onClick={(e) => {
                   e.stopPropagation();
                   onRename(version);
@@ -52,27 +54,27 @@ export default function VersionItem({
                 title="Rename version"
                 disabled={isComparing}
               >
-                <Edit2 className="w-3.5 h-3.5 text-muted-foreground" />
+                <Edit2 className="w-3.5 h-3.5 text-muted-foreground hover:text-indigo-500" />
               </button>
             )}
             {!isCurrentVersion && (
               <button
                 className={`p-1 rounded-full transition-opacity ${
                   isComparing ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-                } ${isActive ? 'text-blue-500' : 'text-muted-foreground hover:text-blue-500'}`}
+                } ${compareVersion?.date.toString() === version.date.toString() ? 'text-indigo-500' : 'text-muted-foreground hover:text-indigo-500'}`}
                 onClick={(e) => {
                   e.stopPropagation();
                   onCompare?.(version);
                 }}
-                title={isActive ? 'Currently viewing this version' : 'Compare with this version'}
-                disabled={isActive}
+                title={compareVersion?.date.toString() === version.date.toString() ? 'Currently viewing this version' : 'Compare with this version'}
+                disabled={compareVersion?.date.toString() === version.date.toString()}
               >
                 <GitCompare className="w-3.5 h-3.5" />
               </button>
             )}
             {!isComparing && (
               <button
-                className="p-1 rounded-full hover:bg-neutral-200 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-50 disabled:pointer-events-none"
+                className="p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-50 disabled:pointer-events-none"
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsDeleting(true);
