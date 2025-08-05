@@ -99,18 +99,20 @@ function Index() {
 
   return (
     <div className="flex w-full h-[calc(100vh-37px)] bg-neutral-100 dark:bg-neutral-900 p-2 justify-center items-center">
+      <div className="absolute top-0 bottom-0 left-0 right-0 m-auto w-96 h-96  dark:bg-indigo-600/50 bg-indigo-100 rounded-full blur-3xl animate-pulse"></div>
+ 
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden max-w-2xl mx-auto">
         {/* Top Bar */}
         <header className="flex flex-col items-center justify-center gap-4 mb-4">
-          <h1 className="text-2xl font-bold text-neutral-800 dark:text-neutral-200 text-center">👋 {getGreeting()}, Welcome back!</h1>
-          <div className="relative w-full max-w-md">
+          <h1 className="z-10 text-2xl text-neutral-800 dark:text-neutral-200 text-center">👋 {getGreeting()}, welcome back!</h1>
+          <div className="z-10 relative w-full max-w-md">
             <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="search"
               placeholder="Search prompts..."
-              className="w-full pl-9 cursor-text"
+              className="w-full pl-9 cursor-text bg-neutral-100 dark:bg-neutral-800"
               onFocus={() => setIsCommandOpen(true)}
               readOnly
             />
@@ -127,9 +129,9 @@ function Index() {
 
           {/* Recent Activity */}
           <div className="w-full">
-            <Card className="border-transparent shadow-none">
+            <Card className="border-transparent shadow-none bg-transparent">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-neutral-700 text-sm dark:text-neutral-400"><Clock className="w-4 h-4" /> Recent Activity</CardTitle>
+                <CardTitle className="z-10 flex items-center gap-2 text-neutral-700 text-sm dark:text-neutral-400"><Clock className="w-4 h-4" /> Recent Activity</CardTitle>
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-[210px]">
@@ -161,7 +163,7 @@ function Index() {
                         return (
                           <div 
                             key={prompt.id} 
-                            className="flex items-center w-full p-2 rounded-lg dark:bg-neutral-800 bg-neutral-200 dark:hover:bg-indigo-600 hover:bg-indigo-200 cursor-pointer"
+                            className="flex items-center w-full p-2 rounded-lg dark:bg-neutral-800 bg-neutral-100 dark:hover:bg-indigo-800 hover:bg-indigo-200 cursor-pointer transition-colors duration-500"
                             onClick={() => {
                               redirectToPrompt(prompt.id);
                             }}
