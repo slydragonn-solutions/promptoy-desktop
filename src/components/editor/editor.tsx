@@ -174,7 +174,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
                 horizontalScrollbarSize: 0,
               },
             }}
-            theme={theme === "system" ? "vs-dark" : theme === "dark" ? "vs-dark" : "light"}
+            theme={theme === "dark" ? "vs-dark" : "light"}
             key={selectedPrompt?.id} // Force re-mount when prompt changes
           />
         )}

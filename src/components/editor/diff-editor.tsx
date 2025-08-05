@@ -73,10 +73,10 @@ export function DiffEditor({
           }}
           originalModelPath="original"
           modifiedModelPath="modified"
-          theme={theme === "system" ? "vs-dark" : theme === "dark" ? "vs-dark" : "light"}
+          theme={theme === "dark" ? "vs-dark" : "light"}
         />
       </div>
-      <div className="flex justify-between items-center p-2 border-t text-xs text-muted-foreground">
+      <div className="flex justify-between items-center p-2 border-t text-xs text-muted-foreground dark:text-neutral-400">
         <div>{originalTitle}</div>
         <div className="text-muted-foreground/50">vs</div>
         <div>{modifiedTitle}</div>
