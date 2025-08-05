@@ -42,7 +42,7 @@ export const Route = createRootRoute({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className={`hover:bg-neutral-50 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 ${currentPath === "/" ? "bg-indigo-50 text-neutral-900 dark:bg-indigo-800 dark:text-neutral-200" : ""}`}
+                    className={`hover:bg-neutral-50 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 ${currentPath === "/" ? "text-neutral-900 dark:text-neutral-200" : ""}`}
                     title="Home"
                   >
                     <HouseIcon />
@@ -54,7 +54,7 @@ export const Route = createRootRoute({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className={`hover:bg-neutral-50 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 ${currentPath === "/vault" ? "bg-indigo-50 text-neutral-900 dark:bg-indigo-800 dark:text-neutral-200" : ""}`}
+                    className={`hover:bg-neutral-50 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 ${currentPath === "/vault" ? "text-neutral-900 dark:text-neutral-200" : ""}`}
                     title="Vault"
                   >
                     <BookText />
@@ -66,7 +66,7 @@ export const Route = createRootRoute({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className={`hover:bg-neutral-50 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 ${currentPath === "/tags" ? "bg-indigo-50 text-neutral-900 dark:bg-indigo-800 dark:text-neutral-200" : ""}`}
+                    className={`hover:bg-neutral-50 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 ${currentPath === "/tags" ? "text-neutral-900 dark:text-neutral-200" : ""}`}
                     title="Tags"
                   >
                     <Tags />
@@ -80,7 +80,7 @@ export const Route = createRootRoute({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className={`hover:bg-neutral-50 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 ${currentPath === "/settings" ? "bg-indigo-50 text-neutral-900 dark:bg-indigo-800 dark:text-neutral-200" : ""}`}
+                    className={`hover:bg-neutral-50 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 ${currentPath === "/settings" ? "text-neutral-900 dark:text-neutral-200" : ""}`}
                     title="Settings"
                   >
                     <SettingsIcon />
@@ -92,7 +92,7 @@ export const Route = createRootRoute({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className={`hover:bg-neutral-50 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 ${currentPath === "/info" ? "bg-indigo-50 text-neutral-900 dark:bg-indigo-800 dark:text-neutral-200" : ""}`}
+                    className={`hover:bg-neutral-50 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 ${currentPath === "/info" ? "text-neutral-900 dark:text-neutral-200" : ""}`}
                     title="Info"
                   >
                     <InfoIcon />
