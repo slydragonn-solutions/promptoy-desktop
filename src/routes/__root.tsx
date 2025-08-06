@@ -20,12 +20,7 @@ import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
 
@@ -75,7 +70,6 @@ const InfoDialog = ({trigger}: {trigger: React.ReactNode}) => {
           </div>
         </div>
       </div>
-        
       </DialogContent>
     </Dialog>
   )
