@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as VaultRouteImport } from './routes/vault'
 import { Route as TagsRouteImport } from './routes/tags'
 import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as InfoRouteImport } from './routes/info'
 import { Route as IndexRouteImport } from './routes/index'
 
 const VaultRoute = VaultRouteImport.update({
@@ -30,11 +29,6 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
-const InfoRoute = InfoRouteImport.update({
-  id: '/info',
-  path: '/info',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -43,14 +37,12 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/info': typeof InfoRoute
   '/settings': typeof SettingsRoute
   '/tags': typeof TagsRoute
   '/vault': typeof VaultRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/info': typeof InfoRoute
   '/settings': typeof SettingsRoute
   '/tags': typeof TagsRoute
   '/vault': typeof VaultRoute
@@ -58,22 +50,20 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/info': typeof InfoRoute
   '/settings': typeof SettingsRoute
   '/tags': typeof TagsRoute
   '/vault': typeof VaultRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/info' | '/settings' | '/tags' | '/vault'
+  fullPaths: '/' | '/settings' | '/tags' | '/vault'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/info' | '/settings' | '/tags' | '/vault'
-  id: '__root__' | '/' | '/info' | '/settings' | '/tags' | '/vault'
+  to: '/' | '/settings' | '/tags' | '/vault'
+  id: '__root__' | '/' | '/settings' | '/tags' | '/vault'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  InfoRoute: typeof InfoRoute
   SettingsRoute: typeof SettingsRoute
   TagsRoute: typeof TagsRoute
   VaultRoute: typeof VaultRoute
@@ -102,13 +92,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/info': {
-      id: '/info'
-      path: '/info'
-      fullPath: '/info'
-      preLoaderRoute: typeof InfoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -121,7 +104,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  InfoRoute: InfoRoute,
   SettingsRoute: SettingsRoute,
   TagsRoute: TagsRoute,
   VaultRoute: VaultRoute,
