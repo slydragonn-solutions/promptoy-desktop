@@ -16,6 +16,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import { promptsStore } from "@/store/prompts-store";
 import { Plus } from "lucide-react";
+import { codeToHtml } from "shiki"
+import { useTheme } from "@/components/theme/theme-provider";
 
 // Base schema for the form
 const baseFormSchema = z.object({
@@ -57,11 +59,13 @@ export function TemplatePromptForm({
   isSubmitting,
   setIsSubmitting,
 }: TemplatePromptFormProps) {
+  const {theme} = useTheme();
   const { prompts, addPrompt } = promptsStore();
   const [templates, setTemplates] = useState<Template[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(
     null,
   );
+  const [previewContent, setPreviewContent] = useState<string>("");
 
   // Create a dynamic form schema based on the selected template
   const getFormSchema = () => {
@@ -82,6 +86,37 @@ export function TemplatePromptForm({
 
   const form = useForm<FormData>();
 
+  // Generate preview content with current form values
+  const getPreviewContent = async () => {
+    if (!selectedTemplate) return "";
+
+    let content = selectedTemplate.content;
+    const formValues = form.getValues();
+
+    Object.entries(formValues).forEach(([key, value]) => {
+      if (key !== "name" && value) {
+        content = content.replace(
+          new RegExp(`\\{\\{${key}\\}}`, "g"),
+          String(value),
+        );
+      } else if (key !== "name") {
+        // If the variable is empty, show it as [variable_name]
+        content = content.replace(
+          new RegExp(`\\{\\{${key}\\}}`, "g"),
+          `[${key}]`,
+        );
+      }
+    });
+
+    const htmlContent = await codeToHtml(content, {
+      lang: "markdown",
+      theme: theme === "dark" ? "catppuccin-mocha" : "catppuccin-latte",
+    });
+    console.log(htmlContent);
+    setPreviewContent(htmlContent);
+    return htmlContent;
+  };
+
   // Update form schema when template changes
   useEffect(() => {
     if (selectedTemplate) {
@@ -95,6 +130,7 @@ export function TemplatePromptForm({
           {} as Record<string, string>,
         ),
       });
+      getPreviewContent();
     }
   }, [selectedTemplate, form]);
 
@@ -184,30 +220,6 @@ export function TemplatePromptForm({
     );
   }
 
-  // Generate preview content with current form values
-  const getPreviewContent = () => {
-    if (!selectedTemplate) return "";
-
-    let content = selectedTemplate.content;
-    const formValues = form.getValues();
-
-    Object.entries(formValues).forEach(([key, value]) => {
-      if (key !== "name" && value) {
-        content = content.replace(
-          new RegExp(`\\{\\{${key}\\}}`, "g"),
-          String(value),
-        );
-      } else if (key !== "name") {
-        // If the variable is empty, show it as [variable_name]
-        content = content.replace(
-          new RegExp(`\\{\\{${key}\\}}`, "g"),
-          `[${key}]`,
-        );
-      }
-    });
-
-    return content;
-  };
 
   const handleSubmit = async (data: any) => {
     if (!selectedTemplate) return;
@@ -286,11 +298,8 @@ export function TemplatePromptForm({
                     );
                   })}
                 </div>
-                <div className="prose dark:prose-invert max-w-none">
-                  <pre className="whitespace-pre-wrap font-mono text-sm p-4 bg-neutral-100 dark:bg-neutral-800 rounded">
-                    {getPreviewContent() ||
-                      "Fill in the variables to see the preview..."}
-                  </pre>
+                <div className="max-w-none">
+                  <div className="[&>*]:whitespace-pre-wrap [&>*]:font-mono [&>*]:text-sm [&>*]:rounded-md [&>*]:p-4" dangerouslySetInnerHTML={{ __html: previewContent }} />
                 </div>
               </div>
             )}

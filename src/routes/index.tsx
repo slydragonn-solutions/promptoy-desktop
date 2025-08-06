@@ -99,7 +99,7 @@ function Index() {
 
   return (
     <div className="flex w-full h-[calc(100vh-37px)] bg-neutral-100 dark:bg-neutral-900 p-2 justify-center items-center">
-      <div className="absolute top-0 bottom-0 left-0 right-0 m-auto w-96 h-96  dark:bg-indigo-600/50 bg-indigo-100 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute top-0 bottom-0 left-0 right-0 m-auto w-96 h-96  dark:bg-indigo-600/50 bg-orange-200 rounded-full blur-3xl animate-pulse"></div>
  
 
       {/* Main Content */}
