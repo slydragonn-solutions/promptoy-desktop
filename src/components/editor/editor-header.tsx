@@ -14,10 +14,11 @@ import {
     DropdownMenu, 
     DropdownMenuContent, 
     DropdownMenuItem, 
-    DropdownMenuTrigger 
+    DropdownMenuTrigger,
+    DropdownMenuShortcut
 } from "@/components/ui/dropdown-menu";
 import { useGroupsStore } from "@/store/groups-store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface EditorHeaderProps {
@@ -76,6 +77,29 @@ export default function EditorHeader({
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        const down = (e: KeyboardEvent) => {
+            if (e.key === 'q' && (e.metaKey || e.ctrlKey)) {
+                e.preventDefault();
+                setSelectedPrompt(null);
+            } else if (e.key === 'c' && (e.metaKey || e.ctrlKey)) {
+                e.preventDefault();
+                handleCopyToClipboard();
+            } else if (e.key === 'r' && (e.metaKey || e.ctrlKey)) {
+                e.preventDefault();
+                setNewName(selectedPrompt.name);
+                setIsRenameDialogOpen(true);
+            } else if (e.key === 'd' && (e.metaKey || e.ctrlKey)) {
+                e.preventDefault();
+                handleDeletePrompt();
+            }
+        };
+
+        document.addEventListener('keydown', down);
+        return () => document.removeEventListener('keydown', down);
+    }, [selectedPrompt]);
+    
     return (
       <div className="flex justify-end items-center gap-2">
             <DropdownMenu>
@@ -152,6 +176,7 @@ export default function EditorHeader({
                   >
                     <PenIcon className="mr-2 h-4 w-4 text-fill-current" />
                     <span>Rename</span>
+                    <DropdownMenuShortcut>⌘R</DropdownMenuShortcut>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleCopyToClipboard}>
                     <svg
@@ -170,10 +195,12 @@ export default function EditorHeader({
                       <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
                     </svg>
                     <span>Copy</span>
+                    <DropdownMenuShortcut>⌘C</DropdownMenuShortcut>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setSelectedPrompt(null)}>
                     <X className="mr-2 h-4 w-4 text-fill-current" />
-                    <span>Close</span>
+                    <span>Quit</span>
+                    <DropdownMenuShortcut>⌘Q</DropdownMenuShortcut>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     className="focus:bg-destructive/10 focus:text-destructive"
@@ -181,6 +208,7 @@ export default function EditorHeader({
                   >
                     <Trash2 className="mr-2 h-4 w-4 text-fill-current" />
                     <span>Delete</span>
+                    <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
