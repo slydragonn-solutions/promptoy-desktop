@@ -18,6 +18,7 @@ import { Toaster } from "@/components/ui/sonner";
 import TitleBar from "@/components/layout/title-bar";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Button } from "@/components/ui/button"
+import { WelcomeDialog } from "@/components/common/welcome-dialog";
 import {
   Dialog,
   DialogContent,
@@ -94,6 +95,7 @@ export const Route = createRootRoute({
       <ThemeProvider defaultTheme="light">
         <TitleBar />
         <main className="flex h-[calc(100vh-37px)] items-center justify-center">
+          <WelcomeDialog />
           <nav className="flex flex-col h-full items-center justify-between gap-2 p-2 bg-neutral-100 text-neutral-500 border-r border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800">
             <ul className="flex flex-col gap-2">
               <li>
