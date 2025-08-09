@@ -16,24 +16,24 @@ function validatePrompt(prompt: Partial<Prompt>): { isValid: boolean; error?: st
 }
 
 async function ensurePromptVaultExists(): Promise<void> {
-  const existsPromptVault = await exists('promptoy-vault', { baseDir: BaseDirectory.Document });
+  const existsPromptVault = await exists('promptoy-vault', { baseDir: BaseDirectory.AppData });
   if (!existsPromptVault) {
-    await mkdir('promptoy-vault', { baseDir: BaseDirectory.Document });
+    await mkdir('promptoy-vault', { baseDir: BaseDirectory.AppData });
   }
 }
 
 export async function loadPrompts(): Promise<Prompt[]> {
   try {
     await ensurePromptVaultExists();
-    const entries = await readDir('promptoy-vault', { baseDir: BaseDirectory.Document });
+    const entries = await readDir('promptoy-vault', { baseDir: BaseDirectory.AppData });
     
     const results = await Promise.all(
       entries
-        .filter(entry => entry.name.endsWith('.json'))
+        .filter(entry => entry.name.startsWith('prompt-') && entry.name.endsWith('.json'))
         .map(async (entry) => {
           try {
             const content = await readTextFile(`promptoy-vault/${entry.name}`, { 
-              baseDir: BaseDirectory.Document 
+              baseDir: BaseDirectory.AppData 
             });
             return JSON.parse(content);
           } catch (error) {
@@ -79,9 +79,9 @@ export async function createPrompt(prompt: Omit<Prompt, 'createdAt' | 'updatedAt
     };
 
     await writeTextFile(
-      `promptoy-vault/${prompt.id}.json`,
+      `promptoy-vault/prompt-${prompt.id}.json`,
       JSON.stringify(promptWithMetadata, null, 2),
-      { baseDir: BaseDirectory.Document }
+      { baseDir: BaseDirectory.AppData }
     );
     
     return { success: true };
@@ -100,15 +100,15 @@ export async function updatePrompt(updatedPrompt: Partial<Prompt> & { id: string
       return { success: false, error: 'Prompt ID is required for update' };
     }
 
-    const filePath = `promptoy-vault/${updatedPrompt.id}.json`;
-    const fileExists = await exists(filePath, { baseDir: BaseDirectory.Document });
+    const filePath = `promptoy-vault/prompt-${updatedPrompt.id}.json`;
+    const fileExists = await exists(filePath, { baseDir: BaseDirectory.AppData });
     
     if (!fileExists) {
       return { success: false, error: 'Prompt not found' };
     }
 
     // Load existing prompt
-    const content = await readTextFile(filePath, { baseDir: BaseDirectory.Document });
+    const content = await readTextFile(filePath, { baseDir: BaseDirectory.AppData });
     const existingPrompt = JSON.parse(content) as Prompt;
     
     // Merge updates
@@ -127,7 +127,7 @@ export async function updatePrompt(updatedPrompt: Partial<Prompt> & { id: string
     await writeTextFile(
       filePath,
       JSON.stringify(mergedPrompt, null, 2),
-      { baseDir: BaseDirectory.Document }
+      { baseDir: BaseDirectory.AppData }
     );
     
     return { success: true };
@@ -146,14 +146,14 @@ export async function deletePrompt(promptId: string): Promise<{ success: boolean
       return { success: false, error: 'Prompt ID is required' };
     }
 
-    const filePath = `promptoy-vault/${promptId}.json`;
-    const fileExists = await exists(filePath, { baseDir: BaseDirectory.Document });
+    const filePath = `promptoy-vault/prompt-${promptId}.json`;
+    const fileExists = await exists(filePath, { baseDir: BaseDirectory.AppData });
     
     if (!fileExists) {
       return { success: false, error: 'Prompt not found' };
     }
 
-    await remove(filePath, { baseDir: BaseDirectory.Document });
+    await remove(filePath, { baseDir: BaseDirectory.AppData });
     return { success: true };
   } catch (error) {
     console.error('Error deleting prompt:', error);

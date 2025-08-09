@@ -12,40 +12,22 @@
     {
       "identifier": "fs:allow-exists",
       "allow": [
-        { "path": "$HOME/*" },
-        { "path": "$HOME/**/*" },
-        { "path": "$Documents/*" },
-        { "path": "$Documents/**/*" },
-        { "path": "$Desktop/*" },
-        { "path": "$Desktop/**/*" },
-        { "path": "$AppData/*" },
-        { "path": "$AppData/**/*" }
+        { "path": "$APPDATA/*" },
+        { "path": "$APPDATA/**/*" }
       ]
     },
     {
       "identifier": "fs:read-all",
       "allow": [
-        { "path": "$HOME/*" },
-        { "path": "$HOME/**/*" },
-        { "path": "$Documents/*" },
-        { "path": "$Documents/**/*" },
-        { "path": "$Desktop/*" },
-        { "path": "$Desktop/**/*" },
-        { "path": "$AppData/*" },
-        { "path": "$AppData/**/*" }
+        { "path": "$APPDATA/*" },
+        { "path": "$APPDATA/**/*" }
       ]
     },
     {
       "identifier": "fs:write-all",
       "allow": [
-        { "path": "$HOME/*" },
-        { "path": "$HOME/**/*" },
-        { "path": "$Documents/*" },
-        { "path": "$Documents/**/*" },
-        { "path": "$Desktop/*" },
-        { "path": "$Desktop/**/*" },
-        { "path": "$AppData/*" },
-        { "path": "$AppData/**/*" }
+        { "path": "$APPDATA/*" },
+        { "path": "$APPDATA/**/*" }
       ]
     },
     "core:window:allow-minimize",

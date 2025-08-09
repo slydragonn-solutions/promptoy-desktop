@@ -249,7 +249,6 @@ export function TemplatePromptForm({
           },
         ],
         notes: [],
-        chatHistory: [],
         tags: [],
         isFavorite: false,
         group: undefined,

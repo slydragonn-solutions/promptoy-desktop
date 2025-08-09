@@ -40,7 +40,6 @@ export function BlankPromptForm({ onSuccess, onBack, isSubmitting, setIsSubmitti
           content: ''
         }],
         notes: [],
-        chatHistory: [],
         tags: [],
         isFavorite: false,
         group: undefined,
