@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import Alert from '../common/alert';
+import { useSavingStore } from '@/store/saving-store';
 
 interface PromptItemProps {
     prompt: Prompt;
@@ -31,6 +32,7 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
     const { getTagById, loadTags } = useTagsStore();
     const { updatePrompt, removePrompt } = promptsStore();
     const { groups, updateGroup } = useGroupsStore();
+    const { isSaving } = useSavingStore();
     
     const [tags, setTags] = useState<Tag[]>([]);
     const [isRenaming, setIsRenaming] = useState(false);
@@ -156,7 +158,13 @@ export default function PromptItem({ prompt, isSelected, onSelect }: PromptItemP
                             'hover:bg-neutral-200/60 bg-neutral-100 border-neutral-100 dark:bg-neutral-900 dark:border-neutral-900 dark:hover:bg-neutral-800',
                             isSelected && 'bg-indigo-50 hover:bg-indigo-100 border-indigo-200 dark:bg-indigo-950 dark:border-indigo-700 dark:hover:bg-indigo-800',
                         )}
-                        onClick={() => onSelect(prompt.id)}
+                        onClick={() => {
+                            if (isSaving) {
+                                toast.error("Please wait for the current save to complete");
+                                return;
+                            }
+                            onSelect(prompt.id);
+                        }}
                     >
                         <div className="flex flex-col gap-1.5 w-full">
                             <div className="flex justify-between items-start gap-2">

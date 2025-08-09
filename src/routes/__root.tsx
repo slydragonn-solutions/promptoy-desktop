@@ -23,6 +23,7 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { useSavingStore } from "@/store/saving-store";
 
 const InfoDialog = ({trigger}: {trigger: React.ReactNode}) => {
   const appVersion = __APP_VERSION__;
@@ -80,8 +81,10 @@ export const Route = createRootRoute({
     const router = useRouterState();
     const currentPath = router.location.pathname;
     const { setSelectedPrompt } = promptsStore();
+    const { isSaving } = useSavingStore();
 
     useEffect(() => {
+
       if (currentPath !== "/vault") {
         setSelectedPrompt(null);
       }
@@ -94,7 +97,7 @@ export const Route = createRootRoute({
           <nav className="flex flex-col h-full items-center justify-between gap-2 p-2 bg-neutral-100 text-neutral-500 border-r border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800">
             <ul className="flex flex-col gap-2">
               <li>
-                <Link to="/">
+                <Link to="/" disabled={isSaving}>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -106,7 +109,7 @@ export const Route = createRootRoute({
                 </Link>
               </li>
               <li>
-                <Link to="/vault">
+                <Link to="/vault" disabled={isSaving}>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -118,7 +121,7 @@ export const Route = createRootRoute({
                 </Link>
               </li>
               <li>
-                <Link to="/tags">
+                <Link to="/tags" disabled={isSaving}>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -132,7 +135,7 @@ export const Route = createRootRoute({
             </ul>
             <ul className="flex flex-col gap-2">
               <li>
-                <Link to="/settings">
+                <Link to="/settings" disabled={isSaving}>
                   <Button
                     variant="ghost"
                     size="icon"

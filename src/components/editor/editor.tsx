@@ -22,6 +22,7 @@ import { useState } from "react";
 import Alert from "../common/alert";
 import { useSettingsStore } from "@/store/settings-store";
 import { useTheme } from "../theme/theme-provider";
+import { useSavingStore } from "@/store/saving-store";
 interface EditorProps {
   isComparing: boolean;
   compareVersion: {
@@ -34,6 +35,7 @@ interface EditorProps {
 
 export default function Editor({ isComparing, compareVersion, onCloseCompare }: EditorProps) {
   const { selectedPrompt, setSelectedPrompt } = promptsStore();
+  const { isSaving } = useSavingStore();
   const [isDeleting, setIsDeleting] = useState(false);
   const { editor: editorSettings } = useSettingsStore();
   const { theme } = useTheme();
@@ -43,7 +45,6 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
   
   const {
     content,
-    isSaving,
     isRenameDialogOpen,
     newName,
     editorRef,

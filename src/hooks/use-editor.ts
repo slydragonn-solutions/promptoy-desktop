@@ -3,11 +3,12 @@ import { Prompt } from '@/types/prompts';
 import { promptsStore } from '@/store/prompts-store';
 import { toast } from 'sonner';
 import { MAX_CONTENT_LENGTH } from '@/constants/prompt';
+import { useSavingStore } from '@/store/saving-store';
 
 export const useEditor = (initialPrompt: Prompt | null) => {
   const { updatePrompt, removePrompt } = promptsStore();
+  const { setIsSaving } = useSavingStore();
   const [content, setContent] = useState('');
-  const [isSaving, setIsSaving] = useState(false);
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
   const [newName, setNewName] = useState('');
   const editorRef = useRef<any>(null);
@@ -160,7 +161,6 @@ export const useEditor = (initialPrompt: Prompt | null) => {
 
   return {
     content,
-    isSaving,
     isRenameDialogOpen,
     newName,
     editorRef,
