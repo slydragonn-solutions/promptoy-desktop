@@ -18,7 +18,7 @@ function validatePrompt(prompt: Partial<Prompt>): { isValid: boolean; error?: st
 async function ensurePromptVaultExists(): Promise<void> {
   const existsPromptVault = await exists('promptoy-vault', { baseDir: BaseDirectory.AppData });
   if (!existsPromptVault) {
-    await mkdir('promptoy-vault', { baseDir: BaseDirectory.AppData });
+    await mkdir('promptoy-vault', { baseDir: BaseDirectory.AppData, recursive: true });
   }
 }
 

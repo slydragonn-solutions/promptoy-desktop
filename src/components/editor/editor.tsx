@@ -105,7 +105,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
           const updatedPrompt = { ...selectedPrompt, tags };
           handleUpdatePrompt(updatedPrompt);
         }}
-        className="flex flex-nowrap gap-1 overflow-x-scroll h-12"
+        className="flex flex-nowrap overflow-x-auto h-12"
         trigger={
           <Button
             type="button"
