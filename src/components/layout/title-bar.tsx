@@ -21,16 +21,17 @@ export default function TitleBar() {
 
     return (
         <div 
-            className="flex justify-end items-center w-full border-b border-neutral-200 bg-neutral-100 dark:bg-neutral-900 dark:border-neutral-800" 
+            className="flex justify-between items-center w-full border-b border-neutral-200 bg-neutral-100 dark:bg-neutral-900 dark:border-neutral-800" 
             data-tauri-drag-region
             id="title-bar"
         >
+            <img src="/star-icon.png" alt="Promptoy Logo" className="h-6 w-6 ml-3.5" />
             <div className="flex gap-1" data-tauri-drag-region="false">
                 <Button variant="ghost" size="icon" onClick={handleMinimize}>
                     <Minus />
                 </Button>
                 <Button variant="ghost" size="icon" onClick={handleMaximize}>
-                    {isMaximized ? <Maximize /> : <Minimize />}
+                    {isMaximized ? <Minimize /> : <Maximize />}
                 </Button>
                 <Button variant="ghost" size="icon" onClick={handleClose}>
                     <X />
