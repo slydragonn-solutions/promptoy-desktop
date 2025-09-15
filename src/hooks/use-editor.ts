@@ -128,7 +128,7 @@ export const useEditor = (initialPrompt: Prompt | null) => {
         }
         saveTimeoutRef.current = setTimeout(() => {
           saveContent(value || '');
-        }, 1500);
+        }, 1000);
       }
     },
     [saveContent]
