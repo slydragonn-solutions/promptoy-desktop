@@ -235,7 +235,7 @@ export default function Editor({ isComparing, compareVersion, onCloseCompare }: 
       </Dialog>
     </section>
     {/* Footer */}
-    <EditorFooter selectedPrompt={selectedPrompt} content={content} />
+    <EditorFooter selectedPrompt={selectedPrompt} />
     <Alert open={isDeleting} onOpenChange={setIsDeleting} title="Delete Prompt" description={`Are you sure you want to delete this prompt "${selectedPrompt?.name}"?`} onAction={() => handleDeletePrompt()} actionText="Delete" />
     </div>
   );

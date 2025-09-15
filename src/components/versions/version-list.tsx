@@ -1,9 +1,7 @@
 import { PromptContent } from "@/types/prompts";
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Info, Plus } from "lucide-react"
-import { MAX_VERSIONS } from "@/constants/prompt"
+import { Plus } from "lucide-react"
 import NewVersionDialog from "./new-version-dialog"
 import VersionItem from "./version-item"
 import RenameVersionDialog from "./rename-version-dialog"
@@ -63,31 +61,14 @@ export default function VersionList({ onCompareVersion, isComparing = false, com
                         title="Create new version"
                         className=" text-neutral-600 bg-neutral-50 hover:bg-indigo-50 dark:text-neutral-400 dark:bg-neutral-800 dark:hover:bg-indigo-600 dark:hover:text-neutral-200"
                         onClick={handleOpenVersionDialog}
-                        disabled={selectedPrompt.versions.length >= MAX_VERSIONS}
                     >
                         <Plus className="w-4 h-4" />
                     </Button>
                     </div>
-                    {selectedPrompt.versions.length >= MAX_VERSIONS && (
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Info className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>Maximum of {MAX_VERSIONS} versions allowed</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
-                    )}
-                </div>
-                <div className="text-xs text-muted-foreground text-right px-1">
-                    {selectedPrompt.versions.length}/{MAX_VERSIONS}
                 </div>
                 <NewVersionDialog
                     isVersionDialogOpen={isVersionDialogOpen}
                     setIsVersionDialogOpen={setIsVersionDialogOpen}
-                    selectedPrompt={selectedPrompt}
                     newVersionName={newVersionName}
                     setNewVersionName={setNewVersionName}
                     versionError={versionError}

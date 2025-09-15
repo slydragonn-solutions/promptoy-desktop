@@ -48,9 +48,6 @@ export default function RenameVersionDialog({
                                     }
                                 }}
                             />
-                            <div className="text-xs text-muted-foreground text-right">
-                                {newVersionName.length}/50 characters
-                            </div>
                             {versionError && (
                                 <p className="text-sm text-red-500">{versionError}</p>
                             )}

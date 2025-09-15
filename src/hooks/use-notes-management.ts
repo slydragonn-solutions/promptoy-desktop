@@ -24,12 +24,7 @@ export const useNotesManagement = () => {
             return;
         }
 
-        // Validate max notes per prompt
         const currentNotes = selectedPrompt.notes || [];
-        if (currentNotes.length >= 100) {
-            toast.error('Maximum limit of 100 notes per prompt reached.');
-            return;
-        }
 
         const newNoteObj = {
             content: newNote.trim(),

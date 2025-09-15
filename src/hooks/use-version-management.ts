@@ -22,10 +22,6 @@ export const useVersionManagement = () => {
             setVersionError('Version name is required');
             return;
         }
-        if (newVersionName.length > 50) {
-            setVersionError('Version name is too long. Maximum 50 characters allowed.');
-            return;
-        }
 
         const newVersion: PromptContent = {
             name: newVersionName.trim(),

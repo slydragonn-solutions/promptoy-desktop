@@ -2,7 +2,6 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { Prompt } from '@/types/prompts';
 import { promptsStore } from '@/store/prompts-store';
 import { toast } from 'sonner';
-import { MAX_CONTENT_LENGTH } from '@/constants/prompt';
 import { useSavingStore } from '@/store/saving-store';
 
 export const useEditor = (initialPrompt: Prompt | null) => {
@@ -122,26 +121,14 @@ export const useEditor = (initialPrompt: Prompt | null) => {
   const handleEditorChange = useCallback(
     (value: string | undefined) => {
       if (value !== undefined) {
-        if (value.length <= MAX_CONTENT_LENGTH) {
-          setIsSaving(true);
-          setContent(value);
-          if (saveTimeoutRef.current) {
-            clearTimeout(saveTimeoutRef.current);
-          }
-          saveTimeoutRef.current = setTimeout(() => {
-            saveContent(value || '');
-          }, 1500);
-        } else {
-          // Show warning if user is trying to exceed the limit
-          toast.error(`Content cannot exceed the limit of ${MAX_CONTENT_LENGTH.toLocaleString()} characters. Content won't be saved.`);
-          // Truncate the content to the maximum allowed length
-          /*
-          const truncated = value.substring(0, MAX_CONTENT_LENGTH);
-          setContent(truncated);
-          // Force save the truncated content
-          saveContent(truncated);
-          */
+        setIsSaving(true);
+        setContent(value);
+        if (saveTimeoutRef.current) {
+          clearTimeout(saveTimeoutRef.current);
         }
+        saveTimeoutRef.current = setTimeout(() => {
+          saveContent(value || '');
+        }, 1500);
       }
     },
     [saveContent]

@@ -1,14 +1,11 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Prompt} from "@/types/prompts"
 import { Button } from "@/components/ui/button";
-import { MAX_VERSIONS } from "@/constants/prompt";
 import { GitCompare } from "lucide-react";
 
 interface NewVersionDialogProps {
     isVersionDialogOpen: boolean;
     setIsVersionDialogOpen: (open: boolean) => void;
-    selectedPrompt: Prompt;
     newVersionName: string;
     setNewVersionName: (name: string) => void;
     versionError: string;
@@ -19,7 +16,6 @@ interface NewVersionDialogProps {
 export default function NewVersionDialog({
     isVersionDialogOpen,
     setIsVersionDialogOpen,
-    selectedPrompt,
     newVersionName,
     setNewVersionName,
     versionError,
@@ -33,9 +29,6 @@ export default function NewVersionDialog({
                     <DialogTitle>Versions</DialogTitle>
                     <DialogDescription>
                         Create a new version of your prompt
-                        <div className="text-xs text-muted-foreground mt-1">
-                            {selectedPrompt.versions.length}/{MAX_VERSIONS} versions used
-                        </div>
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -59,9 +52,6 @@ export default function NewVersionDialog({
                                     }
                                 }}
                             />
-                            <div className="text-xs text-muted-foreground text-right">
-                                {newVersionName.length}/50 characters
-                            </div>
                             {versionError && (
                                 <p className="text-sm text-red-500">{versionError}</p>
                             )}
