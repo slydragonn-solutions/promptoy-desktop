@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "promptoy-desktop",
+  "productName": "Promptoy Desktop",
   "version": "0.1.0",
   "identifier": "com.promptoy-desktop.app",
   "build": {
