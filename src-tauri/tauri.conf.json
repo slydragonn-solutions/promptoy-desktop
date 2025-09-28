@@ -26,7 +26,12 @@
     "active": true,
     "targets": "all",
     "icon": [
-      "icons/promptoy-logo-512.png"
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "32x32.png",
+      "icon.icns",
+      "icon.ico",
+      "icon.png"
     ]
   }
 }
