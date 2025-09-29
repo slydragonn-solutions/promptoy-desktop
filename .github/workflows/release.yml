@@ -24,7 +24,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: 'Release ${{ github.ref }}'
-          body: 'Archivos de la aplicación para Windows y Linux.'
+          body: 'Files for the application for Linux, Windows and macOS'
           draft: false
           prerelease: false
 
